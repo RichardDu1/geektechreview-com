@@ -1,0 +1,134 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const reviews = await getCollection('reviews');
+  return reviews.map(review => ({
+    params: { slug: review.id.split('/').pop() },
+    props: { review },
+  }));
+}
+
+const { review } = Astro.props;
+const { Content } = await render(review);
+
+// Schema Markup
+const reviewSchema = {
+  "@context": "https://schema.org",
+  "@type": "Review",
+  "itemReviewed": {
+    "@type": "Product",
+    "name": review.data.title,
+    "description": review.data.description,
+    "offers": {
+      "@type": "Offer",
+      "price": review.data.price,
+      "priceCurrency": "USD"
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": review.data.author
+  },
+  "reviewRating": {
+    "@type": "Rating",
+    "ratingValue": review.data.score,
+    "bestRating": "10",
+    "worstRating": "1"
+  },
+  "datePublished": review.data.publishedAt
+};
+---
+
+<BaseLayout
+  title={`${review.data.title} Review | Geek Tech Review`}
+  description={review.data.description}
+  canonical={`https://geektechreview.com/en/reviews/${review.id.split('/').pop()}/`}
+  schema={{ type: 'Review', data: reviewSchema }}
+>
+  <article class="max-w-[1400px] mx-auto px-6 py-20 font-sans">
+    
+    <!-- Hero Header -->
+    <header class="max-w-[1000px] mx-auto text-center mb-16">
+      <div class="inline-block bg-black text-white font-bold uppercase text-xs px-3 py-1 mb-8">
+        {review.data.category}
+      </div>
+      <h1 class="text-6xl md:text-8xl font-serif font-black uppercase tracking-tighter leading-[0.9] mb-8">
+        {review.data.title}
+      </h1>
+      <p class="text-2xl text-muted max-w-3xl mx-auto leading-snug font-serif italic mb-8">
+        {review.data.description}
+      </p>
+      <div class="flex items-center justify-center gap-4 text-sm font-bold uppercase tracking-widest border-t border-b border-black py-4">
+        <span>By {review.data.author}</span>
+        <span class="text-primary">•</span>
+        <span>{new Date(review.data.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      </div>
+    </header>
+
+    <div class="magazine-grid">
+      <!-- Main Content -->
+      <div class="col-span-12 md:col-span-8 md:col-start-2">
+        <div class="prose prose-xl max-w-none 
+          prose-headings:font-serif prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter
+          prose-h2:text-4xl prose-h2:mt-16 prose-h2:mb-6
+          prose-h3:text-3xl prose-h3:mt-12
+          prose-p:text-gray-800 prose-p:leading-relaxed prose-p:mb-8
+          prose-a:text-primary hover:prose-a:bg-primary hover:prose-a:text-white prose-a:transition-colors
+          prose-blockquote:border-l-[8px] prose-blockquote:border-accent prose-blockquote:bg-neutral prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:font-serif prose-blockquote:italic">
+          
+          <!-- Drop cap effect for first paragraph -->
+          <div class="first-letter:float-left first-letter:text-8xl first-letter:font-black first-letter:font-serif first-letter:text-primary first-letter:pr-3 first-letter:-mt-2 first-letter:leading-none">
+            <Content />
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Scorecard Sidebar -->
+      <aside class="col-span-12 md:col-span-3">
+        <div class="sticky top-8 bg-neutral border-2 border-black p-8 shadow-[8px_8px_0_0_#000]">
+          <h3 class="font-bold uppercase tracking-widest text-xs text-muted mb-2 border-b border-black pb-2">Geek Tech Score</h3>
+          
+          <div class="text-8xl font-black font-serif text-primary tracking-tighter mb-4">
+            {review.data.score}
+          </div>
+          
+          <div class="mb-6">
+            <span class="inline-block bg-black text-white font-bold uppercase px-3 py-1 mb-2">Verdict</span>
+            <div class="text-xl font-bold">{review.data.verdict}</div>
+          </div>
+          
+          <div class="mb-6 border-t border-border pt-4">
+            <span class="inline-block font-bold uppercase tracking-widest text-xs mb-2">Price</span>
+            <div class="text-2xl font-serif">{review.data.price}</div>
+          </div>
+
+          <div class="mb-6 border-t border-border pt-4">
+            <h4 class="font-bold uppercase text-xs mb-3 text-green-600">The Good</h4>
+            <ul class="space-y-2 text-sm">
+              {review.data.pros.map(pro => (
+                <li class="flex items-start gap-2">
+                  <span class="text-green-600 font-bold mt-0.5">+</span>
+                  <span>{pro}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="border-t border-border pt-4">
+            <h4 class="font-bold uppercase text-xs mb-3 text-red-600">The Bad</h4>
+            <ul class="space-y-2 text-sm">
+              {review.data.cons.map(con => (
+                <li class="flex items-start gap-2">
+                  <span class="text-red-600 font-bold mt-0.5">-</span>
+                  <span>{con}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

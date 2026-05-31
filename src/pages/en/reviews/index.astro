@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const allReviews = await getCollection('reviews');
+const sortedReviews = allReviews.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const pageTitle = 'Hardware Archive | Geek Tech Review';
+const pageDescription = 'Browse all our brutally honest hardware reviews.';
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonical="https://geektechreview.com/en/reviews/"
+>
+  <main class="max-w-[1400px] mx-auto px-6 py-20">
+    <header class="mb-16 border-b-[4px] border-black pb-8">
+      <h1 class="text-6xl md:text-7xl font-black uppercase tracking-tighter mb-4">THE ARCHIVE</h1>
+      <p class="text-xl text-muted font-sans">Our complete database of hardware scores and teardowns.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      {sortedReviews.length > 0 ? sortedReviews.map(review => (
+        <article class="group cursor-pointer">
+          <a href={`/en/reviews/${review.id.split('/').pop()}`} class="block">
+            <div class="relative overflow-hidden mb-4 aspect-[16/9] bg-neutral border border-border">
+              <div class="w-full h-full bg-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                <span class="font-sans text-muted text-sm">Image: {review.data.title}</span>
+              </div>
+              <div class="absolute top-4 left-4 z-20 bg-black text-white font-bold uppercase text-xs px-3 py-1">
+                {review.data.category}
+              </div>
+            </div>
+            
+            <h2 class="text-2xl font-bold mb-2 leading-tight group-hover:text-primary transition-colors">
+              {review.data.title}
+            </h2>
+            <div class="flex items-center justify-between text-sm font-sans">
+               <span class="text-muted">By {review.data.author}</span>
+               <span class="font-bold text-accent text-lg">★ {review.data.score}</span>
+            </div>
+          </a>
+        </article>
+      )) : (
+        <div class="col-span-3 text-center py-20 text-muted font-sans border border-dashed border-border">
+          No reviews found in the archive.
+        </div>
+      )}
+    </div>
+  </main>
+</BaseLayout>
