@@ -1,48 +1,36 @@
 @import "tailwindcss";
 
-/* === TRUE BESPOKE REDESIGN: GEEK TECH REVIEW ===
-   Aesthetic: Magazine / Editorial (The Verge Style)
-   Vibe: Asymmetrical, Huge Serifs, High Readability === */
-
 @theme {
-  --color-primary: #FF00FF; /* Magenta */
-  --color-primary-dark: #D900D9;
-  --color-accent: #00FFFF;  /* Cyan */
-  --color-surface: #FFFFFF;
-  --color-neutral: #F3F4F6;
-  --color-border: #E5E7EB;
-  --color-muted: #6B7280;
-  --color-text: #111827;
+  --color-primary-500: #ef4444;
+  --color-primary-600: #dc2626;
+  --color-dark: #050505;
+  --color-card: #111111;
+  
+  --animate-blob: blob 10s infinite;
+  --animate-fade-in-up: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-  /* Editorial Typography */
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
+    33% { transform: translate(40px, -60px) scale(1.1); opacity: 0.3; }
+    66% { transform: translate(-30px, 30px) scale(0.9); opacity: 0.1; }
+    100% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
+  }
+
+  @keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-body { 
-  font-family: var(--font-sans); 
-  color: var(--color-text); 
-  background-color: var(--color-surface); 
-  line-height: 1.7;
+@utility animation-delay-2000 {
+  animation-delay: 2s;
 }
 
-h1, h2, h3, h4 { 
-  font-family: var(--font-serif);
-  font-weight: 900;
-  letter-spacing: -0.01em;
-  color: #000000;
+@utility animation-delay-4000 {
+  animation-delay: 4s;
 }
 
-.magazine-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 2rem;
-}
-
-/* Custom Highlight */
-::selection {
-  background: var(--color-accent);
-  color: #000;
+body {
+  background-color: var(--color-dark);
+  color: #e2e8f0;
 }
