@@ -1,0 +1,159 @@
+---
+title: "Automated A/B Comparison of Audio Processing Modes for Subjective Preference Learning"
+description: "A step-by-step guide for home theater enthusiasts to automatically compare audio processing modes (e.g., Dolby Atmos, DTS:X, Auro-3D) using REW, Jriver Media Center, and a simple Python script, learning your subjective preferences over time."
+targetRole: ["home-theater-enthusiast"]
+targetIntent: ["compare-modes"]
+difficulty: "Intermediate"
+setupTime: "2 Hours"
+costEstimate: "$0 - $50 (if using free tiers)"
+roi: "Saves 5 hours per comparison session"
+toolsUsed: ["rew","jriver-media-center","python-script"]
+---
+
+## Automated A/B Comparison of Audio Processing Modes for Subjective Preference Learning
+
+This workflow automates the tedious process of manually switching audio modes and taking notes. By using REW for measurement, Jriver Media Center for playback control, and a Python script to randomize and log your preferences, you can systematically learn which mode you prefer for different content.
+
+### Prerequisites
+- **Hardware**: AVR or processor that supports multiple audio modes (e.g., Dolby Atmos, DTS:X, Auro-3D, Stereo).
+- **Software**: 
+  - [REW (Room EQ Wizard)](https://www.roomeqwizard.com/) – free room measurement and audio analysis.
+  - [Jriver Media Center](https://jriver.com/) – media player with powerful automation and scripting (30-day free trial, $49.98 lifetime).
+  - Python 3.8+ with `requests` and `pandas` libraries.
+- **Content**: A set of 5-10 short audio clips (30-60 seconds each) with diverse characteristics (dialog, explosions, music, ambient).
+
+### Step 1: Prepare Your Test Content
+1. Create a folder `C:\AudioTest\Clips` with your clips in FLAC or WAV format (lossless).
+2. Name them descriptively, e.g., `dialog.wav`, `explosion.wav`, `music.wav`.
+
+### Step 2: Set Up Jriver Media Center for Remote Control
+1. Install Jriver Media Center and import your test clips into a new playlist named "AB Test".
+2. Enable the Media Server: Go to `Tools > Options > Media Network` and enable "Use Media Server". Note the port (default 52199).
+3. Enable Web Control: In the same section, enable "Allow control via web interface".
+4. Create a REST API token: Go to `Tools > Options > Media Network > Access Key` and generate a key. Save it.
+
+### Step 3: Configure Your AVR for Remote Control
+- Ensure your AVR supports IP control. Enable network standby and note the IP address.
+- For Denon/Marantz: Use Telnet commands (port 23). For others, check the manufacturer's API.
+- Example Denon command to switch to Dolby Surround: `PWON\r\nMSDOLBY SURROUND\r\n`
+
+### Step 4: Write the Python Automation Script
+Create a Python script `ab_test.py` that:
+- Randomly selects a clip and an audio mode (from a predefined list).
+- Sends HTTP requests to Jriver to play the clip.
+- Sends commands to the AVR to switch the audio mode.
+- Waits for the clip to finish.
+- Prompts the user to rate the experience (1-5) via console input.
+- Logs the clip, mode, and rating to a CSV file.
+
+```python
+import requests
+import random
+import time
+import csv
+import os
+
+# Configuration
+JRIVER_URL = "http://localhost:52199"
+JRIVER_TOKEN = "your_token_here"
+AVR_IP = "192.168.1.100"
+AVR_PORT = 23
+
+# Audio modes and their AVR commands
+MODES = {
+    "Dolby Atmos": "MSDOLBY ATMOS\r",
+    "DTS:X": "MSDTS:X\r",
+    "Auro-3D": "MSAURO3D\r",
+    "Stereo": "MSSTEREO\r"
+}
+
+CLIPS_FOLDER = "C:\\AudioTest\\Clips"
+LOG_FILE = "preferences.csv"
+
+def send_avr_command(command):
+    import socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(2)
+    try:
+        sock.connect((AVR_IP, AVR_PORT))
+        sock.send(command.encode())
+        sock.close()
+    except Exception as e:
+        print(f"AVR command failed: {e}")
+
+def play_clip(clip_name):
+    # Jriver API: play a file by path
+    params = {
+        "Action": "Play",
+        "File": os.path.join(CLIPS_FOLDER, clip_name),
+        "Token": JRIVER_TOKEN
+    }
+    try:
+        requests.get(f"{JRIVER_URL}/MCWS/v1/Playback/Play", params=params, timeout=5)
+    except Exception as e:
+        print(f"Jriver play failed: {e}")
+
+def main():
+    clips = [f for f in os.listdir(CLIPS_FOLDER) if f.endswith(('.wav','.flac'))]
+    if not clips:
+        print("No clips found!")
+        return
+    
+    # Initialize log file
+    if not os.path.exists(LOG_FILE):
+        with open(LOG_FILE, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(["Clip", "Mode", "Rating"])
+    
+    for _ in range(20):  # 20 trials
+        clip = random.choice(clips)
+        mode = random.choice(list(MODES.keys()))
+        print(f"\nNow playing: {clip} in {mode}")
+        
+        # Switch AVR mode
+        send_avr_command(MODES[mode])
+        time.sleep(1)  # Allow mode change
+        
+        # Play clip
+        play_clip(clip)
+        time.sleep(5)  # Wait for clip to start
+        
+        # Wait for user input
+        rating = input("Rate this combination (1-5): ")
+        while rating not in ['1','2','3','4','5']:
+            rating = input("Invalid. Enter 1-5: ")
+        
+        # Log
+        with open(LOG_FILE, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([clip, mode, rating])
+        
+        print("Logged.")
+    
+    print("\nTest complete! Analyze preferences.csv.")
+
+if __name__ == "__main__":
+    main()
+```
+
+### Step 5: Run the Test
+1. Ensure Jriver Media Center is running and your AVR is on.
+2. Run the script: `python ab_test.py`
+3. For each trial, listen to the clip and enter your rating.
+4. After 20 trials, the script exits.
+
+### Step 6: Analyze Results
+Open `preferences.csv` in Excel or Python. Calculate average rating per mode to see which mode you prefer overall. For deeper analysis, group by clip type (e.g., dialog vs. music) to see if preference changes with content.
+
+### Tips for Better Results
+- Use a blind test: Have someone else run the script so you don't know which mode is playing.
+- Repeat the test multiple times over several days to account for mood and fatigue.
+- Calibrate your system to reference level (75dB) before testing.
+
+### Troubleshooting
+- **AVR not responding**: Check IP and port. Test with a telnet client manually.
+- **Jriver not playing**: Ensure the file path is correct and the media server is enabled.
+- **Script errors**: Install missing libraries: `pip install requests pandas`.
+
+### Conclusion
+This automated workflow removes the hassle of manual switching and note-taking, allowing you to focus on listening. Over time, you'll build a data-driven understanding of your audio preferences, helping you choose the best mode for any content.

@@ -1,0 +1,62 @@
+---
+title: "AI-Based Multi-Subwoofer Phase Alignment for Seamless Bass Integration"
+description: "A step-by-step guide for home theater installers to use AI tools like Dirac Live and Audyssey MultEQ-X to automatically align multiple subwoofers for smooth, room-corrected bass."
+targetRole: ["home-theater-installer"]
+targetIntent: ["align-subwoofers"]
+difficulty: "Intermediate"
+setupTime: "60 Minutes"
+costEstimate: "$0 - $500"
+roi: "Saves 2 hours per calibration and improves bass quality"
+toolsUsed: ["dirac-live","audyssey-multeq-x","rew"]
+---
+
+## AI-Based Multi-Subwoofer Phase Alignment for Seamless Bass Integration
+
+### Overview
+Achieving smooth, room-corrected bass with multiple subwoofers requires precise phase alignment. AI-based tools like Dirac Live and Audyssey MultEQ-X automate this process, saving time and delivering superior results. This guide walks you through the workflow.
+
+### Prerequisites
+- AVR or processor with Dirac Live or Audyssey MultEQ-X support
+- Measurement microphone (e.g., UMIK-1)
+- Laptop with REW (Room EQ Wizard) for verification
+- Multiple subwoofers placed in optimal locations
+
+### Step 1: Initial Setup
+1. Place subwoofers in desired locations (e.g., opposite corners or mid-wall).
+2. Connect all subwoofers to the AVR’s subwoofer outputs.
+3. Set all subwoofer volume knobs to 50% and crossover to maximum (or LFE).
+4. Run the AVR’s built-in calibration (e.g., Audyssey) to set initial levels and distances.
+
+### Step 2: AI Phase Alignment with Dirac Live
+1. Launch Dirac Live on your laptop.
+2. Connect the measurement microphone to the laptop and place it at the main listening position.
+3. Select “Multi-Subwoofer” mode.
+4. Follow the on-screen prompts to measure each subwoofer individually (Dirac Live will automatically detect phase and delay).
+5. After measurements, Dirac Live calculates optimal phase alignment and applies filters.
+6. Export the filter file to your AVR.
+
+### Step 3: Verification with REW
+1. Open REW and connect the microphone.
+2. Measure the combined response of all subwoofers at the listening position.
+3. Check for smooth frequency response and minimal cancellation dips (e.g., no deep nulls below 80 Hz).
+4. If needed, adjust subwoofer placement or re-run Dirac Live with different target curves.
+
+### Step 4: Fine-Tuning with Audyssey MultEQ-X (Alternative)
+1. For Denon/Marantz AVRs, use Audyssey MultEQ-X on a PC.
+2. Connect the AVR via USB and launch MultEQ-X.
+3. Select “Multi-Subwoofer” and measure each subwoofer.
+4. The AI engine aligns phase and applies room correction.
+5. Upload the filter to the AVR.
+
+### Step 5: Final Checks
+1. Play bass-heavy content (e.g., movie scenes with deep bass).
+2. Listen for seamless integration—no localization of bass from one subwoofer.
+3. Use REW’s spectrogram to confirm smooth decay.
+
+### Troubleshooting
+- **Phase mismatch**: Ensure all subwoofers are set to 0° phase on the subwoofer itself (let Dirac handle it).
+- **Room modes**: If nulls persist, try moving subwoofers or adding a third subwoofer.
+- **Time alignment**: Check that distances in the AVR match physical distances (Dirac Live should correct this).
+
+### Conclusion
+AI-based phase alignment eliminates guesswork and delivers professional-grade bass integration. Tools like Dirac Live and Audyssey MultEQ-X are essential for modern home theater installers.

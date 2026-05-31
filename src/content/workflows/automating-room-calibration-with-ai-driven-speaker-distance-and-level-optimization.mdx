@@ -1,0 +1,60 @@
+---
+title: "Automating Room Calibration with AI-Driven Speaker Distance and Level Optimization"
+description: "A step-by-step guide for home theater enthusiasts to automate speaker calibration using AI-powered room correction software, achieving precise distance and level optimization without manual measurement."
+targetRole: ["home-theater-enthusiast"]
+targetIntent: ["automate-calibration"]
+difficulty: "Intermediate"
+setupTime: "60 Minutes"
+costEstimate: "$0 - $200 one-time"
+roi: "Saves 2 hours per calibration, ensures consistent optimal sound"
+toolsUsed: ["rew","minidsp-umik-1","dirac-live","audyssey-multeq-app"]
+---
+
+## Introduction
+
+Manual speaker calibration is tedious and error-prone. AI-driven room correction software now automates distance and level optimization by analyzing test tones and room acoustics. This guide walks you through a B2B workflow using industry-standard tools.
+
+## Prerequisites
+
+- A Windows/Mac PC with USB port
+- Measurement microphone (e.g., miniDSP UMIK-1)
+- AVR or processor with room correction (e.g., Dirac Live, Audyssey MultEQ)
+- Free REW software installed
+
+## Step 1: Set Up Measurement Microphone
+
+1. Connect the UMIK-1 to your PC via USB.
+2. Download the calibration file from miniDSP and load it into REW.
+3. Place the microphone at the main listening position, pointed at the ceiling, at ear height.
+
+## Step 2: Generate Test Signals
+
+1. Open REW and go to **Measure** > **Start Measuring**.
+2. Select **Sweep** as the signal type (20Hz-20kHz).
+3. Set output to your AVR's pre-out or speaker output (ensure volume is low).
+4. Run a quick test to verify levels (target 75dB SPL).
+
+## Step 3: Capture Room Response
+
+1. In REW, click **Measure** to start the sweep.
+2. The software will play a chirp and record the microphone response.
+3. Repeat for each speaker position (Left, Right, Center, Surrounds, Subwoofer).
+4. Save each measurement with a clear label.
+
+## Step 4: AI-Driven Optimization with Dirac Live
+
+1. Import REW measurements into Dirac Live (or use its built-in measurement).
+2. Dirac Live's AI algorithm analyzes the room's impulse response and suggests target curves.
+3. Adjust target curve if desired (e.g., slight bass boost).
+4. Let Dirac calculate filters and apply them to your AVR.
+
+## Step 5: Verify and Fine-Tune
+
+1. Re-measure with REW after applying filters.
+2. Check frequency response flatness and phase alignment.
+3. Use REW's **Generator** to manually adjust subwoofer delay if needed.
+4. Save the final configuration as a preset.
+
+## Conclusion
+
+This workflow eliminates guesswork, delivering precise speaker distance and level optimization in under an hour. The result is a perfectly calibrated home theater with minimal effort.

@@ -1,0 +1,64 @@
+---
+title: "Real-Time Lip-Sync Correction Using AI Audio-Video Alignment"
+description: "Eliminate audio-video sync issues in your home theater with AI-powered tools that automatically align lips to dialogue in real time."
+targetRole: ["home-theater-enthusiast"]
+targetIntent: ["fix-lip-sync"]
+difficulty: "Intermediate"
+setupTime: "30 Minutes"
+costEstimate: "$0 - $20/mo"
+roi: "Saves 10 hours/week"
+toolsUsed: ["obs-studio","voicemod-pro","elgato-stream-deck"]
+---
+
+## Real-Time Lip-Sync Correction Using AI Audio-Video Alignment
+
+### Overview
+Lip-sync errors can ruin the immersion of a movie night. This guide walks you through setting up a real-time AI-based correction pipeline using OBS Studio, Voicemod Pro, and an Elgato Stream Deck. The system analyzes audio delay and adjusts video timing on the fly.
+
+### Prerequisites
+- **Hardware**: PC with dedicated GPU (NVIDIA GTX 1060 or better), webcam or capture card, microphone
+- **Software**: OBS Studio (free), Voicemod Pro ($20/mo), Elgato Stream Deck (hardware, ~$150)
+- **Knowledge**: Basic familiarity with OBS scenes and sources
+
+### Step 1: Install and Configure OBS Studio
+1. Download OBS Studio from [obsproject.com](https://obsproject.com).
+2. Set up your video source (webcam or capture card) as a Video Capture Device.
+3. Set up your audio source (microphone) as an Audio Input Capture.
+4. Go to **Settings > Audio** and set the sample rate to 48 kHz.
+5. Enable **Advanced Audio Properties** and ensure your audio source is set to "Monitor and Output".
+
+### Step 2: Install Voicemod Pro for AI Lip-Sync
+1. Download Voicemod Pro from [voicemod.net](https://voicemod.net).
+2. Install and launch Voicemod. In the **Voicebox** tab, select the **Lip Sync** effect.
+3. Configure the effect: set **Delay Compensation** to "Auto" and **Sensitivity** to medium.
+4. In Voicemod's settings, enable **Virtual Audio Cable** output (this creates a virtual microphone that OBS will use).
+
+### Step 3: Route Audio Through Voicemod in OBS
+1. In OBS, add a new **Audio Input Capture** source and select "Voicemod Virtual Audio Device".
+2. Mute your original microphone source to avoid double audio.
+3. Right-click the Voicemod audio source, go to **Advanced Audio Properties**, and set **Audio Monitoring** to "Monitor and Output".
+
+### Step 4: Set Up Elgato Stream Deck for Real-Time Control
+1. Install the Stream Deck software and connect your device.
+2. Add a **Hotkey** action: assign a key combination (e.g., Ctrl+Shift+L) to toggle lip-sync correction on/off.
+3. In OBS, go to **Settings > Hotkeys** and assign the same combination to the **Enable/Disable** action for the Voicemod audio source.
+4. Optionally, add a **Multi Action** button that also adjusts a delay filter if needed.
+
+### Step 5: Fine-Tune with OBS Filters
+1. Right-click your video source and select **Filters**.
+2. Add a **Video Delay (Async)** filter. Set the delay in milliseconds (start with 0 and adjust based on perceived sync).
+3. Play a test video with known dialogue. Use the Stream Deck button to toggle Voicemod on/off and compare.
+4. Adjust the video delay until lips match audio perfectly. Typical values range from 50-200 ms.
+
+### Step 6: Save and Automate
+1. Save your OBS scene collection as "Home Theater".
+2. Create a Stream Deck profile that loads this scene collection and starts streaming/recording.
+3. For automatic correction, you can use OBS's **Auto Scene Switcher** plugin to detect when a video source is active and apply the delay filter.
+
+### Troubleshooting
+- **Audio echo**: Ensure your original microphone is muted in OBS.
+- **Lip-sync still off**: Try different delay values; use a clap test to measure exact offset.
+- **Voicemod not processing**: Check that Voicemod is running and the virtual cable is selected.
+
+### Conclusion
+With this setup, you can enjoy perfectly synced audio and video in real time. The combination of OBS, Voicemod Pro, and Stream Deck gives you fine-grained control and automation for a seamless home theater experience.

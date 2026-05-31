@@ -1,0 +1,70 @@
+---
+title: "Automated Dynamic Range Compression for Late-Night Viewing: A Home Theater Enthusiast's Guide"
+description: "Learn how to set up automated dynamic range compression using real-world tools like Equalizer APO, Peace, and OBS to ensure comfortable late-night viewing without disturbing others."
+targetRole: ["home-theater-enthusiast"]
+targetIntent: ["adjust-dynamic-range"]
+difficulty: "Intermediate"
+setupTime: "1-2 Hours"
+costEstimate: "$0 - $20/mo"
+roi: "Saves 10 hours/week of manual adjustments"
+toolsUsed: ["equalizer-apo","peace-equalizer","obs-studio"]
+---
+
+## Overview
+
+Late-night viewing often suffers from extreme dynamic range: loud explosions wake the house, while quiet dialogue is inaudible. This guide automates dynamic range compression using free, open-source tools. The workflow detects time of day and applies compression profiles automatically, ensuring consistent volume without manual tweaking.
+
+## Prerequisites
+
+- Windows PC (Equalizer APO is Windows-only)
+- Basic familiarity with audio routing
+- Optional: A microphone for room calibration
+
+## Step 1: Install Equalizer APO and Peace
+
+1. Download [Equalizer APO](https://sourceforge.net/projects/equalizerapo/) and install. During installation, select your playback device (e.g., speakers or headphones).
+2. Download [Peace Equalizer](https://sourceforge.net/projects/peace-equalizer-apo-extension/) and install. Peace provides a GUI for Equalizer APO.
+3. Restart your PC.
+
+## Step 2: Create Compression Profiles
+
+1. Open Peace Equalizer. Click the "Equalizer" tab.
+2. Create a "Normal" profile: flat EQ, no compression.
+3. Create a "Late Night" profile:
+   - Enable the "Compressor" module (bottom left).
+   - Set Threshold: -20 dB, Ratio: 4:1, Attack: 10 ms, Release: 100 ms.
+   - Optionally, apply a loudness curve (e.g., slight bass boost).
+4. Save each profile with a descriptive name.
+
+## Step 3: Automate Profile Switching with OBS
+
+OBS Studio can trigger profile changes via its audio monitoring and scripting capabilities.
+
+1. Install [OBS Studio](https://obsproject.com/).
+2. Create a scene with your media source (e.g., VLC, browser).
+3. Use OBS's "Audio Monitor" feature to route audio through Equalizer APO.
+4. Write a simple script (Python or Lua) that checks the current time and switches profiles using the Peace command-line interface.
+   - Peace CLI: `Peace.exe /LoadProfile:"Late Night"`
+5. Schedule the script via Windows Task Scheduler to run at your desired late-night hours (e.g., 10 PM to 7 AM).
+
+## Step 4: Test and Tweak
+
+1. Play a movie with wide dynamic range (e.g., "Mad Max: Fury Road").
+2. Verify that late-night compression reduces peaks without muffling dialogue.
+3. Adjust compressor parameters to taste.
+
+## Comparison with Hardware Solutions
+
+- **DBX 266xs**: Hardware compressor (~$150), but requires manual switching.
+- **MiniDSP 2x4 HD**: Digital crossover with compression (~$200), but less flexible.
+- **Software approach**: Free, fully automated, and customizable.
+
+## Troubleshooting
+
+- **No audio**: Ensure Equalizer APO is configured for the correct device.
+- **Profile not switching**: Check Peace CLI path and Task Scheduler triggers.
+- **Latency**: Increase buffer size in OBS if audio lags.
+
+## Conclusion
+
+This automated workflow delivers consistent late-night audio without manual intervention. For $0, you gain peace of mind and better sleep for your household.

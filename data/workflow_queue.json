@@ -1,0 +1,62 @@
+[
+  {
+    "topic": "Automating Room Calibration with AI-Driven Speaker Distance and Level Optimization",
+    "role": "home-theater-enthusiast",
+    "intent": "automate-calibration",
+    "status": "completed"
+  },
+  {
+    "topic": "AI-Powered Audio Format Upscaling for Legacy Content Based on Source Metadata",
+    "role": "home-theater-enthusiast",
+    "intent": "upscale-audio",
+    "status": "completed"
+  },
+  {
+    "topic": "Intelligent Subwoofer Crossover Optimization Using Room Acoustics Analysis",
+    "role": "home-theater-installer",
+    "intent": "optimize-crossover",
+    "status": "completed"
+  },
+  {
+    "topic": "Automated Dynamic Range Compression Adjustment for Late-Night Viewing",
+    "role": "home-theater-enthusiast",
+    "intent": "adjust-dynamic-range",
+    "status": "completed"
+  },
+  {
+    "topic": "AI-Driven Speaker Placement Recommendation Based on Room Geometry and Seating",
+    "role": "home-theater-installer",
+    "intent": "recommend-placement",
+    "status": "completed"
+  },
+  {
+    "topic": "Real-Time Lip-Sync Correction Using AI Audio-Video Alignment",
+    "role": "home-theater-enthusiast",
+    "intent": "fix-lip-sync",
+    "status": "completed"
+  },
+  {
+    "topic": "Automated A/B Comparison of Audio Processing Modes for Subjective Preference Learning",
+    "role": "home-theater-enthusiast",
+    "intent": "compare-modes",
+    "status": "completed"
+  },
+  {
+    "topic": "AI-Based Multi-Subwoofer Phase Alignment for Seamless Bass Integration",
+    "role": "home-theater-installer",
+    "intent": "align-subwoofers",
+    "status": "completed"
+  },
+  {
+    "topic": "Intelligent Content-Based Sound Mode Selection for Mixed-Use Systems",
+    "role": "home-theater-manager",
+    "intent": "select-sound-mode",
+    "status": "pending"
+  },
+  {
+    "topic": "Predictive Maintenance for Amplifiers and Speakers Using AI Anomaly Detection",
+    "role": "home-theater-installer",
+    "intent": "predict-maintenance",
+    "status": "pending"
+  }
+]
