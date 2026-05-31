@@ -1,0 +1,127 @@
+---
+title: "AI-Powered Predictive Maintenance for Home Theater Amplifiers & Speakers"
+description: "A step-by-step guide for home theater installers to set up AI anomaly detection on amplifiers and speakers, reducing downtime and preventing costly failures."
+targetRole: ["home-theater-installer"]
+targetIntent: ["predict-maintenance"]
+difficulty: "Intermediate"
+setupTime: "2-3 Hours"
+costEstimate: "$50 - $200 initial, $20/mo cloud fees"
+roi: "Saves 5-10 hours/month on troubleshooting and prevents $500+ in repair costs"
+toolsUsed: ["raspberry-pi-4","edge-impulse","influxdb","grafana"]
+---
+
+## Overview
+
+Predictive maintenance for amplifiers and speakers uses AI anomaly detection to monitor electrical and acoustic signals, identifying early signs of failure (e.g., clipping, overheating, impedance drift). This guide walks you through setting up a low-cost monitoring system using a Raspberry Pi, Edge Impulse for AI, InfluxDB for time-series data, and Grafana for visualization.
+
+## Prerequisites
+
+- **Hardware**: Raspberry Pi 4 (2GB+), USB sound card (e.g., Behringer UCA202), current clamp sensor (e.g., SCT-013), temperature sensor (e.g., DS18B20), and speaker/amplifier under test.
+- **Software**: Raspberry Pi OS (64-bit), Python 3.9+, Edge Impulse CLI, InfluxDB 2.x, Grafana.
+- **Skills**: Basic Linux command line, Python scripting, and familiarity with AI/ML concepts.
+
+## Step 1: Hardware Setup
+
+1. **Connect sensors**:
+   - Wire the current clamp around the amplifier's power cable. Connect to an ADC (e.g., MCP3008) on the Pi's SPI bus.
+   - Attach the DS18B20 temperature sensor to the amplifier's heatsink using thermal tape. Connect to GPIO4 (1-Wire).
+   - Plug the USB sound card into the Pi. Connect a line-out from the amplifier's speaker output (via a voltage divider) to the sound card's line-in.
+2. **Enable interfaces**:
+   - `sudo raspi-config` → Interface Options → enable SPI and 1-Wire.
+   - Reboot.
+
+## Step 2: Data Collection
+
+1. **Install dependencies**:
+   ```bash
+   sudo apt update && sudo apt install python3-pip git
+   pip3 install adafruit-circuitpython-mcp3xxx w1thermsensor sounddevice numpy
+   ```
+2. **Write a Python script** to sample current, temperature, and audio at 1 Hz. Save to CSV:
+   ```python
+   import time, csv
+   from w1thermsensor import W1ThermSensor
+   import board, busio, adafruit_mcp3xxx.mcp3008 as MCP
+   import sounddevice as sd
+   import numpy as np
+
+   # Initialize sensors
+   sensor = W1ThermSensor()
+   spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
+   cs = digitalio.DigitalInOut(board.D5)
+   mcp = MCP.MCP3008(spi, cs)
+   chan = MCP.P0  # current sensor on channel 0
+
+   with open('data.csv', 'w', newline='') as f:
+       writer = csv.writer(f)
+       writer.writerow(['timestamp', 'current', 'temp', 'audio_rms'])
+       while True:
+           current = chan.voltage * 5  # convert to amps (calibrate)
+           temp = sensor.get_temperature()
+           audio = sd.rec(int(44100*0.1), samplerate=44100, channels=1)
+           sd.wait()
+           rms = np.sqrt(np.mean(audio**2))
+           writer.writerow([time.time(), current, temp, rms])
+           time.sleep(1)
+   ```
+3. **Run for 24 hours** to capture normal operation. Label any anomalies manually (e.g., clipping events).
+
+## Step 3: Train AI Model with Edge Impulse
+
+1. **Create an Edge Impulse project** (free tier).
+2. **Upload your CSV data** as a time-series dataset. Split into training (80%) and testing (20%).
+3. **Design impulse**:
+   - Time series data → Spectral features (FFT) + statistical features (mean, std, min, max).
+   - Use a 10-second window with 5-second overlap.
+4. **Add a classifier**: Choose "Anomaly Detection (K-means)" or "Classification" if you have labeled anomalies.
+5. **Train the model**: Edge Impulse will generate a model that flags outliers.
+6. **Deploy as a Raspberry Pi binary**: Download the Edge Impulse Linux ARM64 binary.
+
+## Step 4: Real-Time Monitoring
+
+1. **Install Edge Impulse runner on Pi**:
+   ```bash
+   wget https://cdn.edgeimpulse.com/build/.../linux-arm64.tar.gz
+   tar -xzf linux-arm64.tar.gz
+   ```
+2. **Run the model** with a Python wrapper that sends features to the model and outputs anomaly score:
+   ```python
+   import subprocess, json
+   # ... (feature extraction code)
+   result = subprocess.run(['./edge-impulse-runner', '--input', features_json], capture_output=True)
+   score = json.loads(result.stdout)['anomaly']
+   ```
+3. **Log scores to InfluxDB**:
+   ```bash
+   pip3 install influxdb-client
+   ```
+   Write a script that pushes timestamp, anomaly score, current, temp, and audio RMS to InfluxDB every second.
+
+## Step 5: Visualize with Grafana
+
+1. **Install Grafana** on the Pi or a separate server:
+   ```bash
+   sudo apt install grafana
+   ```
+2. **Add InfluxDB as a data source**.
+3. **Create a dashboard**:
+   - Panel 1: Time series of anomaly score (threshold line at 0.8).
+   - Panel 2: Current and temperature gauges.
+   - Panel 3: Audio waveform (last 10 seconds).
+4. **Set up alerts**: Grafana can send email/Slack notifications when anomaly score exceeds threshold for 5 consecutive seconds.
+
+## Step 6: Maintenance Workflow
+
+- **Daily**: Check Grafana dashboard for any anomaly spikes.
+- **Weekly**: Review trend lines for gradual degradation (e.g., rising temperature).
+- **On alert**: Inspect the amplifier/speaker. Common fixes: clean heatsink, replace capacitors, tighten connections.
+
+## Comparison with Commercial Solutions
+
+- **Pros**: Low cost ($50-200), customizable, no subscription fees.
+- **Cons**: Requires technical setup; not as polished as commercial systems like **Audio Precision APx** or **BSS London**.
+- **When to use**: Ideal for high-end custom installations where equipment cost justifies the effort.
+
+## Conclusion
+
+This DIY predictive maintenance system empowers home theater installers to proactively service amplifiers and speakers, reducing callbacks and extending equipment life. With Edge Impulse's easy ML training and Grafana's powerful visualization, you can catch failures before they happen.
