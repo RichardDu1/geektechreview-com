@@ -1,0 +1,67 @@
+---
+title: "Automated Thermal Anomaly Detection in Drone Inspections of Power Lines"
+description: "A step-by-step guide for utility inspectors to automate hotspot identification using drone thermal imaging, AI analysis, and reporting tools."
+targetRole: ["utility-inspector"]
+targetIntent: ["hotspot-identification"]
+difficulty: "Intermediate"
+setupTime: "2-3 hours initial setup"
+costEstimate: "$500 - $2000/mo (drone + software)"
+roi: "Saves 20 hours/week and reduces inspection errors by 40%"
+toolsUsed: ["dj-mavic-3t","flir-thermal-studio","drone-deploy","google-earth-engine"]
+---
+
+## Automated Thermal Anomaly Detection in Drone Inspections of Power Lines
+
+### Overview
+This workflow enables utility inspectors to automatically detect hotspots (overheating components) in power line inspections using a thermal drone, AI analysis, and cloud-based reporting. It reduces manual review time and improves accuracy.
+
+### Prerequisites
+- DJI Mavic 3T (or similar thermal drone)
+- FLIR Thermal Studio Pro (or equivalent)
+- DroneDeploy account (or Pix4D)
+- Google Earth Engine account (optional for large-scale analysis)
+
+### Step 1: Pre-Flight Planning
+1. **Define inspection area**: Use Google Earth or DroneDeploy to create a flight path covering all power line segments.
+2. **Set thermal camera parameters**: Emissivity = 0.95 (typical for power line components), reflected temperature = ambient.
+3. **Configure drone**: Set altitude 30-50m, speed 5 m/s, overlap 70% for accurate stitching.
+
+### Step 2: Data Acquisition
+1. **Fly the mission**: Use autonomous flight mode in DroneDeploy or DJI Pilot.
+2. **Capture thermal images**: Ensure each image includes the power line and surrounding hardware.
+3. **Collect visible light images**: For context and reporting.
+
+### Step 3: Thermal Image Processing
+1. **Import images into FLIR Thermal Studio Pro**.
+2. **Apply temperature calibration**: Use built-in tools to correct for atmospheric conditions.
+3. **Export radiometric JPEGs** with embedded temperature data.
+
+### Step 4: Anomaly Detection
+1. **Use FLIR's AI-based anomaly detection**: Run the "Hotspot Detection" algorithm to identify areas exceeding threshold (e.g., 60°C).
+2. **Alternatively, use DroneDeploy's Thermal Analytics**: Upload images to DroneDeploy and apply "Temperature Range" filter.
+3. **Manual review**: Cross-check flagged hotspots with visible light images.
+
+### Step 5: Georeferencing and Mapping
+1. **Stitch thermal images into orthomosaic** using DroneDeploy or Pix4D.
+2. **Export as GeoTIFF** for GIS integration.
+3. **Overlay on Google Earth Engine**: Use the GeoTIFF to visualize hotspots on a map.
+
+### Step 6: Reporting
+1. **Generate report in DroneDeploy**: Include hotspot locations, temperature values, and severity.
+2. **Export to PDF or share via link**.
+3. **Create maintenance tickets** in your CMMS (e.g., Fiix, MaintainX) with hotspot data.
+
+### Step 7: Automation (Optional)
+1. **Set up DroneDeploy webhooks** to trigger workflows when new inspection data is uploaded.
+2. **Use Zapier** to connect DroneDeploy to your CMMS or email.
+3. **Schedule recurring flights** using DroneDeploy's mission scheduler.
+
+### Tips for Success
+- Fly during early morning or late afternoon for consistent thermal contrast.
+- Calibrate the thermal camera before each flight.
+- Use a threshold of 40°C above ambient for critical hotspots.
+
+### Troubleshooting
+- **Blurry thermal images**: Reduce drone speed or increase overlap.
+- **False positives**: Adjust emissivity and reflected temperature settings.
+- **Georeferencing errors**: Ensure GPS accuracy and use ground control points.

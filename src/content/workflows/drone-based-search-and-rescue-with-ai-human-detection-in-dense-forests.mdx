@@ -1,0 +1,72 @@
+---
+title: "Drone-Based Search and Rescue with AI Human Detection in Dense Forests"
+description: "A comprehensive guide for search-and-rescue coordinators to deploy drones equipped with AI-powered human detection algorithms for locating missing persons in dense forest environments."
+targetRole: ["search-rescue-coordinator"]
+targetIntent: ["missing-person-location"]
+difficulty: "Advanced"
+setupTime: "2-4 Hours"
+costEstimate: "$500 - $5,000 (drone + software)"
+roi: "Reduces search time by up to 80% compared to ground teams"
+toolsUsed: ["dji-mavic-3-thermal","skydio-x2d","percepto-autonomous-drones","flytbase-drone-management","drone-deploy-ai-inspection","airmap-uav-logistics"]
+---
+
+## Overview
+
+This workflow outlines how to integrate AI-powered human detection into drone operations for search and rescue (SAR) in dense forests. By leveraging thermal imaging, real-time AI inference, and autonomous flight planning, coordinators can rapidly cover large areas and pinpoint missing persons even under heavy canopy.
+
+## Prerequisites
+
+- **Drone**: DJI Mavic 3 Thermal or Skydio X2D (with thermal camera)
+- **Software**: Percepto Autonomous Drones (for AI detection), FlytBase (for fleet management), DroneDeploy (for mapping), AirMap (for airspace compliance)
+- **Hardware**: Rugged tablet or laptop for ground control, spare batteries, SD cards
+- **Team**: At least 2 operators (pilot and spotter/analyst)
+
+## Step-by-Step Workflow
+
+### 1. Pre-Mission Planning
+
+- **Define Search Area**: Use AirMap to check airspace restrictions and obtain necessary waivers (e.g., BVLOS).
+- **Create Flight Path**: In DroneDeploy, import the search area polygon. Set altitude to 120m AGL (maximum allowed) to balance coverage and detection resolution. Configure overlap (80% front, 70% side) for photogrammetry.
+- **Set AI Detection Parameters**: In Percepto, configure the human detection model. Enable thermal mode (if available) and set confidence threshold to 0.7 to reduce false positives.
+
+### 2. Pre-Flight Checks
+
+- **Battery**: Ensure all batteries are fully charged (allow 25 min flight time per battery).
+- **Weather**: Check wind speed (<20 mph), visibility (>3 miles), and precipitation (none).
+- **Hardware**: Mount thermal camera, verify gimbal calibration, and insert SD cards.
+- **Communication**: Test radio link between drone and controller; ensure cellular backup (if using Skydio X2D with LTE).
+
+### 3. Launch and Autonomous Flight
+
+- **Takeoff**: Use FlytBase to launch the drone from a designated safe zone. The drone will autonomously follow the pre-planned grid pattern.
+- **Real-Time AI Inference**: As the drone flies, Percepto processes video feed on the edge (onboard NVIDIA Jetson) and streams detection results to the ground station. The operator sees bounding boxes over detected humans on the map.
+- **Manual Intervention**: If a potential detection occurs, the pilot can switch to manual control to hover and confirm. Use the thermal camera to verify heat signature.
+
+### 4. Data Analysis and Reporting
+
+- **Post-Flight Review**: After landing, download the flight log and detection data. DroneDeploy generates an orthomosaic map with geotagged detection points.
+- **Cross-Reference**: Overlay detection points with ground team GPS tracks. Use Percepto’s timeline to review video clips of each detection.
+- **Generate Report**: Export a PDF report including map, detection coordinates, timestamps, and confidence scores. Share with incident command.
+
+### 5. Iterate and Refine
+
+- **Adjust Parameters**: If false positives are high, increase confidence threshold or switch to thermal-only detection.
+- **Re-fly Hotspots**: For areas with dense canopy, lower altitude to 80m and reduce speed to 5 m/s for better detection.
+- **Coordinate with Ground Teams**: Use AirMap to share real-time drone position and detection updates via API.
+
+## Best Practices
+
+- **Use Thermal**: In dense forests, thermal cameras can detect body heat through foliage, especially during dawn/dusk.
+- **Battery Management**: Plan for battery swaps every 20 minutes; have at least 6 batteries per drone.
+- **Compliance**: Always maintain VLOS unless BVLOS waiver is obtained. Use AirMap for real-time airspace updates.
+- **Training**: Ensure operators are trained on AI detection software and emergency procedures.
+
+## Troubleshooting
+
+- **No Detections**: Check if AI model is loaded; verify camera settings (thermal vs visual). Increase sensitivity.
+- **False Positives**: Reduce confidence threshold or filter by size (ignore animals).
+- **Connectivity Loss**: Enable LTE backup on Skydio X2D; use FlytBase’s offline mode.
+
+## Conclusion
+
+By combining autonomous drones with AI human detection, SAR coordinators can dramatically reduce search time in dense forests. This workflow provides a scalable, repeatable process that integrates with existing incident command systems.

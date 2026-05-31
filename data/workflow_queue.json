@@ -51,12 +51,312 @@
     "topic": "Intelligent Content-Based Sound Mode Selection for Mixed-Use Systems",
     "role": "home-theater-manager",
     "intent": "select-sound-mode",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Predictive Maintenance for Amplifiers and Speakers Using AI Anomaly Detection",
     "role": "home-theater-installer",
     "intent": "predict-maintenance",
     "status": "completed"
+  },
+  {
+    "topic": "Automated Drone Flight Log Analysis for Fleet Maintenance Scheduling",
+    "role": "fleet-manager",
+    "intent": "predictive-maintenance",
+    "status": "completed"
+  },
+  {
+    "topic": "AI-Powered Aerial Crop Health Reports for Precision Agriculture",
+    "role": "agriculture-consultant",
+    "intent": "crop-analysis",
+    "status": "completed"
+  },
+  {
+    "topic": "Automated Drone Inspection Report Generation for Solar Panel Farms",
+    "role": "solar-farm-operator",
+    "intent": "defect-detection",
+    "status": "completed"
+  },
+  {
+    "topic": "Real-Time Construction Site Progress Monitoring with Drone Imagery and AI Change Detection",
+    "role": "construction-project-manager",
+    "intent": "progress-tracking",
+    "status": "completed"
+  },
+  {
+    "topic": "AI-Driven Wildlife Population Counting Using Drone Surveys",
+    "role": "wildlife-biologist",
+    "intent": "population-estimation",
+    "status": "completed"
+  },
+  {
+    "topic": "Automated Thermal Anomaly Detection in Drone Inspections of Power Lines",
+    "role": "utility-inspector",
+    "intent": "hotspot-identification",
+    "status": "completed"
+  },
+  {
+    "topic": "Drone-Based Search and Rescue with AI Human Detection in Dense Forests",
+    "role": "search-rescue-coordinator",
+    "intent": "missing-person-location",
+    "status": "completed"
+  },
+  {
+    "topic": "AI-Assisted Drone Mapping for Emergency Response After Natural Disasters",
+    "role": "emergency-manager",
+    "intent": "damage-assessment",
+    "status": "completed"
+  },
+  {
+    "topic": "Automated 3D Model Generation of Historical Sites Using Drone Photogrammetry",
+    "role": "archaeologist",
+    "intent": "digital-preservation",
+    "status": "pending"
+  },
+  {
+    "topic": "Drone-Based Oil Spill Detection and Quantification Using Multispectral AI",
+    "role": "environmental-scientist",
+    "intent": "spill-monitoring",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Drone Traffic Management for Urban Air Mobility Coordination",
+    "role": "airspace-manager",
+    "intent": "collision-avoidance",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Wind Turbine Blade Inspection via Drone and Deep Learning Crack Detection",
+    "role": "wind-farm-technician",
+    "intent": "blade-damage-analysis",
+    "status": "pending"
+  },
+  {
+    "topic": "Drone-Based Landfill Methane Leak Detection Using AI Gas Sensor Fusion",
+    "role": "environmental-engineer",
+    "intent": "leak-localization",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Enhanced Drone Swarm Coordination for Large-Scale Agricultural Spraying",
+    "role": "agri-tech-manager",
+    "intent": "swarm-optimization",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Bridge Crack Detection Using Drone High-Resolution Imagery and CNN Models",
+    "role": "civil-engineer",
+    "intent": "structural-health",
+    "status": "pending"
+  },
+  {
+    "topic": "Drone-Based Inventory Counting in Warehouses with AI Object Recognition",
+    "role": "warehouse-manager",
+    "intent": "stock-audit",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Drone Cinematography for Automated Sports Event Coverage",
+    "role": "sports-broadcaster",
+    "intent": "auto-tracking",
+    "status": "pending"
+  },
+  {
+    "topic": "Drone-Assisted Precision Mapping of Mining Sites with AI Ore Grade Estimation",
+    "role": "mining-geologist",
+    "intent": "resource-evaluation",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Wildlife Poacher Detection Using Drone Thermal and Radar Fusion AI",
+    "role": "park-ranger",
+    "intent": "anti-poaching",
+    "status": "pending"
+  },
+  {
+    "topic": "Drone-Based 5G Signal Strength Mapping for Network Optimization with AI",
+    "role": "telecom-engineer",
+    "intent": "coverage-analysis",
+    "status": "pending"
+  },
+  {
+    "topic": "Automating Personal Health Data Aggregation from Multiple Wearables via AI",
+    "role": "health-enthusiast",
+    "intent": "consolidate-health-metrics",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Driven Sleep Quality Analysis and Personalized Recommendations from Wearable Data",
+    "role": "sleep-coach",
+    "intent": "optimize-sleep-patterns",
+    "status": "pending"
+  },
+  {
+    "topic": "Real-Time Stress Detection and Automated Calm-Response Triggers Using Smartwatch Biometrics",
+    "role": "stress-management-coach",
+    "intent": "reduce-stress-levels",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Fitness Goal Adjustment Based on Real-Time Wearable Performance and Recovery Metrics",
+    "role": "personal-trainer",
+    "intent": "adaptive-fitness-planning",
+    "status": "pending"
+  },
+  {
+    "topic": "Predictive Injury Risk Assessment via AI Analysis of Wearable Motion and Load Data",
+    "role": "sports-medicine-doctor",
+    "intent": "prevent-injuries",
+    "status": "pending"
+  },
+  {
+    "topic": "Voice-Activated AI Workflow for Summarizing Daily Wearable Data and Generating Actionable Insights",
+    "role": "busy-professional",
+    "intent": "daily-health-summary",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Fall Detection and Emergency Response Automation Using Wearable Sensors",
+    "role": "elderly-caregiver",
+    "intent": "ensure-safety",
+    "status": "pending"
+  },
+  {
+    "topic": "Continuous Blood Glucose Monitoring with AI Predictive Alerts and Diet Recommendations",
+    "role": "diabetes-patient",
+    "intent": "manage-glucose-levels",
+    "status": "pending"
+  },
+  {
+    "topic": "Smart Calendar Integration: Automatically Adjusting Workout and Rest Days Based on Wearable Recovery Scores",
+    "role": "fitness-app-developer",
+    "intent": "integrate-recovery-data",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Driven Early Detection of Atrial Fibrillation Using ECG Data from Smartwatches",
+    "role": "cardiologist",
+    "intent": "detect-arrhythmias",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Hydration and Nutrition Reminders Based on Sweat Loss and Activity Level from Wearables",
+    "role": "endurance-athlete",
+    "intent": "optimize-hydration",
+    "status": "pending"
+  },
+  {
+    "topic": "Wearable Data-Driven Productivity Optimization: AI Adjusts Break Schedules Based on Stress and Focus Metrics",
+    "role": "remote-work-manager",
+    "intent": "enhance-productivity",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Mood Tracking and Intervention Suggestions Using Galvanic Skin Response and Heart Rate",
+    "role": "mental-health-therapist",
+    "intent": "monitor-mood",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Posture Correction Alerts Using Wearable Inertial Measurement Units and AI Analysis",
+    "role": "ergonomics-consultant",
+    "intent": "improve-posture",
+    "status": "pending"
+  },
+  {
+    "topic": "Smart Alarm Clock with AI That Wakes You During Light Sleep Phase Using Wearable Sleep Data",
+    "role": "sleep-deprived-user",
+    "intent": "optimize-wake-time",
+    "status": "pending"
+  },
+  {
+    "topic": "Real-Time Coaching During Workouts: AI Form Correction Using Smartwatch Motion Data",
+    "role": "fitness-coach",
+    "intent": "correct-exercise-form",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Insurance Premium Adjustments Based on Wearable Activity and Health Data with AI Underwriting",
+    "role": "life-insurance-underwriter",
+    "intent": "risk-assessment",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Driven Menstrual Cycle Prediction and Symptom Management Using Wearable Temperature and HRV",
+    "role": "women-health-specialist",
+    "intent": "track-cycle",
+    "status": "pending"
+  },
+  {
+    "topic": "Wearable Data Syncing with EHR for Automated Clinical Documentation and Alert Generation",
+    "role": "primary-care-physician",
+    "intent": "automate-ehr-input",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Fatigue Detection for Shift Workers Using Wearable Actigraphy and Alertness Algorithms",
+    "role": "occupational-health-safety-manager",
+    "intent": "prevent-fatigue-accidents",
+    "status": "pending"
+  },
+  {
+    "topic": "Automating A/V Receiver Calibration Optimization Using AI Room Correction Analysis",
+    "role": "home-theater-installer",
+    "intent": "optimize-calibration",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Speaker Placement Recommendation Based on Room Acoustics and Layout",
+    "role": "home-theater-designer",
+    "intent": "recommend-speaker-placement",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Soundbar Dialogue Enhancement Tuning Using AI Speech Recognition",
+    "role": "home-theater-enthusiast",
+    "intent": "enhance-dialogue-clarity",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Driven Subwoofer Crossover and Phase Alignment Using Real-Time Room Response",
+    "role": "home-theater-calibrator",
+    "intent": "align-subwoofer",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Projector Lens Shift and Keystone Correction Using Computer Vision",
+    "role": "home-theater-installer",
+    "intent": "auto-projector-alignment",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Streaming Bitrate and Codec Selection for Optimal Video Quality",
+    "role": "home-theater-streamer",
+    "intent": "optimize-streaming-quality",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated HDMI EDID Management and Handshake Troubleshooting Using AI Log Analysis",
+    "role": "home-theater-troubleshooter",
+    "intent": "resolve-hdmi-issues",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Based Scene Detection for Automated Lighting and Shade Control in Home Theater",
+    "role": "home-theater-automation-user",
+    "intent": "sync-lighting-with-content",
+    "status": "pending"
+  },
+  {
+    "topic": "Automated Speaker Impedance and Sensitivity Matching Using AI Recommendation Engine",
+    "role": "home-theater-builder",
+    "intent": "match-speaker-specs",
+    "status": "pending"
+  },
+  {
+    "topic": "AI-Powered Content-Based Audio Upscaling for Legacy Surround Formats",
+    "role": "home-theater-enthusiast",
+    "intent": "upscale-audio-formats",
+    "status": "pending"
   }
 ]

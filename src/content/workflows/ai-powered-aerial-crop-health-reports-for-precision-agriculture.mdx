@@ -1,0 +1,66 @@
+---
+title: "AI-Powered Aerial Crop Health Reports for Precision Agriculture"
+description: "A step-by-step guide for agriculture consultants to leverage drone imagery and AI analytics to generate actionable crop health reports, reducing manual scouting time and improving yield predictions."
+targetRole: ["agriculture-consultant"]
+targetIntent: ["crop-analysis"]
+difficulty: "Intermediate"
+setupTime: "2 Hours"
+costEstimate: "$50 - $200/mo"
+roi: "Saves 15 hours/week per farm"
+toolsUsed: ["drone-deploy","sentinel-hub","google-earth-engine","cropwise"]
+---
+
+## AI-Powered Aerial Crop Health Reports for Precision Agriculture
+
+### Overview
+This workflow enables agriculture consultants to generate comprehensive crop health reports using drone imagery and AI analytics. By combining aerial data with machine learning models, you can detect stress, nutrient deficiencies, and pest infestations early, leading to targeted interventions and optimized yields.
+
+### Prerequisites
+- DJI Phantom 4 Pro or similar drone with multispectral camera
+- Internet connection
+- Basic knowledge of GIS and crop science
+
+### Step 1: Capture Aerial Imagery
+Fly your drone over the target field at an altitude of 120m with 80% front and side overlap. Use a multispectral camera (e.g., Micasense RedEdge) to capture bands: Red, Green, Blue, Red Edge, Near-Infrared. Ensure flight is conducted under clear skies between 10 AM and 2 PM for consistent lighting.
+
+### Step 2: Upload to DroneDeploy
+Import the raw images into **DroneDeploy** (https://www.dronedeploy.com). Use the "Precision Agriculture" template to automatically stitch images into orthomosaics and compute vegetation indices like NDVI, NDRE, and GNDVI. DroneDeploy’s AI will flag anomalies such as stressed areas.
+
+### Step 3: Analyze with Sentinel Hub
+Export the orthomosaic as a GeoTIFF and upload to **Sentinel Hub** (https://www.sentinel-hub.com). Use the EO Browser to overlay historical satellite data (Sentinel-2) for temporal analysis. Compare current NDVI with the 30-day average to identify sudden changes.
+
+### Step 4: Run AI Models on Google Earth Engine
+Use **Google Earth Engine** (https://earthengine.google.com) to apply pre-trained machine learning models for crop classification and health prediction. Write a simple JavaScript script to calculate zonal statistics per field boundary. Example code snippet:
+
+```javascript
+var field = ee.FeatureCollection('users/your_field_boundary');
+var ndvi = ee.ImageCollection('COPERNICUS/S2_SR')
+  .filterDate('2023-06-01', '2023-06-30')
+  .median()
+  .normalizedDifference(['B8', 'B4'])
+  .rename('NDVI');
+var stats = ndvi.reduceRegions({
+  collection: field,
+  reducer: ee.Reducer.mean(),
+  scale: 10
+});
+print(stats);
+```
+
+### Step 5: Generate Report in Cropwise
+Import the analysis results into **Cropwise** (https://www.cropwise.com) to create a professional report. Use the "Health Report" template to include maps, charts, and recommendations. Customize with your observations and suggested actions (e.g., variable-rate irrigation, targeted pesticide application).
+
+### Step 6: Deliver to Client
+Export the report as PDF and share via email or a client portal. Include a summary of key findings, risk areas, and recommended next steps. Schedule a follow-up call to discuss implementation.
+
+### Tips for Success
+- Calibrate your drone’s reflectance panel before each flight.
+- Use ground truth points (e.g., soil samples) to validate AI predictions.
+- Combine with weather data from APIs like OpenWeather for context.
+
+### Troubleshooting
+- **Low NDVI values**: Check for cloud cover or sensor calibration issues.
+- **Processing errors**: Reduce image resolution or split large fields into tiles.
+
+### Conclusion
+By following this workflow, you can deliver data-driven insights that improve crop management and client satisfaction. The combination of drone imagery and AI analytics reduces manual labor and increases accuracy.

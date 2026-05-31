@@ -1,0 +1,123 @@
+---
+title: "Intelligent Content-Based Sound Mode Selection for Mixed-Use Systems"
+description: "Automate sound mode switching based on content type using real-time audio analysis and smart home integration, ensuring optimal audio for movies, music, and gaming without manual intervention."
+targetRole: ["home-theater-manager"]
+targetIntent: ["select-sound-mode"]
+difficulty: "Intermediate"
+setupTime: "2 Hours"
+costEstimate: "$0 - $50/mo"
+roi: "Saves 5 hours/week and eliminates mode-switching errors"
+toolsUsed: ["plex","home-assistant","node-red","logitech-harmony"]
+---
+
+## Overview
+
+This guide walks you through setting up an intelligent sound mode selection system that automatically detects content type (movie, music, gaming) and switches your AV receiver or soundbar to the appropriate sound mode. By combining media server metadata, real-time audio analysis, and smart home automation, you eliminate manual toggling and ensure every experience sounds its best.
+
+## Prerequisites
+
+- AV receiver or soundbar with network control (IP/RS-232/IR)
+- Media server (Plex, Jellyfin, Emby) or streaming device
+- Home automation hub (Home Assistant recommended)
+- Node-RED (optional for advanced logic)
+- Microphone or audio capture device (for real-time analysis)
+
+## Step 1: Identify Content Type via Media Server
+
+Most media servers expose metadata like genre, audio codec, and content type. Use Plex Webhooks or API to detect when playback starts.
+
+### Plex Webhook Setup
+1. In Plex Settings > Webhooks, add a webhook URL pointing to your automation server (e.g., `http://homeassistant:8123/api/webhook/plex_playback`).
+2. Configure Home Assistant to listen for the webhook and extract `media_type` (movie, episode, track) and `genre`.
+
+### Example Home Assistant Automation (YAML)
+```yaml
+automation:
+  - alias: "Plex Playback Started"
+    trigger:
+      platform: webhook
+      webhook_id: plex_playback
+    action:
+      - service: media_player.select_source
+        data:
+          entity_id: media_player.plex
+          source: "{{ trigger.json.MediaContainer.Metadata[0].type }}"
+```
+
+## Step 2: Real-Time Audio Analysis (Optional)
+
+For content not from your media server (e.g., live TV, streaming apps), use an audio analyzer to detect characteristics like dynamic range, frequency spectrum, and stereo vs. surround.
+
+### Using Node-RED with FFT
+1. Install `node-red-contrib-audio-analyzer`.
+2. Capture audio from a microphone or line-in.
+3. Analyze FFT bins to classify content:
+   - **Movie**: Wide dynamic range, strong LFE, surround channels.
+   - **Music**: Consistent stereo, limited LFE, even frequency distribution.
+   - **Gaming**: High mid-range, frequent transient peaks.
+
+### Node-RED Flow Snippet
+```json
+[{"id":"audio-in","type":"audio in","z":"flow","name":"","device":"default","topic":"","x":100,"y":100,"wires":[["fft-analyze"]]},{"id":"fft-analyze","type":"function","z":"flow","name":"Classify","func":"// Simple classification logic\nvar fft = msg.payload;\nvar avgLow = fft.slice(0,10).reduce((a,b)=>a+b)/10;\nvar avgHigh = fft.slice(100,200).reduce((a,b)=>a+b)/100;\nif(avgLow > 0.5 && avgHigh < 0.3) msg.payload = 'movie';\nelse if(avgLow < 0.2 && avgHigh > 0.4) msg.payload = 'music';\nelse msg.payload = 'gaming';\nreturn msg;","outputs":1,"x":300,"y":100,"wires":[["mode-select"]]}]
+```
+
+## Step 3: Map Content to Sound Mode
+
+Create a mapping table in Home Assistant or Node-RED. Example:
+
+| Content Type | Sound Mode (AVR) |
+|--------------|------------------|
+| Movie        | Dolby Surround / Neural:X |
+| Music        | Stereo / Pure Direct |
+| Gaming       | Game / Night Mode |
+
+### Home Assistant Script
+```yaml
+script:
+  set_sound_mode:
+    sequence:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ state_attr('media_player.plex', 'media_content_type') == 'movie' }}"
+            sequence:
+              - service: media_player.select_sound_mode
+                data:
+                  entity_id: media_player.av_receiver
+                  sound_mode: "Dolby Surround"
+          - conditions:
+              - condition: template
+                value_template: "{{ state_attr('media_player.plex', 'media_content_type') == 'track' }}"
+            sequence:
+              - service: media_player.select_sound_mode
+                data:
+                  entity_id: media_player.av_receiver
+                  sound_mode: "Stereo"
+```
+
+## Step 4: Integrate with Remote Control
+
+Use Logitech Harmony or Broadlink to trigger sound mode changes via IR if your AVR lacks IP control.
+
+### Harmony Activity Integration
+1. In Harmony app, create activities for each content type (e.g., "Watch Movie", "Listen Music").
+2. Use Home Assistant to call Harmony activities based on content detection.
+
+```yaml
+action:
+  - service: remote.send_command
+    data:
+      entity_id: remote.harmony_hub
+      command: "ActivityStart"
+      device: "Watch Movie"
+```
+
+## Step 5: Test and Refine
+
+- Play various content and verify correct mode.
+- Adjust FFT thresholds in Node-RED for better classification.
+- Add fallback to manual override via dashboard.
+
+## Conclusion
+
+This system eliminates manual sound mode switching, ensuring optimal audio for every use case. With media server integration and optional real-time analysis, you can achieve a truly intelligent home theater experience.

@@ -1,0 +1,54 @@
+---
+title: "Automated Drone Inspection Report Generation for Solar Panel Farms"
+description: "Streamline defect detection and reporting using automated drone workflows, reducing manual inspection time by 80%."
+targetRole: ["solar-farm-operator"]
+targetIntent: ["defect-detection"]
+difficulty: "Intermediate"
+setupTime: "2-3 Hours"
+costEstimate: "$500 - $2000 initial (drone + software), $50/mo subscription"
+roi: "Saves 20 hours/week, reduces defect miss rate by 90%"
+toolsUsed: ["djiglobal-enterprise","skydio-3d-scan","precisionhawk-lumina","drone-deploy-inspect","solar-anywhere"]
+---
+
+## Automated Drone Inspection Report Generation for Solar Panel Farms
+
+### Overview
+This guide walks you through setting up an automated workflow to capture thermal and visual imagery of solar panels using drones, process the data with AI defect detection, and generate inspection reports without manual intervention.
+
+### Prerequisites
+- A compatible drone (e.g., DJI Mavic 3 Enterprise, Skydio X10)
+- Software accounts: DroneDeploy, PrecisionHawk, or Solar Anywhere
+- Internet connection for cloud processing
+
+### Step 1: Plan the Flight Mission
+1. Open DroneDeploy and create a new mission for your solar farm.
+2. Set flight altitude (typically 60-80m for thermal) and overlap (80% front, 70% side).
+3. Enable thermal camera capture if available.
+4. Save the mission as a template for repeat use.
+
+### Step 2: Execute Automated Flight
+1. Launch the drone using the mission file.
+2. Ensure GPS lock and clear airspace.
+3. The drone will autonomously capture images and thermal data.
+4. Upon landing, data is automatically uploaded to the cloud.
+
+### Step 3: AI Defect Detection
+1. In PrecisionHawk Lumina or Solar Anywhere, import the dataset.
+2. Run the AI analysis module for solar panel defects (hotspots, cracks, soiling).
+3. Review flagged anomalies; false positives can be filtered.
+
+### Step 4: Generate Report
+1. Use DroneDeploy Inspect to create a report template.
+2. Map defects to panel locations on the orthomosaic.
+3. Auto-generate a PDF report with summary, defect count, and severity.
+4. Schedule weekly reports via email.
+
+### Step 5: Continuous Improvement
+- Adjust flight parameters based on weather.
+- Update AI models with new defect examples.
+- Integrate with CMMS for automated work orders.
+
+### Troubleshooting
+- **Poor image quality**: Increase overlap or reduce altitude.
+- **False positives**: Train custom model with site-specific data.
+- **Upload failures**: Check internet connection; use offline mode if needed.

@@ -1,0 +1,77 @@
+---
+title: "AI-Assisted Drone Mapping for Emergency Response After Natural Disasters"
+description: "A step-by-step guide for emergency managers to deploy AI-powered drone mapping for rapid damage assessment, using real tools like DJI drones, Pix4Dreact, and DroneDeploy."
+targetRole: ["emergency-manager"]
+targetIntent: ["damage-assessment"]
+difficulty: "Intermediate"
+setupTime: "2-4 hours initial setup"
+costEstimate: "$500 - $2000 per deployment (drone rental + software)"
+roi: "Reduces assessment time by 80% compared to ground surveys"
+toolsUsed: ["dji-mavic-3-enterprise","pix4dreact","dronedeploy","picterra"]
+---
+
+## Overview
+
+This workflow enables emergency managers to rapidly assess damage after natural disasters using AI-assisted drone mapping. By combining drone imagery with AI analysis, you can generate actionable damage maps within hours instead of days.
+
+## Prerequisites
+
+- DJI Mavic 3 Enterprise or similar drone with RTK module
+- Pix4Dreact license (free for first 30 days)
+- DroneDeploy account (free tier available)
+- Picterra account for AI damage detection
+- Laptop with internet connection
+
+## Step 1: Pre-Flight Planning
+
+1. **Identify target area**: Use satellite imagery or prior maps to define the disaster zone.
+2. **Check airspace**: Use FAA B4UFLY or local authority app to ensure no flight restrictions.
+3. **Set flight parameters**: In DJI Pilot app, set altitude (100-120m), overlap (75% front, 60% side), and grid pattern.
+
+## Step 2: Conduct Aerial Survey
+
+1. **Launch drone**: Ensure GPS lock and RTK correction (if available).
+2. **Execute autonomous flight**: Use DJI Pilot's mapping mode to capture images.
+3. **Monitor battery**: Swap batteries as needed; typical coverage is ~1 sq km per battery.
+
+## Step 3: Process Imagery with Pix4Dreact
+
+1. **Import images**: Transfer SD card to laptop, open Pix4Dreact.
+2. **Create project**: Select images, set coordinate system (WGS84).
+3. **Generate orthomosaic**: Click "Process" – takes 30-60 minutes for 500 images.
+4. **Export**: Save as GeoTIFF and share with team via cloud.
+
+## Step 4: AI Damage Detection with Picterra
+
+1. **Upload orthomosaic**: Log into Picterra, create new detector for "Building Damage".
+2. **Train or use pre-trained model**: Use existing model for structural damage.
+3. **Run detection**: AI identifies collapsed buildings, debris, and flooded areas.
+4. **Export results**: Download GeoJSON or shapefile with damage polygons.
+
+## Step 5: Visualize in DroneDeploy
+
+1. **Import orthomosaic**: Drag GeoTIFF into DroneDeploy map.
+2. **Overlay damage layer**: Upload Picterra GeoJSON as a layer.
+3. **Add annotations**: Mark critical infrastructure (hospitals, roads).
+4. **Share map**: Generate a public link for field teams and command center.
+
+## Step 6: Generate Report
+
+1. **Use DroneDeploy's report tool**: Create PDF with before/after comparison.
+2. **Include statistics**: Number of damaged buildings, area affected.
+3. **Distribute**: Email to stakeholders and upload to incident management system.
+
+## Tips for Success
+
+- Always have backup batteries and memory cards.
+- Use RTK for accurate georeferencing (critical for overlaying with GIS).
+- Process imagery in parallel on multiple laptops for large areas.
+- Test AI model on similar disaster data before deployment.
+
+## Comparison with Alternatives
+
+- **Manual ground survey**: Takes days, dangerous, less accurate.
+- **Satellite imagery**: Lower resolution, delayed by hours.
+- **Manned aircraft**: Expensive, slower to deploy.
+
+This workflow combines the speed of drones with the intelligence of AI, giving emergency managers a decisive advantage in the critical first 72 hours.

@@ -1,0 +1,61 @@
+---
+title: "AI-Driven Wildlife Population Counting Using Drone Surveys"
+description: "A step-by-step guide for wildlife biologists to conduct efficient, accurate population counts using drones and AI image analysis, reducing manual effort and improving data reliability."
+targetRole: ["wildlife-biologist"]
+targetIntent: ["population-estimation"]
+difficulty: "Intermediate"
+setupTime: "2-3 Hours"
+costEstimate: "$500 - $2000 initial (drone + software), $0 - $50/mo cloud processing"
+roi: "Saves 20+ hours per survey, increases accuracy by 30%"
+toolsUsed: ["dji-mavic-3-enterprise","drone-deploy","picterra","google-earth-engine"]
+---
+
+## Overview
+
+This workflow enables wildlife biologists to count animal populations using drone imagery and AI-powered object detection. By automating image analysis, you can cover large areas quickly and reduce human error.
+
+## Prerequisites
+
+- **Drone**: DJI Mavic 3 Enterprise (or similar with RGB camera and RTK GPS)
+- **Software**: DroneDeploy (flight planning), Picterra (AI detection), Google Earth Engine (optional for large-scale analysis)
+- **Skills**: Basic drone piloting, familiarity with GIS concepts
+
+## Step 1: Plan Your Survey
+
+1. **Define Area**: Use Google Earth Engine or QGIS to delineate survey boundaries.
+2. **Set Flight Parameters**: In DroneDeploy, create a mapping mission with 80% front overlap and 70% side overlap. Altitude: 80-120m depending on target species size.
+3. **Schedule Flight**: Choose time of day with optimal lighting (early morning/late afternoon) and minimal animal movement.
+
+## Step 2: Conduct Drone Flight
+
+1. **Pre-flight Check**: Ensure battery full, SD card inserted, GPS lock.
+2. **Launch**: Use DroneDeploy app to start autonomous mission. Monitor battery and weather.
+3. **Post-flight**: Download images to computer or cloud.
+
+## Step 3: Process Images with AI
+
+1. **Upload to Picterra**: Create a new project and upload orthomosaic or individual images.
+2. **Train Detector**: If needed, annotate a few animals (e.g., 50-100) to train a custom model. Alternatively, use pre-trained models for common species.
+3. **Run Detection**: Set confidence threshold (e.g., 0.7) and run inference. Review results and export as GeoJSON.
+
+## Step 4: Analyze and Validate
+
+1. **Import to GIS**: Load GeoJSON into QGIS or Google Earth Engine.
+2. **Manual Validation**: Randomly check 10% of detections to estimate accuracy.
+3. **Calculate Population**: Use mark-recapture or distance sampling methods if applicable. For simple counts, sum detections.
+
+## Step 5: Report and Archive
+
+1. **Generate Report**: Include map, count, confidence intervals, and flight metadata.
+2. **Archive Data**: Store raw images, detection results, and flight logs for future reference.
+
+## Tips
+
+- Use RTK GPS for accurate geolocation.
+- Avoid flights during rain or high wind.
+- For dense vegetation, consider thermal cameras.
+
+## Troubleshooting
+
+- **False positives**: Adjust confidence threshold or retrain model with more examples.
+- **Missed animals**: Lower flight altitude or increase overlap.
