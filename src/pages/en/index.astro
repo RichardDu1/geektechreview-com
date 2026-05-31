@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const pageTitle = 'Deep Dive Tech Reviews | Geek Tech Review';
+const pageDescription = 'In-depth, brutally honest reviews of developer laptops, noise-canceling audio, and tech hardware.';
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonical="https://geektechreview.com/en/"
+  schema={{ type: 'WebSite', data: { description: pageDescription } }}
+>
+  <!-- Magazine Header -->
+  <header class="border-b-[4px] border-black pb-8 pt-12 px-6 max-w-[1400px] mx-auto">
+    <div class="flex flex-col items-center">
+      <div class="font-bold tracking-widest uppercase text-xs text-muted mb-4 border-b border-black pb-1">Issue #042 • Late 2026</div>
+      <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-center mb-6">
+        GEEK TECH.
+      </h1>
+      <nav class="flex gap-8 font-sans font-bold uppercase text-sm border-y border-border py-4 w-full justify-center">
+        <a href="#" class="hover:text-primary transition-colors">Laptops</a>
+        <a href="#" class="hover:text-primary transition-colors">Audio</a>
+        <a href="#" class="hover:text-primary transition-colors">Keyboards</a>
+        <a href="#" class="hover:text-primary transition-colors">Monitors</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Editorial Asymmetrical Layout -->
+  <main class="max-w-[1400px] mx-auto px-6 py-12">
+    <div class="magazine-grid">
+      
+      <!-- Featured Story (Spans 8 cols) -->
+      <article class="col-span-12 md:col-span-8 group cursor-pointer">
+        <div class="relative overflow-hidden mb-6 aspect-[16/9] bg-neutral border border-border">
+          <div class="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent z-10"></div>
+          <!-- Placeholder Image block -->
+          <div class="w-full h-full bg-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
+            <span class="font-sans text-muted">Hero Image: M4 MacBook Pro</span>
+          </div>
+          
+          <div class="absolute top-4 left-4 z-20 bg-primary text-white font-bold uppercase text-xs px-3 py-1 shadow-[-4px_4px_0_0_#000]">
+            Review
+          </div>
+        </div>
+        
+        <h2 class="text-4xl md:text-5xl mb-4 leading-tight group-hover:underline decoration-[4px] decoration-primary underline-offset-4">
+          The M4 Max MacBook Pro is terrifyingly fast. Do you actually need it?
+        </h2>
+        <p class="text-xl text-muted font-sans max-w-2xl leading-relaxed mb-6">
+          Apple's latest silicon pushes the boundaries of portable compilation speeds, but at $3,499, it's overkill for 95% of developers. We ran our massive Chromium build test to find the breaking point.
+        </p>
+        <div class="flex items-center gap-4 text-sm font-bold uppercase font-sans">
+          <span>By Alex Chen</span>
+          <span class="text-primary">•</span>
+          <span class="text-muted">14 Min Read</span>
+        </div>
+      </article>
+
+      <!-- Sidebar Stories (Spans 4 cols) -->
+      <aside class="col-span-12 md:col-span-4 flex flex-col gap-10 border-t md:border-t-0 md:border-l border-border pt-10 md:pt-0 md:pl-10">
+        
+        <div>
+          <h3 class="font-bold text-xs uppercase tracking-widest text-muted border-b border-black pb-2 mb-6">Trending Now</h3>
+          
+          <article class="mb-8 group cursor-pointer">
+            <h4 class="text-2xl mb-2 leading-snug group-hover:text-primary transition-colors">Sony WH-1000XM6 Review: The Silence is Deafening</h4>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase text-muted font-sans">
+              <span class="text-accent text-lg">★ 9.5</span>
+              <span>Audio</span>
+            </div>
+          </article>
+
+          <article class="mb-8 group cursor-pointer">
+            <h4 class="text-2xl mb-2 leading-snug group-hover:text-primary transition-colors">NuPhy Halo75 v2: The ultimate pre-built thock?</h4>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase text-muted font-sans">
+              <span class="text-accent text-lg">★ 8.8</span>
+              <span>Peripherals</span>
+            </div>
+          </article>
+
+          <article class="group cursor-pointer">
+            <h4 class="text-2xl mb-2 leading-snug group-hover:text-primary transition-colors">Stop buying 4K OLEDs for coding. Get an ultrawide.</h4>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase text-muted font-sans">
+              <span class="text-primary font-bold">Opinion</span>
+            </div>
+          </article>
+        </div>
+        
+        <!-- Newsletter Box -->
+        <div class="bg-black text-white p-8 mt-auto shadow-[8px_8px_0_0_var(--color-primary)]">
+          <h4 class="text-3xl font-serif mb-4">Tech brutally reviewed. Every Friday.</h4>
+          <input type="email" placeholder="Your Email" class="w-full bg-transparent border-b-2 border-white/30 text-white py-2 mb-6 font-sans focus:outline-none focus:border-primary transition-colors" />
+          <button class="w-full bg-primary text-black font-bold uppercase tracking-widest py-3 hover:bg-white transition-colors">Subscribe</button>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+</BaseLayout>

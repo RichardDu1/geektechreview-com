@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* === TRUE BESPOKE REDESIGN: GEEK TECH REVIEW ===
+   Aesthetic: Magazine / Editorial (The Verge Style)
+   Vibe: Asymmetrical, Huge Serifs, High Readability === */
+
+@theme {
+  --color-primary: #FF00FF; /* Magenta */
+  --color-primary-dark: #D900D9;
+  --color-accent: #00FFFF;  /* Cyan */
+  --color-surface: #FFFFFF;
+  --color-neutral: #F3F4F6;
+  --color-border: #E5E7EB;
+  --color-muted: #6B7280;
+  --color-text: #111827;
+
+  /* Editorial Typography */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body { 
+  font-family: var(--font-sans); 
+  color: var(--color-text); 
+  background-color: var(--color-surface); 
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4 { 
+  font-family: var(--font-serif);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+
+.magazine-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2rem;
+}
+
+/* Custom Highlight */
+::selection {
+  background: var(--color-accent);
+  color: #000;
+}
