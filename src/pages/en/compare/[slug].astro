@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const allItems = await getCollection('reviews');
+  
+  const allProducts = [];
+  allItems.forEach(item => {
+    if (item.data.products) {
+      item.data.products.forEach(p => {
+        if (!allProducts.find(x => x.name === p.name)) {
+           p.sourceTitle = item.data.title;
+           p.slugified = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-s)/g, '');
+           allProducts.push(p);
+        }
+      });
+    }
+  });
+
+  const paths = [];
+  for (let i = 0; i < allProducts.length; i++) {
+    for (let j = i + 1; j < allProducts.length; j++) {
+      paths.push({
+        params: { slug: `${allProducts[i].slugified}-vs-${allProducts[j].slugified}` },
+        props: { p1: allProducts[i], p2: allProducts[j] }
+      });
+    }
+  }
+  return paths;
+}
+
+const { p1, p2 } = Astro.props;
+const pageTitle = `${p1.name} vs ${p2.name}: Which is better in 2026?`;
+const pageDescription = `An objective, data-driven comparison between ${p1.name} and ${p2.name}. Compare pros, features, pricing, and scores.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <main class="max-w-6xl mx-auto px-6 py-20">
+    <div class="text-center mb-16 animate-fade-up">
+      <div class="inline-block bg-[#0a0a0a] border border-white/10 px-4 py-1 rounded-full text-zinc-400 text-sm font-bold mb-6">
+        Head-to-Head Comparison
+      </div>
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">{p1.name} <span class="text-zinc-600 italic font-light mx-2">vs</span> {p2.name}</h1>
+      <p class="text-xl text-zinc-400">An objective analysis based on our testing data.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      <div class="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 hover:border-white/20 transition-colors">
+        <div class="flex justify-between items-start mb-6">
+          <h2 class="text-3xl font-bold text-white">{p1.name}</h2>
+          <span class="bg-primary-500 text-white font-bold px-4 py-1 rounded-lg text-xl">{p1.score || '9.0'}</span>
+        </div>
+        <p class="text-zinc-400 mb-8 min-h-[80px]">{p1.description}</p>
+        <div class="mb-8 bg-white/5 rounded-2xl p-6">
+          <h3 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Key Advantages</h3>
+          <ul class="space-y-3">
+            {p1.pros && p1.pros.slice(0,3).map((pro: any) => <li class="text-zinc-400 flex items-start gap-3"><span class="text-green-500 shrink-0">✔</span> <span>{pro}</span></li>)}
+          </ul>
+        </div>
+        <a href={p1.affiliateLink || '#'} target="_blank" rel="nofollow" class="block w-full text-center bg-white text-black font-bold py-4 rounded-xl hover:bg-zinc-200 transition-colors shadow-lg">Get {p1.name}</a>
+      </div>
+
+      <div class="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 hover:border-white/20 transition-colors">
+        <div class="flex justify-between items-start mb-6">
+          <h2 class="text-3xl font-bold text-white">{p2.name}</h2>
+          <span class="bg-primary-500 text-white font-bold px-4 py-1 rounded-lg text-xl">{p2.score || '8.5'}</span>
+        </div>
+        <p class="text-zinc-400 mb-8 min-h-[80px]">{p2.description}</p>
+        <div class="mb-8 bg-white/5 rounded-2xl p-6">
+          <h3 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Key Advantages</h3>
+          <ul class="space-y-3">
+            {p2.pros && p2.pros.slice(0,3).map((pro: any) => <li class="text-zinc-400 flex items-start gap-3"><span class="text-green-500 shrink-0">✔</span> <span>{pro}</span></li>)}
+          </ul>
+        </div>
+        <a href={p2.affiliateLink || '#'} target="_blank" rel="nofollow" class="block w-full text-center bg-white text-black font-bold py-4 rounded-xl hover:bg-zinc-200 transition-colors shadow-lg">Get {p2.name}</a>
+      </div>
+    </div>
+    
+    <div class="bg-[#0a0a0a] border border-white/10 rounded-3xl p-10 text-center max-w-4xl mx-auto">
+      <h3 class="text-3xl font-bold text-white mb-6">The Verdict</h3>
+      <p class="text-zinc-400 text-lg leading-relaxed">
+        Both <strong class="text-white">{p1.name}</strong> and <strong class="text-white">{p2.name}</strong> offer exceptional capabilities for their respective target audiences. 
+        If you prioritize high scores and comprehensive features, <strong class="text-white">{parseFloat(p1.score || 9) > parseFloat(p2.score || 8.5) ? p1.name : p2.name}</strong> takes the edge. 
+        However, the best choice ultimately depends on your specific workflow and budget constraints.
+      </p>
+    </div>
+  </main>
+</BaseLayout>

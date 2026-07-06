@@ -1,0 +1,81 @@
+---
+title: "Automated Fitness Goal Adjustment Using Real-Time Wearable Metrics"
+description: "A step-by-step guide for personal trainers to set up an automated system that adjusts client fitness goals based on real-time wearable performance and recovery data, saving time and improving outcomes."
+targetRole: ["personal-trainer"]
+targetIntent: ["adaptive-fitness-planning"]
+difficulty: "Intermediate"
+setupTime: "2-3 Hours"
+costEstimate: "$0 - $50/mo"
+roi: "Saves 5-10 hours/week per client"
+toolsUsed: ["whoop","trainheroic","zapier","google-sheets"]
+---
+
+## Overview
+
+This workflow enables personal trainers to automatically adjust client training goals based on real-time data from wearables like WHOOP, using TrainHeroic for program management and Zapier for automation. The system monitors recovery scores, sleep, and strain, then updates weekly targets without manual intervention.
+
+## Prerequisites
+
+- A WHOOP account for each client (or compatible wearable)
+- TrainHeroic coach account
+- Zapier free or paid plan
+- Google Sheets (free)
+
+## Step 1: Connect Wearable Data to Zapier
+
+1. Log in to Zapier and create a new Zap.
+2. Choose **WHOOP** as the trigger app.
+3. Select trigger event: **New Recovery Score** (or New Sleep, New Strain).
+4. Connect your WHOOP account and select the client (if multiple, repeat per client).
+5. Test the trigger to ensure data flows.
+
+## Step 2: Create a Google Sheet for Metrics
+
+1. Create a new Google Sheet named "Client Metrics".
+2. Columns: Date, Client Name, Recovery Score, Sleep Quality, Strain, Goal Adjustment.
+3. Share the sheet with your Zapier-connected Google account.
+
+## Step 3: Log Data to Google Sheets
+
+1. In the same Zap, add an action step: **Google Sheets > Create Spreadsheet Row**.
+2. Map the WHOOP fields (Recovery Score, Sleep Quality, Strain) to the corresponding columns.
+3. Set the Date to current date/time.
+4. Leave Goal Adjustment blank for now.
+
+## Step 4: Calculate Goal Adjustment with a Formula
+
+1. In Google Sheets, add a new column "Adjusted Goal" with a formula:
+   - Example: `=IF(B2<33, "Deload", IF(B2<66, "Maintain", "Progressive Overload"))`
+   - Adjust thresholds based on your training philosophy.
+2. This formula automatically categorizes the goal based on recovery score.
+
+## Step 5: Update TrainHeroic Program
+
+1. Add another action step in Zapier: **TrainHeroic > Update Athlete Program**.
+2. Connect your TrainHeroic account.
+3. Map the client name from the sheet to the athlete in TrainHeroic.
+4. Set the program template based on the Goal Adjustment column (e.g., if "Deload", assign deload template).
+5. Test the action.
+
+## Step 6: Automate Weekly Check-ins
+
+1. Create a second Zap triggered by a **Schedule** (e.g., every Monday at 8 AM).
+2. Action: **Google Sheets > Get Spreadsheet Rows** for the last 7 days.
+3. Use a **Filter** step to only proceed if the average recovery score is below 50%.
+4. Action: **Email** (or Slack) to notify you with a summary and recommended program change.
+
+## Step 7: Monitor and Refine
+
+- Review the system weekly to adjust thresholds.
+- Add more wearables (e.g., Oura Ring, Garmin) by duplicating Zaps.
+- Consider using **TrainHeroic's API** for more granular control.
+
+## Troubleshooting
+
+- **No data in Sheets**: Check WHOOP trigger is active and client has synced.
+- **Wrong program assigned**: Verify mapping in TrainHeroic action.
+- **Zapier limits**: Upgrade plan if you hit task limits.
+
+## Conclusion
+
+This automated workflow reduces manual tracking and allows you to focus on coaching. By leveraging real-time data, you can make evidence-based adjustments that improve client results and satisfaction.

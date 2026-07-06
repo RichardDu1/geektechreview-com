@@ -1,0 +1,74 @@
+---
+title: "AI Scene Detection for Automated Lighting and Shade Control in Home Theater"
+description: "Learn how to sync your home theater lights and shades with on-screen content using AI scene detection, creating an immersive cinematic experience without manual intervention."
+targetRole: ["home-theater-automation-user"]
+targetIntent: ["sync-lighting-with-content"]
+difficulty: "Intermediate"
+setupTime: "2-3 Hours"
+costEstimate: "$200 - $500 (hardware) + $0 - $10/mo (software)"
+roi: "Saves 5 hours/week on manual adjustments and enhances viewing experience"
+toolsUsed: ["home-assistant","node-red","lutron-caseta","philips-hue","plex"]
+---
+
+## Overview
+
+This guide walks you through setting up AI-based scene detection to automatically adjust lighting and shades in your home theater based on the content being played. By integrating Home Assistant, Node-RED, and smart devices, you can achieve a seamless, immersive experience.
+
+## Prerequisites
+
+- **Hardware**: Smart lights (Philips Hue), smart shades (Lutron Caseta), and a media server (Plex).
+- **Software**: Home Assistant (HA) installed on a Raspberry Pi or NUC, Node-RED add-on, and Plex integration.
+- **Knowledge**: Basic familiarity with Home Assistant and Node-RED.
+
+## Step 1: Set Up Home Assistant and Integrations
+
+1. Install Home Assistant (if not already) and add the following integrations:
+   - **Philips Hue**: Use the Hue bridge to control lights.
+   - **Lutron Caseta**: Connect your smart shades.
+   - **Plex**: Link your Plex media server.
+2. Ensure all devices are accessible in HA.
+
+## Step 2: Install Node-RED and Plex Webhooks
+
+1. In HA, install the Node-RED add-on from the Supervisor add-on store.
+2. Configure Node-RED to receive Plex webhooks:
+   - In Plex, go to Settings > Webhooks and add a new webhook pointing to `http://[HA_IP]:1880/plex-webhook`.
+   - In Node-RED, create an HTTP endpoint to capture the webhook payload.
+
+## Step 3: Create Scene Detection Logic
+
+1. In Node-RED, build a flow that:
+   - Listens for Plex webhook events (play, pause, stop, media change).
+   - Extracts metadata (e.g., movie title, genre, brightness level).
+   - Uses a simple AI model (e.g., via TensorFlow.js or a pre-trained classifier) to determine scene type (action, dialogue, dark, bright). For simplicity, we'll use a rule-based approach based on metadata.
+2. Map scene types to lighting scenes:
+   - **Action**: Bright, dynamic colors.
+   - **Dialogue**: Warm, dim lights.
+   - **Dark scene**: Very dim or off.
+   - **Bright scene**: Full brightness, cool white.
+3. Send commands to HA via REST API or MQTT to trigger scenes.
+
+## Step 4: Configure Lighting and Shade Scenes in HA
+
+1. In HA, create scenes for each scene type:
+   - **Action Scene**: Lights set to 80% brightness, color loop, shades open.
+   - **Dialogue Scene**: Lights at 30% warm white, shades closed.
+   - **Dark Scene**: Lights off, shades closed.
+   - **Bright Scene**: Lights at 100% cool white, shades open.
+2. Test each scene manually.
+
+## Step 5: Integrate Node-RED with HA
+
+1. In Node-RED, use the "Call Service" node to trigger HA scenes.
+2. Connect the scene detection output to the appropriate service call.
+3. Deploy the flow.
+
+## Step 6: Test and Refine
+
+1. Play different types of content in Plex and observe the lighting changes.
+2. Adjust thresholds and scenes as needed.
+3. Optionally, add a manual override switch in HA.
+
+## Conclusion
+
+You now have an AI-driven home theater that automatically syncs lighting and shades with content. This setup can be extended with more advanced AI models for finer scene detection.

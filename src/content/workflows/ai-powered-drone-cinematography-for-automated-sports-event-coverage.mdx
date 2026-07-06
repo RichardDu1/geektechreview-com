@@ -1,0 +1,75 @@
+---
+title: "AI-Powered Drone Cinematography for Automated Sports Event Coverage"
+description: "A step-by-step guide for sports broadcasters to set up and operate AI-driven drones for automated tracking and filming of live sports events, reducing manual camera crew needs."
+targetRole: ["sports-broadcaster"]
+targetIntent: ["auto-tracking"]
+difficulty: "Intermediate"
+setupTime: "2-3 hours initial setup, 30 minutes per event"
+costEstimate: "$5,000 - $15,000 (drone + software) + $200/mo for cloud services"
+roi: "Saves 10+ hours per event and reduces crew costs by 40%"
+toolsUsed: ["skydio-x10","dji-rc-pro-enterprise","autopilot-holybro","litchi-for-dji","drone-deploy"]
+---
+
+## AI-Powered Drone Cinematography for Automated Sports Event Coverage
+
+### Overview
+This workflow enables sports broadcasters to deploy AI-powered drones that automatically track athletes, capture cinematic shots, and stream live footage without manual piloting. Ideal for covering football, soccer, racing, and other fast-paced sports.
+
+### Prerequisites
+- **Drone**: Skydio X10 (best AI tracking) or DJI Mavic 3 Enterprise (with SDK support)
+- **Software**: Autopilot (Holybro) or Litchi for mission planning; DroneDeploy for live mapping
+- **Controller**: DJI RC Pro Enterprise (for DJI drones) or Skydio Controller
+- **Internet**: 4G/5G hotspot for live streaming
+- **Permissions**: FAA Part 107 (US) or equivalent local license
+
+### Step 1: Define the Coverage Area
+1. Use **DroneDeploy** to create a 3D map of the stadium/field.
+2. Set geofence boundaries to keep the drone within safe limits.
+3. Identify key points (goal posts, start/finish line, center field) for automated orbits.
+
+### Step 2: Configure AI Tracking
+1. In **Autopilot** or **Litchi**, select the subject type (person, vehicle, ball).
+2. Set tracking parameters: distance (10-30m), altitude (15-50m), and camera angle (30-45° down).
+3. Enable **Dynamic Re-Tracking** to switch subjects (e.g., follow the ball then the scorer).
+
+### Step 3: Create Automated Flight Paths
+1. Design waypoint missions in **Litchi** for pre-game flyovers and crowd shots.
+2. For live action, use **Skydio’s Beacon** (if using Skydio) to have the drone follow a referee or coach.
+3. Program **Orbit Mode** around key players during replays.
+
+### Step 4: Live Streaming Setup
+1. Connect drone to **RTMP server** (e.g., YouTube Live, Twitch, or your broadcaster’s ingest).
+2. Use **DJI Cellular Module** or **Skydio 4G** for reliable streaming.
+3. Set bitrate to 10-15 Mbps for 1080p60 or 4K30.
+
+### Step 5: Real-Time Monitoring & Control
+1. Use **DroneDeploy** or **Autopilot** dashboard on a tablet to view live feed and adjust tracking.
+2. Assign a safety pilot with a backup controller to override if needed.
+3. Monitor battery levels; plan landing zones for hot-swapping.
+
+### Step 6: Post-Event Workflow
+1. Automatically upload footage to cloud (e.g., **Google Drive** via **Zapier**).
+2. Use **Adobe Premiere Pro** with AI plugins (e.g., **Autopod**) to cut highlights.
+3. Archive raw footage with metadata (GPS, timestamps) for future use.
+
+### Tips for Best Results
+- **Calibrate compass** before each flight.
+- **Test tracking** with a moving vehicle at low speed first.
+- **Use ND filters** for bright conditions to avoid overexposure.
+- **Have backup batteries** (at least 3 per drone).
+
+### Comparison with Manual Crew
+| Aspect | AI Drone | Manual Camera |
+|--------|----------|---------------|
+| Cost per event | $500 (drone ops) | $2,000 (3 cam ops) |
+| Setup time | 30 min | 2 hours |
+| Tracking accuracy | 95% (AI) | 100% (human) |
+| Coverage angles | 360° | Limited by positions |
+
+### Troubleshooting
+- **Lost tracking**: Switch to manual control and re-select subject.
+- **Poor GPS**: Enable VIO (Visual Inertial Odometry) in settings.
+- **Stream lag**: Reduce bitrate or use wired connection.
+
+### Conclusion
+AI-powered drones are transforming sports broadcasting by reducing costs and enabling dynamic shots. Start with a Skydio X10 for best out-of-box AI, or use DJI + Litchi for more customization.

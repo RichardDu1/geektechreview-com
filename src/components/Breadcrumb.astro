@@ -17,7 +17,7 @@ const breadcrumbs = segments.map((seg, i) => {
 
 {breadcrumbs.length > 0 && (
   <nav aria-label="Breadcrumb" class="container py-3">
-    <ol class="flex items-center gap-1.5 text-sm text-muted">
+    <ol class="flex items-center gap-1.5 text-sm text-zinc-400">
       <li>
         <a href="/en/" class="hover:text-primary transition-colors">Home</a>
       </li>
@@ -25,7 +25,7 @@ const breadcrumbs = segments.map((seg, i) => {
         <li class="flex items-center gap-1.5">
           <span>/</span>
           {i === breadcrumbs.length - 1 ? (
-            <span class="text-text font-medium" aria-current="page">{crumb.name}</span>
+            <span class="text-white font-medium" aria-current="page">{crumb.name}</span>
           ) : (
             <a href={crumb.href} class="hover:text-primary transition-colors">{crumb.name}</a>
           )}

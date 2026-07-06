@@ -1,0 +1,70 @@
+---
+title: "Automated Posture Correction Alerts Using Wearable IMUs and AI Analysis"
+description: "A step-by-step guide for ergonomics consultants to set up a system using wearable inertial measurement units (IMUs) and AI to detect and alert on poor posture in real-time, improving client outcomes and reducing manual monitoring."
+targetRole: ["ergonomics-consultant"]
+targetIntent: ["improve-posture"]
+difficulty: "Intermediate"
+setupTime: "2-3 Hours"
+costEstimate: "$200 - $500 initial hardware, $50/mo software"
+roi: "Saves 15 hours/week per consultant"
+toolsUsed: ["notecase-posture","edge-impulse","zapier"]
+---
+
+## Automated Posture Correction Alerts Using Wearable Inertial Measurement Units and AI Analysis
+
+### Overview
+This workflow enables ergonomics consultants to deploy a wearable IMU system that uses AI to detect poor posture (e.g., forward head, slouching) and send real-time alerts to clients via smartphone or smartwatch. The system reduces the need for constant manual observation and provides objective data for progress tracking.
+
+### Prerequisites
+- **Hardware**: Wearable IMU sensor (e.g., Notecase Posture wearable or BNO055-based device)
+- **Software**: Edge Impulse account (free tier available), Zapier account (free tier), smartphone with Bluetooth
+- **Skills**: Basic familiarity with sensor data and no-code AI platforms
+
+### Step 1: Select and Configure the Wearable IMU
+Choose a wearable IMU that can stream accelerometer and gyroscope data via Bluetooth. The **Notecase Posture** wearable is a good option as it is designed for posture tracking and has an open API. Alternatively, use a generic BNO055 sensor with an Arduino Nano 33 BLE.
+
+- Pair the device with your smartphone via Bluetooth.
+- Install the companion app (e.g., Notecase app) and ensure data streaming is enabled.
+
+### Step 2: Set Up Edge Impulse for AI Model Training
+Edge Impulse allows you to train a machine learning model to classify posture (good vs. poor) from IMU data.
+
+1. Create a free account at [edgeimpulse.com](https://edgeimpulse.com).
+2. Create a new project named "Posture Detection".
+3. Use the **Data Forwarder** to stream live IMU data from your smartphone to Edge Impulse. Install the Edge Impulse CLI and run the data forwarder script.
+4. Collect labeled data: Record 2 minutes of "good posture" and 2 minutes of "poor posture" (e.g., slouching). Label each sample accordingly.
+5. Go to the **Impulse Design** tab and add a **Spectral Features** block and a **Neural Network (Keras)** classifier.
+6. Train the model with default settings. Aim for >95% accuracy.
+7. Deploy the model as a **C++ library** or **WebAssembly** package. For real-time alerts, use the **Edge Impulse for Android/iOS** SDK to run the model on the phone.
+
+### Step 3: Integrate AI Model with Mobile App
+Use the Edge Impulse mobile SDK to embed the trained model into a custom app or use the Edge Impulse **Remote Management** feature to send alerts.
+
+- For a no-code approach, use **Edge Impulse for Android** app: upload your model and configure it to send HTTP requests when poor posture is detected.
+- Create a webhook in Edge Impulse that triggers on classification events (e.g., poor posture > 5 seconds).
+
+### Step 4: Set Up Automated Alerts via Zapier
+Zapier connects the Edge Impulse webhook to notification services.
+
+1. Create a Zapier account and create a new Zap.
+2. Trigger: **Webhook** → Catch Hook. Copy the webhook URL and paste it into Edge Impulse's webhook configuration.
+3. Action: Choose **Notifications** (e.g., Push by Zapier, Email, or SMS). Configure the message: "Poor posture detected! Please adjust your position."
+4. Test the Zap by simulating a poor posture event.
+
+### Step 5: Deploy and Monitor
+- Have the client wear the IMU sensor during work hours.
+- The mobile app runs the AI model locally and sends alerts via Zapier when poor posture persists.
+- As a consultant, you can receive daily summaries via email (e.g., number of alerts, duration of poor posture).
+
+### Tips for Success
+- Calibrate the sensor for each client's baseline posture.
+- Adjust the alert threshold (e.g., 10 seconds of poor posture) to avoid false alarms.
+- Use the data to provide personalized ergonomic recommendations.
+
+### Troubleshooting
+- **No data streaming**: Ensure Bluetooth is enabled and the sensor is charged.
+- **Low model accuracy**: Collect more diverse posture samples (e.g., standing, sitting).
+- **Zapier not triggering**: Verify webhook URL and test with a manual POST request.
+
+### Conclusion
+This automated system empowers ergonomics consultants to scale their services, provide real-time feedback, and deliver data-driven insights to clients. Total setup time is under 3 hours, and the ROI in saved monitoring time is substantial.

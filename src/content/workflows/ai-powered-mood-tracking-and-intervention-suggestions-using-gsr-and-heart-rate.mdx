@@ -1,0 +1,60 @@
+---
+title: "AI-Powered Mood Tracking and Intervention Suggestions Using GSR and Heart Rate"
+description: "A step-by-step guide for mental health therapists to integrate wearable biosensors (GSR, HR) with AI analysis for real-time mood monitoring and personalized intervention suggestions."
+targetRole: ["mental-health-therapist"]
+targetIntent: ["monitor-mood"]
+difficulty: "Intermediate"
+setupTime: "2-3 hours initial setup, then 30 minutes per client"
+costEstimate: "$50 - $150/mo (hardware + software)"
+roi: "Saves 5 hours/week per therapist, improves intervention accuracy"
+toolsUsed: ["empatica-e4-wristband","google-cloud-ai-platform","zapier"]
+---
+
+## AI-Powered Mood Tracking and Intervention Suggestions Using GSR and Heart Rate
+
+### Overview
+This workflow enables mental health therapists to leverage wearable biosensors (Galvanic Skin Response and Heart Rate) combined with AI to monitor clients' mood states in real time and receive automated intervention suggestions. The system uses the Empatica E4 wristband for data collection, Google Cloud AI Platform for machine learning analysis, and Zapier for workflow automation.
+
+### Prerequisites
+- Empatica E4 wristband (or similar GSR/HR wearable)
+- Google Cloud Platform account (free tier available)
+- Zapier account (free tier available)
+- Basic familiarity with data export and API connections
+
+### Step 1: Set Up Wearable Data Collection
+1. **Obtain Empatica E4 wristband**: Purchase or borrow the device. Ensure it is charged and paired with the Empatica E4 app on a smartphone.
+2. **Configure data streaming**: In the app, enable continuous streaming of GSR and HR data. Set sampling rate to 4 Hz for GSR and 1 Hz for HR.
+3. **Create a test session**: Wear the device for 10 minutes to verify data is being recorded. Export the raw CSV file from the app to your computer.
+
+### Step 2: Build AI Mood Prediction Model
+1. **Prepare training data**: Collect labeled mood data (e.g., calm, anxious, stressed) from previous sessions or public datasets. Ensure data includes GSR, HR, and timestamp.
+2. **Upload to Google Cloud AI Platform**:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/).
+   - Enable the AI Platform API.
+   - Create a new dataset and upload your CSV.
+3. **Train a model**: Use AutoML Tables to train a classification model. Select GSR and HR as features, mood as target. Train and evaluate.
+4. **Deploy model**: Once accuracy >80%, deploy the model to an endpoint. Note the endpoint URL and API key.
+
+### Step 3: Automate Real-Time Analysis with Zapier
+1. **Create a Zap**: In Zapier, create a new Zap with trigger "New File in Folder" (Google Drive) or "Webhook" depending on data source.
+2. **Connect Empatica E4**: Use the Empatica API (requires developer access) to push new data to a Google Sheet. Alternatively, manually upload CSV files to a designated Google Drive folder.
+3. **Add action step**: Use "Webhook by Zapier" to send the latest GSR/HR values to your deployed AI model endpoint. Parse the JSON response (predicted mood).
+4. **Store results**: Add another action to write the predicted mood and timestamp to a new row in a Google Sheet.
+
+### Step 4: Generate Intervention Suggestions
+1. **Create a lookup table**: In Google Sheets, create a second sheet mapping predicted moods to intervention suggestions (e.g., "Anxious" -> "Deep breathing exercise", "Stressed" -> "Progressive muscle relaxation").
+2. **Use Zapier to fetch suggestion**: Add a step in your Zap to look up the intervention based on the predicted mood using Google Sheets "Find Row" action.
+3. **Notify therapist**: Use Zapier's email or SMS action to send the intervention suggestion to the therapist's phone or email.
+
+### Step 5: Review and Refine
+1. **Monitor accuracy**: Compare AI predictions with client self-reports during sessions. Adjust model or retrain with new data.
+2. **Customize interventions**: Tailor suggestions based on individual client history. Update the lookup table accordingly.
+3. **Scale**: Repeat for multiple clients by creating separate Google Sheets or using client IDs.
+
+### Troubleshooting
+- **No data from wearable**: Check Bluetooth connection and app permissions.
+- **Model predictions off**: Ensure training data includes diverse mood states and sufficient samples.
+- **Zapier errors**: Verify API endpoint is active and authentication tokens are correct.
+
+### Conclusion
+This AI-powered workflow transforms raw biosensor data into actionable mood insights, enabling therapists to intervene proactively. With minimal setup, you can enhance your practice with data-driven decision-making.

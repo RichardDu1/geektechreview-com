@@ -1,5 +1,5 @@
 ---
-// Header.astro â€?Sticky navigation with mobile hamburger menu
+// Header.astro ï¿½?Sticky navigation with mobile hamburger menu
 const navItems = [
   { label: 'Home', href: '/en/' },
   { label: 'Categories', href: '/en/categories/' },
@@ -9,10 +9,10 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
+<header class="sticky top-0 z-50 bg-[#0a0a0a]/95/95 backdrop-blur border-b border-white/10 border-gray-200">
   <div class="container flex items-center justify-between h-16">
     <!-- Logo -->
-    <a href="/en/" class="flex items-center gap-2 font-bold text-xl text-text no-underline">
+    <a href="/en/" class="flex items-center gap-2 font-bold text-xl text-white no-underline">
       <span class="text-primary">Geek</span>TechReview
     </a>
 
@@ -21,7 +21,7 @@ const navItems = [
       {navItems.map((item) => (
         <a
           href={item.href}
-          class="text-sm font-medium text-muted hover:text-primary transition-colors"
+          class="text-sm font-medium text-zinc-400 hover:text-primary transition-colors"
         >
           {item.label}
         </a>
@@ -31,7 +31,7 @@ const navItems = [
     <!-- Mobile Hamburger -->
     <button
       id="menu-toggle"
-      class="md:hidden p-2 text-text"
+      class="md:hidden p-2 text-white"
       aria-label="Toggle menu"
       aria-expanded="false"
     >
@@ -42,12 +42,12 @@ const navItems = [
   </div>
 
   <!-- Mobile Menu (hidden by default) -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-white">
+  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-[#0a0a0a]/95">
     <nav class="container flex flex-col py-4 gap-3" aria-label="Mobile navigation">
       {navItems.map((item) => (
         <a
           href={item.href}
-          class="text-sm font-medium text-muted hover:text-primary transition-colors py-1"
+          class="text-sm font-medium text-zinc-400 hover:text-primary transition-colors py-1"
         >
           {item.label}
         </a>

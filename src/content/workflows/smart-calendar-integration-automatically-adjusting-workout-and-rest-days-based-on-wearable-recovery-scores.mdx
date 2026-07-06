@@ -1,0 +1,98 @@
+---
+title: "Smart Calendar Integration: Automatically Adjusting Workout and Rest Days Based on Wearable Recovery Scores"
+description: "A step-by-step guide for fitness app developers to integrate wearable recovery data (e.g., HRV, sleep) into calendar apps, automatically scheduling workouts and rest days based on real-time readiness scores."
+targetRole: ["fitness-app-developer"]
+targetIntent: ["integrate-recovery-data"]
+difficulty: "Advanced"
+setupTime: "2-4 hours"
+costEstimate: "$0 - $50/mo"
+roi: "Saves 5+ hours/week on manual planning, improves user adherence"
+toolsUsed: ["whoop-api","google-calendar-api","zapier","n8n"]
+---
+
+## Overview
+
+This guide explains how to build a workflow that reads recovery scores from wearable devices (e.g., WHOOP, Oura, Garmin) and automatically updates a user's calendar with appropriate workouts or rest days. The system uses a rules engine to translate recovery data into calendar events.
+
+## Prerequisites
+
+- A wearable API key (WHOOP, Oura, or Garmin Health API)
+- Google Calendar API credentials (or Outlook Calendar API)
+- An automation platform (Zapier or n8n)
+- Basic knowledge of REST APIs and JSON
+
+## Step 1: Obtain Recovery Data from Wearable API
+
+1. Register for developer access on your chosen wearable platform (e.g., [WHOOP Developer](https://developer.whoop.com/)).
+2. Obtain an API key and set up OAuth 2.0 for user authorization.
+3. Use the API endpoint to fetch daily recovery scores. For WHOOP, the endpoint is `GET /v1/recovery` which returns a `recovery_score` (0-100%).
+4. Parse the response to extract the score and timestamp.
+
+Example JSON response:
+```json
+{
+  "recovery_score": 75,
+  "resting_heart_rate": 55,
+  "hrv": 45,
+  "timestamp": "2025-03-21T06:00:00Z"
+}
+```
+
+## Step 2: Define Rules for Workout/Rest Decision
+
+Create a rules engine that maps recovery score to activity type:
+- **Recovery >= 80%**: High-intensity workout (e.g., HIIT, heavy lifting)
+- **Recovery 60-79%**: Moderate workout (e.g., steady-state cardio, light weights)
+- **Recovery 40-59%**: Low-intensity activity (e.g., yoga, walking)
+- **Recovery < 40%**: Rest day (no workout, or active recovery)
+
+Store these rules in a config file or database.
+
+## Step 3: Set Up Automation Platform
+
+### Option A: Zapier (No-Code)
+1. Create a new Zap with a **Schedule** trigger (e.g., daily at 6 AM).
+2. Add a **Webhook** action to call the wearable API and fetch recovery score.
+3. Add a **Filter** step to check the score and route to different actions.
+4. For each score range, use **Google Calendar** action to create an event with appropriate title and description.
+
+### Option B: n8n (Self-Hosted, More Flexible)
+1. Install n8n on your server or use n8n.cloud.
+2. Create a workflow with a **Cron** trigger.
+3. Use **HTTP Request** node to call wearable API.
+4. Use **IF** node to branch based on recovery score.
+5. Use **Google Calendar** node to create/update events.
+
+## Step 4: Integrate with Calendar API
+
+1. Enable Google Calendar API in Google Cloud Console and download credentials.
+2. Use OAuth 2.0 to authenticate users (store refresh tokens).
+3. Use the `events.insert` endpoint to create events. Set the start/end times based on user's preferred workout time (e.g., 7:00-8:00 AM).
+4. Optionally, update existing events if the score changes later in the day.
+
+Example API call:
+```json
+POST https://www.googleapis.com/calendar/v3/calendars/primary/events
+{
+  "summary": "HIIT Workout (Recovery: 85%)",
+  "description": "High intensity interval training based on your recovery score.",
+  "start": {"dateTime": "2025-03-21T07:00:00", "timeZone": "America/New_York"},
+  "end": {"dateTime": "2025-03-21T08:00:00", "timeZone": "America/New_York"}
+}
+```
+
+## Step 5: Handle Edge Cases
+
+- **No data**: If wearable data is missing (e.g., device not synced), default to a moderate workout or ask user.
+- **Multiple wearables**: Aggregate scores from multiple sources (e.g., average).
+- **User preferences**: Allow users to set custom rules (e.g., always rest on Sundays).
+
+## Step 6: Test and Deploy
+
+1. Test with sample recovery scores to ensure correct calendar events are created.
+2. Deploy the automation to run daily.
+3. Monitor API rate limits and error logs.
+
+## Conclusion
+
+By following this guide, you can build a smart calendar integration that adapts to users' recovery data, helping them optimize training and avoid overtraining. This workflow can be extended to include sleep data, stress levels, and more.

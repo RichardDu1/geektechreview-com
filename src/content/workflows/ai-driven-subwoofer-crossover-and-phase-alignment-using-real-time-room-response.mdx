@@ -1,0 +1,52 @@
+---
+title: "AI-Driven Subwoofer Crossover and Phase Alignment Using Real-Time Room Response"
+description: "A step-by-step guide for home theater calibrators to achieve seamless subwoofer integration using AI tools like Dirac Live and Room EQ Wizard (REW) with real-time room response analysis."
+targetRole: ["home-theater-calibrator"]
+targetIntent: ["align-subwoofer"]
+difficulty: "Advanced"
+setupTime: "2-3 Hours"
+costEstimate: "$0 - $500 (one-time for mic/software)"
+roi: "Saves 5+ hours per calibration and eliminates guesswork"
+toolsUsed: ["dirac-live","room-eq-wizard","minidsp-umik-1"]
+---
+
+## AI-Driven Subwoofer Crossover and Phase Alignment Using Real-Time Room Response
+
+### Overview
+This workflow leverages AI-powered room correction software (Dirac Live) and measurement tools (REW) to automatically determine optimal crossover frequency and phase alignment for subwoofers, ensuring seamless bass integration.
+
+### Prerequisites
+- **Hardware**: Measurement microphone (e.g., MiniDSP UMIK-1), subwoofer(s), AVR with Dirac Live or similar.
+- **Software**: Dirac Live (paid), Room EQ Wizard (free), REW (free).
+- **Knowledge**: Basic understanding of room acoustics and subwoofer setup.
+
+### Step 1: Set Up Measurement Microphone
+- Place the UMIK-1 at the main listening position, ear height, pointing upward.
+- Connect via USB and load the calibration file in REW.
+
+### Step 2: Measure Baseline Room Response
+- In REW, set sweep range 10-200 Hz, use 1/6 octave smoothing.
+- Run measurement with subwoofer and mains playing together.
+- Identify the main cancellation dip and room mode peaks.
+
+### Step 3: Use Dirac Live for AI-Driven Optimization
+- Open Dirac Live, select your AVR as output device.
+- Perform multi-point measurements (9 positions recommended).
+- Let Dirac Live’s AI algorithm calculate target curve, crossover, and phase.
+- Review suggested crossover (typically 80-120 Hz) and phase offset.
+
+### Step 4: Fine-Tune with REW
+- Export Dirac Live filters to AVR.
+- Re-measure in REW to verify flatness.
+- Manually adjust subwoofer phase (0-180°) if a dip remains at crossover.
+- Use REW’s “Alignment Tool” to find optimal delay for phase alignment.
+
+### Step 5: Validate and Save
+- Run final sweep; ensure response is within ±3 dB from 20-200 Hz.
+- Save configuration as a preset in AVR.
+- Test with movie/music content.
+
+### Tips
+- Use high-pass filter on mains (e.g., 80 Hz) to reduce distortion.
+- For multiple subs, measure each individually then combined.
+- AI tools reduce trial-and-error but always verify with ear.

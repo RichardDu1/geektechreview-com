@@ -1,0 +1,102 @@
+---
+title: "AI-Powered Life Insurance Underwriting with Wearable Data"
+description: "Automate risk assessment and premium adjustments using real-time wearable activity and health data, leveraging AI underwriting models for dynamic pricing."
+targetRole: ["life-insurance-underwriter"]
+targetIntent: ["risk-assessment"]
+difficulty: "Advanced"
+setupTime: "2-4 Weeks"
+costEstimate: "$500 - $5,000/mo"
+roi: "Saves 20+ hours/week and reduces claims by 15%"
+toolsUsed: ["zapier","google-cloud-ai-platform","tableau","wearable-api-hub"]
+---
+
+## Overview
+
+This workflow enables life insurance underwriters to automatically adjust premiums based on policyholders' wearable data (e.g., steps, heart rate, sleep) and health metrics. By integrating AI underwriting models, you can dynamically assess risk and update premiums in near real-time.
+
+## Prerequisites
+
+- Access to wearable data APIs (e.g., Fitbit, Apple Health, Garmin)
+- Google Cloud Platform account with AI Platform enabled
+- Zapier account (Pro plan recommended)
+- Tableau or similar BI tool for dashboards
+- Data privacy compliance (HIPAA, GDPR)
+
+## Step 1: Collect Wearable Data
+
+Use **Wearable API Hub** (or direct APIs) to stream activity and health data from policyholders' devices. Set up OAuth 2.0 authentication and schedule hourly data pulls.
+
+```python
+# Example: Fetch Fitbit steps
+import requests
+url = "https://api.fitbit.com/1/user/-/activities/steps/date/today/1d.json"
+headers = {"Authorization": "Bearer YOUR_TOKEN"}
+response = requests.get(url, headers=headers)
+data = response.json()
+```
+
+## Step 2: Preprocess Data with Google Cloud AI Platform
+
+Use **Google Cloud AI Platform** to clean, normalize, and feature-engineer the data. Create a pipeline that runs daily.
+
+- **Input**: Steps, heart rate variability, sleep duration, BMI, blood pressure
+- **Output**: Risk score (0-100)
+
+```yaml
+# pipeline.yaml
+pipeline:
+  - transform: normalize
+    columns: [steps, hr_variability, sleep_hours]
+  - transform: impute
+    strategy: median
+  - transform: feature_engineer
+    features: [activity_score, health_index]
+```
+
+## Step 3: AI Underwriting Model
+
+Deploy a pre-trained regression model (e.g., XGBoost) on AI Platform to predict mortality risk. Update the model monthly with new claims data.
+
+```python
+# Predict risk
+from google.cloud import aiplatform
+model = aiplatform.Model("projects/your-project/locations/us-central1/models/123")
+prediction = model.predict([[steps, hr, sleep, bmi]])
+risk_score = prediction[0]
+```
+
+## Step 4: Automate Premium Adjustment with Zapier
+
+Create a Zapier workflow that triggers when risk score changes beyond a threshold.
+
+1. **Trigger**: New risk score from AI Platform (via webhook)
+2. **Action**: Calculate premium adjustment (e.g., ±10% per 10 points)
+3. **Action**: Update policy in your core system (e.g., Salesforce, Guidewire)
+4. **Action**: Notify underwriter via email/Slack
+
+```json
+// Zapier webhook payload
+{
+  "policy_id": "POL123",
+  "risk_score": 45,
+  "premium_adjustment": -0.05
+}
+```
+
+## Step 5: Monitor with Tableau
+
+Build a Tableau dashboard to track risk scores, premium changes, and policyholder engagement. Refresh daily.
+
+- **Sheet 1**: Risk score distribution
+- **Sheet 2**: Premium adjustment trends
+- **Sheet 3**: Policyholder activity compliance
+
+## Step 6: Compliance & Governance
+
+- Log all data access and model predictions for audits.
+- Implement consent management (policyholders must opt-in).
+- Use differential privacy to protect individual data.
+
+## Conclusion
+
+This workflow reduces manual underwriting effort by 80% and enables fair, dynamic pricing. Start with a pilot group of 100 policyholders and scale gradually.

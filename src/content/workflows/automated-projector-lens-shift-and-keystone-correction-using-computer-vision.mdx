@@ -1,0 +1,57 @@
+---
+title: "Automated Projector Lens Shift and Keystone Correction Using Computer Vision"
+description: "A step-by-step guide for home theater installers to leverage computer vision tools for automatic projector alignment, saving hours of manual adjustment."
+targetRole: ["home-theater-installer"]
+targetIntent: ["auto-projector-alignment"]
+difficulty: "Intermediate"
+setupTime: "2 Hours"
+costEstimate: "$0 - $50/mo"
+roi: "Saves 3 hours per installation"
+toolsUsed: ["auto-keystone-correction","keystone-advanced-warp-blend","reelmind-ai"]
+---
+
+## Overview
+Automated projector alignment using computer vision eliminates tedious manual lens shift and keystone correction. This guide covers setup, calibration, and fine-tuning for home theater installations.
+
+## Prerequisites
+- Projector with motorized lens shift (or adjustable mount)
+- Depth camera (e.g., Intel RealSense) or webcam
+- Computer running Python 3.8+
+- Projector control API (e.g., PJLink, RS-232)
+
+## Step 1: Install Required Software
+1. Install [Auto-KeyStone-Correction](https://github.com/elfslmn/Auto-KeyStone-Correction) (open-source, uses depth camera).
+2. For multi-projector setups, install [Keystone Advanced Warp and Blend](https://keystoneprojection.com) (commercial, $50/mo).
+3. Optionally, integrate [Reelmind.ai](https://reelmind.ai) for AI-enhanced correction.
+
+## Step 2: Hardware Setup
+- Mount the depth camera facing the projection surface.
+- Connect the camera to the computer via USB.
+- Ensure the projector is connected to the computer via serial or network.
+
+## Step 3: Calibration
+1. Run the Auto-KeyStone-Correction script: `python auto_keystone.py`.
+2. The script will project a calibration pattern and detect distortion.
+3. Adjust camera position if pattern is not fully visible.
+
+## Step 4: Automated Correction
+- The software computes homography and sends lens shift/keystone commands to the projector.
+- For motorized lens shift, ensure the projector API is configured.
+- For manual mounts, the software will display adjustment instructions.
+
+## Step 5: Fine-Tuning
+- Use Keystone Advanced Warp and Blend for multi-projector edge blending.
+- Verify with a test pattern (grid or crosshatch).
+- Adjust brightness/contrast if blending seams are visible.
+
+## Step 6: Validation
+- Measure corner sharpness and geometry using a laser distance meter.
+- Run a 4K HDR demo to check for artifacts.
+
+## Troubleshooting
+- **Camera not detected**: Install drivers (RealSense SDK).
+- **Projector not responding**: Check serial/network settings.
+- **Soft image**: Reduce keystone correction amount; prefer lens shift.
+
+## Conclusion
+Automated alignment reduces installation time from 4 hours to 1 hour. For best results, combine depth-camera-based correction with manual fine-tuning.

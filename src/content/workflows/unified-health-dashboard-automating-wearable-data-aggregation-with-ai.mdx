@@ -1,0 +1,73 @@
+---
+title: "Unified Health Dashboard: Automating Wearable Data Aggregation with AI"
+description: "Learn how to automatically collect health metrics from multiple wearables (e.g., Fitbit, Apple Watch, Oura Ring) into a single AI-powered dashboard for consolidated analysis and insights."
+targetRole: ["health-enthusiast"]
+targetIntent: ["consolidate-health-metrics"]
+difficulty: "Intermediate"
+setupTime: "2 Hours"
+costEstimate: "$0 - $30/mo"
+roi: "Saves 5 hours/week manually logging data"
+toolsUsed: ["zapier","google-sheets","openai-api","tableau-public"]
+---
+
+## Overview
+
+This guide walks you through building an automated pipeline that pulls data from multiple wearable devices into a single Google Sheet, then uses AI to generate insights and visualizations. By the end, you'll have a real-time health dashboard.
+
+## Prerequisites
+
+- Accounts for each wearable (Fitbit, Apple Health, Oura, etc.)
+- Zapier account (free tier works)
+- Google account (for Sheets)
+- OpenAI API key (optional, for AI insights)
+- Tableau Public account (free)
+
+## Step 1: Connect Wearables to Zapier
+
+1. Log into Zapier and create a new Zap.
+2. Choose your first wearable app (e.g., Fitbit) as the trigger.
+3. Select a trigger event (e.g., "New Sleep Log" or "New Heart Rate Measurement").
+4. Connect your Fitbit account and test the trigger.
+5. Repeat for each wearable (Apple Health via Health Connect, Oura, etc.) – create separate Zaps or use a multi-step Zap.
+
+## Step 2: Send Data to Google Sheets
+
+1. In each Zap, add an action step: Google Sheets > Create Spreadsheet Row.
+2. Map the wearable fields (e.g., date, heart rate, steps, sleep score) to columns in a single Google Sheet.
+3. Create a new Google Sheet with headers: Date, Source, Metric, Value, Unit.
+4. For each data point, add a row. Example: Date: 2025-03-20, Source: Fitbit, Metric: Steps, Value: 8500, Unit: steps.
+5. Test the Zap to ensure data flows correctly.
+
+## Step 3: Normalize and Clean Data (Optional)
+
+Use Google Sheets formulas or a simple script (Tools > Script Editor) to standardize units (e.g., convert miles to km) and remove duplicates.
+
+## Step 4: Add AI Analysis with OpenAI
+
+1. Create a new Zap triggered by a new row in Google Sheets.
+2. Add an action: OpenAI > Send Prompt.
+3. Prompt example: "Analyze the following health data and provide a summary of trends, anomalies, and recommendations: [data from last 7 days]."
+4. Store the AI response in a new column or separate sheet.
+
+## Step 5: Build a Dashboard in Tableau Public
+
+1. Connect Tableau Public to your Google Sheet (via Google Sheets connector).
+2. Create visualizations: line charts for heart rate over time, bar charts for daily steps, etc.
+3. Add calculated fields for averages, trends.
+4. Publish the dashboard and set it to refresh daily.
+
+## Step 6: Automate and Monitor
+
+- Schedule Zaps to run every hour or as needed.
+- Set up email alerts for anomalies (e.g., heart rate > 120 at rest) using Zapier's Filter and Email actions.
+- Review AI insights weekly.
+
+## Troubleshooting
+
+- **Data not appearing**: Check Zap history for errors. Ensure wearable APIs are active.
+- **Duplicate rows**: Add a deduplication step in Google Sheets using UNIQUE() or a script.
+- **API limits**: Free tiers may have caps; upgrade if needed.
+
+## Conclusion
+
+You now have a fully automated system that aggregates health data from multiple wearables, enriches it with AI, and visualizes it in a dashboard. This saves time and provides deeper insights into your health trends.

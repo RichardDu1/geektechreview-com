@@ -1,0 +1,68 @@
+---
+title: "AI-Powered Audio Upscaling for Legacy Surround Formats: A Home Theater Enthusiast's Guide"
+description: "Transform your vintage Dolby Pro Logic, DTS, or matrix-encoded audio into immersive 3D spatial audio using AI tools like Adobe Podcast Enhance, Auphonic, and RX 10. This guide covers source preparation, AI upscaling, and integration with modern AVRs."
+targetRole: ["home-theater-enthusiast"]
+targetIntent: ["upscale-audio-formats"]
+difficulty: "Intermediate"
+setupTime: "2-3 hours"
+costEstimate: "$0 - $50/mo"
+roi: "Revives legacy media with modern spatial audio without hardware upgrades"
+toolsUsed: ["adobe-podcast-enhance","auphonic","izotope-rx-10"]
+---
+
+## Overview
+
+AI-powered audio upscaling breathes new life into legacy surround formats (Dolby Pro Logic, DTS, matrix-encoded stereo) by analyzing and reconstructing spatial cues. This workflow uses three key tools: **Adobe Podcast Enhance** (free, cloud-based), **Auphonic** (AI leveler and spatializer), and **iZotope RX 10** (professional spectral repair). The result is a modern 5.1/7.1 or object-based (Dolby Atmos) mix that can be played on any AVR.
+
+## Prerequisites
+
+- **Source audio**: Legacy surround-encoded stereo or multichannel files (e.g., FLAC, WAV, AC3).
+- **Software**: Adobe Podcast Enhance (web), Auphonic (web/desktop), iZotope RX 10 (paid).
+- **Hardware**: AVR with HDMI or optical input; optional: DAW (Reaper, Audacity) for manual tweaks.
+
+## Step 1: Prepare Your Source Audio
+
+1. **Rip or extract** the legacy audio track from DVD, LaserDisc, or VHS using tools like MakeMKV or Audacity.
+2. **Export as high-resolution WAV/FLAC** (48kHz/24-bit recommended).
+3. **Identify the original format**:
+   - Dolby Pro Logic: 4-channel matrix encoded into 2 channels.
+   - DTS: 5.1 discrete channels (often 1.5 Mbps).
+   - Matrix-encoded stereo: e.g., QSound, SRS Circle Surround.
+
+## Step 2: Clean and Enhance with Adobe Podcast Enhance
+
+1. Go to [Adobe Podcast Enhance](https://podcast.adobe.com/enhance).
+2. Upload your stereo file (free, up to 1 hour).
+3. Enable **"Reduce Noise"** and **"Reduce Reverb"** to clean artifacts.
+4. Download the enhanced stereo file.
+
+## Step 3: AI Spatial Upscaling with Auphonic
+
+1. Sign up for [Auphonic](https://auphonic.com) (free tier: 2 hours/month).
+2. Create a new production and upload the enhanced file.
+3. Under **"Audio Algorithms"**, enable **"Spatial Audio"** and select **"Upmix to 5.1"** or **"Upmix to 7.1"**.
+4. Adjust **"Spatial Width"** to 100% and **"Center Channel"** to 70% for dialog clarity.
+5. Process and download the multichannel WAV file.
+
+## Step 4: Refine with iZotope RX 10 (Optional)
+
+1. Open the multichannel file in RX 10.
+2. Use **"Dialogue Isolate"** to clean dialog in the center channel.
+3. Apply **"Music Rebalance"** to adjust levels of vocals, bass, and percussion.
+4. Export as 5.1 FLAC or WAV.
+
+## Step 5: Integrate with Your AVR
+
+1. Transfer the upscaled file to a media player (e.g., Plex, Kodi, or USB).
+2. On your AVR, set the audio mode to **"Multi Ch In"** or **"Direct"** to preserve the discrete channels.
+3. For object-based Atmos, use **Dolby Atmos Music** upmixer if available.
+
+## Troubleshooting
+
+- **Phase issues**: Use RX 10's **"Phase Correction"**.
+- **Dialog too quiet**: Increase center channel gain in Auphonic.
+- **No spatial effect**: Ensure source is matrix-encoded; try **"Stereo to 5.1"** in Auphonic.
+
+## Conclusion
+
+This AI workflow transforms legacy surround into modern spatial audio with minimal effort. For best results, experiment with Auphonic's spatial settings and RX 10's spectral tools. Your home theater will thank you.

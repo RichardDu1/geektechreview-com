@@ -1,0 +1,67 @@
+---
+title: "Real-Time AI Form Correction with Smartwatch Motion Data"
+description: "A step-by-step guide for fitness coaches to leverage smartwatch motion sensors and AI to provide real-time exercise form correction, enhancing client safety and performance."
+targetRole: ["fitness-coach"]
+targetIntent: ["correct-exercise-form"]
+difficulty: "Intermediate"
+setupTime: "30 Minutes"
+costEstimate: "$0 - $20/mo"
+roi: "Saves 5 hours/week"
+toolsUsed: ["moov-now","train-ai","zapier"]
+---
+
+## Overview
+
+This workflow enables fitness coaches to use smartwatch motion data (accelerometer, gyroscope) combined with AI to deliver real-time form correction during workouts. By integrating Moov Now, Train AI, and Zapier, you can automate feedback loops and track client progress.
+
+## Prerequisites
+
+- A smartwatch with motion sensors (e.g., Apple Watch, Wear OS, or Moov Now)
+- Moov Now app installed on client's phone
+- Train AI account (free tier available)
+- Zapier account (free tier available)
+- Client consent for data collection
+
+## Step 1: Set Up Moov Now for Motion Data Capture
+
+1. **Install Moov Now** on the client's smartphone and pair it with their smartwatch.
+2. **Configure workout types** (e.g., squats, deadlifts) in the Moov app. It uses the watch's accelerometer and gyroscope to track movement patterns.
+3. **Enable real-time audio coaching** in Moov settings. The app provides verbal cues for form correction based on motion data.
+
+## Step 2: Connect Moov Now to Train AI via Zapier
+
+1. **Create a Zapier account** and create a new Zap.
+2. **Set trigger as "New Workout Completed" in Moov Now** (requires Moov Now Zapier integration).
+3. **Set action as "Create Exercise Session" in Train AI**.
+4. **Map fields**: Map Moov's motion data (e.g., rep count, range of motion, symmetry) to Train AI's session parameters.
+
+## Step 3: Configure Train AI for Form Analysis
+
+1. **Log into Train AI** and create a new AI model for form correction.
+2. **Upload reference videos** of correct exercise form (optional but recommended).
+3. **Define form rules**: Set thresholds for range of motion, speed, and symmetry based on exercise type.
+4. **Enable real-time feedback**: Train AI can send alerts via webhook when form deviations exceed thresholds.
+
+## Step 4: Automate Real-Time Feedback Loop
+
+1. **Create a second Zap** with trigger "New Form Alert" from Train AI (via webhook).
+2. **Set action as "Send SMS" or "Send Push Notification"** to the coach's phone using Twilio or Pushover.
+3. **Customize message**: Include client name, exercise, and specific correction (e.g., "John: Squat depth too shallow - lower hips").
+
+## Step 5: Monitor and Adjust
+
+1. **Review weekly reports** from Train AI summarizing form issues per client.
+2. **Adjust form rules** in Train AI based on client progress.
+3. **Provide personalized feedback** during live sessions using the real-time alerts.
+
+## Tips for Success
+
+- **Test with one client** before scaling.
+- **Ensure smartwatch is worn correctly** for accurate data.
+- **Combine with video analysis** for complex movements.
+
+## Troubleshooting
+
+- **No data in Train AI**: Check Zapier connection and Moov Now permissions.
+- **Delayed alerts**: Use webhook instead of polling.
+- **False positives**: Adjust sensitivity in Train AI rules.

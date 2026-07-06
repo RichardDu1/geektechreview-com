@@ -1,0 +1,72 @@
+---
+title: "Drone-Based Oil Spill Detection and Quantification Using Multispectral AI"
+description: "A comprehensive B2B workflow for environmental scientists to deploy drones with multispectral cameras and AI analytics for real-time oil spill detection, classification, and volume estimation."
+targetRole: ["environmental-scientist"]
+targetIntent: ["spill-monitoring"]
+difficulty: "Advanced"
+setupTime: "2-3 Days"
+costEstimate: "$5,000 - $15,000 initial investment"
+roi: "Saves 40 hours/week vs manual inspection"
+toolsUsed: ["djimavic3m","pix4dfields","drone-deploy-ai","qgis"]
+---
+
+## Overview
+
+This workflow integrates UAV-mounted multispectral imaging with deep learning to detect, classify, and quantify oil spills in marine and coastal environments. It replaces slow satellite-based methods with real-time, high-resolution drone surveys.
+
+## Prerequisites
+
+- DJI Mavic 3 Multispectral (or similar) drone
+- Pix4Dfields or DroneDeploy for flight planning and processing
+- QGIS with Semi-Automatic Classification Plugin
+- Python environment with TensorFlow/PyTorch (optional for custom models)
+- Access to a trained oil spill detection model (e.g., YOLOv8 or U-Net)
+
+## Step 1: Mission Planning
+
+1. Define the survey area using **DroneDeploy** or **Pix4Dfields**.
+2. Set flight altitude (e.g., 120m) to achieve 5cm/pixel resolution.
+3. Configure multispectral bands: Blue, Green, Red, Red Edge, NIR.
+4. Enable RTK for precise geolocation.
+5. Schedule flights during calm sea states (wind < 15 knots).
+
+## Step 2: Data Acquisition
+
+1. Launch the drone and execute the autonomous mission.
+2. Capture overlapping images (80% front, 60% side overlap).
+3. Monitor real-time telemetry and image quality.
+4. After landing, transfer images to processing computer.
+
+## Step 3: Image Processing and Orthomosaic Generation
+
+1. Import images into **Pix4Dfields**.
+2. Process to create multispectral orthomosaic and reflectance maps.
+3. Export as GeoTIFF with all bands.
+4. Optionally, use **DroneDeploy AI** for automated spill detection.
+
+## Step 4: AI-Based Oil Spill Detection
+
+1. Load the orthomosaic into **QGIS**.
+2. Apply the trained deep learning model (e.g., YOLOv8) using the **Semi-Automatic Classification Plugin** or custom Python script.
+3. The model outputs polygons for oil slicks with confidence scores.
+4. Classify spills by thickness (sheen, emulsion, thick oil) using spectral indices (e.g., NDVI, NDWI).
+
+## Step 5: Quantification and Reporting
+
+1. Calculate spill area from polygon geometries in QGIS.
+2. Estimate volume using thickness classification and empirical formulas (e.g., Allen et al. 2020).
+3. Generate a report with maps, statistics, and recommendations.
+4. Export as PDF or share via cloud platform.
+
+## Comparison with Alternatives
+
+- **Satellite**: Lower resolution (10-30m), revisit time days. Drone offers <5cm resolution, on-demand.
+- **Manual boat inspection**: Slow, dangerous, limited coverage. Drone covers 100+ ha/hour.
+- **Fixed-wing drones**: Longer endurance but higher cost and complexity.
+
+## Best Practices
+
+- Calibrate multispectral camera before each flight.
+- Use ground control points for accuracy.
+- Retrain AI model periodically with new spill data.
+- Comply with local drone regulations (e.g., Part 107 in US).

@@ -1,0 +1,62 @@
+---
+title: "Automated HDMI EDID Management and Handshake Troubleshooting Using AI Log Analysis"
+description: "A step-by-step guide for home theater troubleshooters to automate EDID management and resolve HDMI handshake issues using AI log analysis tools like Splunk and EDID Manager."
+targetRole: ["home-theater-troubleshooter"]
+targetIntent: ["resolve-hdmi-issues"]
+difficulty: "Advanced"
+setupTime: "2-3 Hours"
+costEstimate: "$0 - $100/mo"
+roi: "Saves 10 hours/week"
+toolsUsed: ["splunk","edid-manager","python-script"]
+---
+
+## Automated HDMI EDID Management and Handshake Troubleshooting Using AI Log Analysis
+
+### Overview
+HDMI handshake failures and EDID mismatches are common in complex home theater setups. This guide shows you how to automate EDID management and troubleshoot handshake issues using AI log analysis with Splunk and a custom Python script.
+
+### Prerequisites
+- **Splunk** (free tier or higher) for log aggregation and AI analysis
+- **EDID Manager** (e.g., HDFury EDID Manager) for reading/writing EDID data
+- **Python 3.8+** with libraries: `pyserial`, `requests`, `json`
+- **HDMI matrix or switch** with serial or IP control
+- **Basic knowledge** of HDMI, EDID, and serial communication
+
+### Step 1: Set Up Log Collection
+1. **Enable logging** on your HDMI matrix/switch (e.g., via serial port or syslog).
+2. **Configure Splunk** to ingest logs from the device. Use Splunk Universal Forwarder if needed.
+3. **Create a Splunk index** named `hdmi_handshake`.
+
+### Step 2: Build an AI Log Analysis Dashboard
+1. In Splunk, create a new dashboard with panels for:
+   - **Handshake failure events** (search: `index=hdmi_handshake "handshake failed" OR "EDID error"`)
+   - **EDID mismatch alerts** (search: `index=hdmi_handshake "EDID mismatch"`)
+   - **Timeline of handshake attempts**
+2. Use Splunk's **Machine Learning Toolkit** to train a model that predicts handshake failures based on patterns (e.g., time of day, source device).
+
+### Step 3: Automate EDID Management with Python
+1. **Write a Python script** that:
+   - Connects to the HDMI matrix via serial or IP.
+   - Reads current EDID from each input port.
+   - Compares EDID against a known-good baseline stored in a JSON file.
+   - If mismatch detected, writes the correct EDID to the port.
+2. **Schedule the script** to run every 5 minutes using cron (Linux) or Task Scheduler (Windows).
+
+### Step 4: Integrate AI Alerts with Automation
+1. In Splunk, set up **alert actions** that trigger when handshake failure rate exceeds a threshold (e.g., 5 failures in 10 minutes).
+2. Configure the alert to call a webhook that runs your Python script (e.g., using Flask or a simple HTTP server).
+3. The script will then force an EDID re-read and reset the HDMI link.
+
+### Step 5: Test and Iterate
+1. Simulate a handshake failure by disconnecting a source device.
+2. Verify that Splunk detects the failure and triggers the automation.
+3. Check that the Python script corrects the EDID and restores the connection.
+4. Refine the AI model with more data over time.
+
+### Troubleshooting Tips
+- **No logs in Splunk**: Check serial cable and baud rate (usually 115200).
+- **Script fails to write EDID**: Ensure the HDMI matrix supports EDID write commands (check manufacturer docs).
+- **False positives**: Adjust the AI model threshold in Splunk.
+
+### Conclusion
+By combining Splunk's AI log analysis with automated EDID management, you can drastically reduce HDMI handshake issues in your home theater. This workflow saves hours of manual troubleshooting and ensures a seamless viewing experience.

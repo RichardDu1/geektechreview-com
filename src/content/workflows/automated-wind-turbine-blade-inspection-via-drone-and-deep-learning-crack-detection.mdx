@@ -1,0 +1,76 @@
+---
+title: "Automated Wind Turbine Blade Inspection via Drone and Deep Learning Crack Detection"
+description: "A step-by-step guide for wind farm technicians to perform automated blade inspections using drones and AI-powered crack detection, reducing manual inspection time and improving accuracy."
+targetRole: ["wind-farm-technician"]
+targetIntent: ["blade-damage-analysis"]
+difficulty: "Intermediate"
+setupTime: "2 Hours"
+costEstimate: "$500 - $2000 (drone + software subscription)"
+roi: "Saves 20 hours/week per technician"
+toolsUsed: ["skyvisor","blade3-ai"]
+---
+
+## Overview
+
+This workflow guides you through setting up an automated wind turbine blade inspection system using a drone equipped with high-resolution cameras and deep learning software for crack detection. By following these steps, you can reduce inspection time by up to 80% and detect cracks earlier.
+
+## Prerequisites
+
+- DJI Matrice 300 RTK or similar industrial drone with 30x zoom camera
+- SkyVisor or Blade³.ai subscription
+- Tablet or laptop for mission planning
+- Safety gear (helmet, harness) for on-site work
+
+## Step 1: Mission Planning
+
+1. Open SkyVisor or Blade³.ai on your device.
+2. Import turbine coordinates or select from map.
+3. Set flight parameters: altitude 20m, speed 2m/s, overlap 80%.
+4. Define inspection zones (leading edge, trailing edge, tip).
+5. Save mission as template for repeat inspections.
+
+## Step 2: Pre-Flight Checks
+
+- Verify drone battery >80% and SD card formatted.
+- Check weather: wind <25km/h, no rain, visibility >5km.
+- Ensure no obstacles near turbine.
+- Calibrate compass and IMU.
+
+## Step 3: Execute Automated Flight
+
+1. Launch drone from safe location (50m from turbine).
+2. Start mission; drone will autonomously orbit and capture images.
+3. Monitor live feed for anomalies.
+4. After completion, drone returns to home point.
+
+## Step 4: Data Upload and AI Analysis
+
+1. Remove SD card and transfer images to computer.
+2. Upload to SkyVisor or Blade³.ai cloud platform.
+3. Select "Deep Learning Crack Detection" analysis.
+4. Wait for processing (typically 10-30 minutes per turbine).
+
+## Step 5: Review Results
+
+1. Open generated report: highlights cracks, erosion, and delamination.
+2. Filter by severity (critical, major, minor).
+3. View annotated images with bounding boxes and crack length.
+4. Compare with previous inspections to track progression.
+
+## Step 6: Generate Maintenance Report
+
+1. Export PDF report with images and recommendations.
+2. Include repair priority list and estimated downtime.
+3. Share with maintenance team via email or CMMS.
+
+## Tips for Best Results
+
+- Inspect during low wind and good lighting (overcast is ideal).
+- Use infrared camera for subsurface defects.
+- Calibrate AI model with local blade types for higher accuracy.
+
+## Troubleshooting
+
+- **Blurry images**: Reduce drone speed or increase shutter speed.
+- **GPS loss**: Enable RTK for precise positioning.
+- **False positives**: Adjust confidence threshold in AI settings.

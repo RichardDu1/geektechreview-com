@@ -1,0 +1,68 @@
+---
+title: "Voice-Activated AI Workflow for Summarizing Daily Wearable Data and Generating Actionable Insights"
+description: "Automate your daily health data analysis with a voice-activated AI workflow that pulls data from wearables, summarizes key metrics, and delivers actionable insights via a custom GPT, saving you time and improving health decisions."
+targetRole: ["busy-professional"]
+targetIntent: ["daily-health-summary"]
+difficulty: "Intermediate"
+setupTime: "30 Minutes"
+costEstimate: "$0 - $20/mo"
+roi: "Saves 10 hours/week"
+toolsUsed: ["apple-health-export","google-fit-export","zapier","openai-gpt","voiceflow"]
+---
+
+## Overview
+
+This workflow enables busy professionals to get a daily health summary and actionable insights by simply speaking a voice command. It integrates wearable data (Apple Health, Google Fit) with AI (GPT-4) and automation (Zapier) to produce a concise report.
+
+## Prerequisites
+
+- Apple Health or Google Fit account
+- Zapier account (free tier works)
+- OpenAI API key (or ChatGPT Plus for GPTs)
+- Voiceflow account (free tier)
+
+## Step 1: Export Wearable Data
+
+### Apple Health
+1. Open the Health app on iPhone.
+2. Tap your profile picture > Export All Health Data.
+3. Save the exported ZIP file to a cloud folder (e.g., Google Drive).
+
+### Google Fit
+1. Go to Google Fit > Settings > Export data.
+2. Download the JSON file.
+
+## Step 2: Set Up Zapier Automation
+
+1. Create a new Zap in Zapier.
+2. **Trigger**: Schedule by Zapier (daily at 8 AM).
+3. **Action**: Google Drive - Get File Contents (read the exported health data file).
+4. **Action**: Code by Zapier (Python) to parse the JSON/XML and extract key metrics: steps, sleep hours, heart rate, calories.
+5. **Action**: OpenAI (GPT-4) - Summarize the data into a paragraph.
+6. **Action**: Webhook by Zapier - Send the summary to Voiceflow.
+
+## Step 3: Build Voice-Activated GPT
+
+1. Go to [chat.openai.com/gpts](https://chat.openai.com/gpts) and create a new GPT.
+2. **Name**: Daily Health Assistant
+3. **Instructions**: "You receive a daily health summary via webhook. When the user says 'What's my health summary?', respond with the latest summary and 3 actionable insights."
+4. **Actions**: Add an action with endpoint from Zapier webhook.
+5. Save and publish.
+
+## Step 4: Voice Interface with Voiceflow
+
+1. Create a new Voiceflow project.
+2. Add a **Voice Trigger** block (e.g., "Get health summary").
+3. Add an **API Call** block to call the GPT action (via OpenAI API).
+4. Add a **Speak** block to read the response aloud.
+5. Integrate with Alexa or Google Assistant (optional).
+
+## Step 5: Test and Refine
+
+- Say "Get health summary" to your voice assistant.
+- The workflow fetches the latest data, summarizes it, and speaks the insights.
+- Adjust the GPT instructions to focus on actionable tips (e.g., "You slept 6 hours; aim for 8 tonight").
+
+## Conclusion
+
+This workflow turns raw wearable data into a daily voice briefing, helping you stay on top of your health without manual effort.

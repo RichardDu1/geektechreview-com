@@ -1,10 +1,16 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import Card from '../components/Card.astro';
 
-const pageTitle = 'Geek Tech Review — Hardcore Tech & Hardware Reviews';
-const pageDescription = 'Deep dives, benchmarks, and honest reviews of the latest PC hardware, gadgets, and tech gear.';
+const allReviews = await getCollection('reviews');
+// Sort by date descending
+const sortedReviews = allReviews.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const featuredReview = sortedReviews[0];
+const sidebarReviews = sortedReviews.slice(1, 4);
+
+const pageTitle = 'Deep Dive Tech Reviews | Geek Tech Review';
+const pageDescription = 'In-depth, brutally honest reviews of developer laptops, noise-canceling audio, and tech hardware.';
 ---
 
 <BaseLayout
@@ -13,30 +19,86 @@ const pageDescription = 'Deep dives, benchmarks, and honest reviews of the lates
   canonical="https://geektechreview.com/en/"
   schema={{ type: 'WebSite', data: { description: pageDescription } }}
 >
-  <Hero title="Hardcore Benchmarks & Tech Reviews" subtitle="We push hardware to the limit so you know what to buy." />
-
-  <section class="container mx-auto px-6 py-8 animate-fade-in-up" style="animation-delay: 0.2s;">
-    <h2 class="text-xl md:text-2xl font-bold mb-10 text-white tracking-tight flex items-center gap-3">
-      <span class="w-1.5 h-6 bg-primary-500 rounded-full"></span>
-      Popular Categories
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-fr">
-      <Card title="PC Builds" description="Custom PC Guides" href="/en/categories/c1/" tag="Trending" featured={true} />
-      <Card title="Components" description="GPUs, CPUs, Motherboards" href="/en/categories/c2/" tag="New" />
-      <Card title="Peripherals" description="Mice, Keyboards, Monitors" href="/en/categories/c3/" />
-      <Card title="Mobile" description="Smartphones & Tablets" href="/en/categories/c4/" />
+  <!-- Magazine Header -->
+  <header class="border-b-[4px] border-white/10 pb-8 pt-12 px-6 max-w-[1400px] mx-auto">
+    <div class="flex flex-col items-center">
+      <div class="font-bold tracking-widest uppercase text-xs text-zinc-400 mb-4 border-b border-white/10 pb-1">Issue #042 • Late 2026</div>
+      <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-center mb-6">
+        GEEK TECH.
+      </h1>
+      <nav class="flex gap-8 font-sans font-bold uppercase text-sm border-y border-white/10 py-4 w-full justify-center">
+        <a href="/en/reviews/" class="hover:text-primary transition-colors">All Reviews</a>
+        <a href="/en/reviews/" class="hover:text-primary transition-colors">Laptops</a>
+        <a href="/en/reviews/" class="hover:text-primary transition-colors">Audio</a>
+        <a href="/en/reviews/" class="hover:text-primary transition-colors">Keyboards</a>
+      </nav>
     </div>
-  </section>
+  </header>
 
-  <section class="container mx-auto px-6 py-16 animate-fade-in-up" style="animation-delay: 0.4s;">
-    <h2 class="text-xl md:text-2xl font-bold mb-10 text-white tracking-tight flex items-center gap-3">
-      <span class="w-1.5 h-6 bg-purple-500 rounded-full"></span>
-      Latest Updates
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card title="RTX 5090 Review & Benchmarks" description="Read our latest in-depth review and analysis for 2026." href="/en/reviews/1/" rating={4.9} price="Verified" />
-      <Card title="Best Gaming Mice 2026" description="A comprehensive breakdown of features, pricing, and pros/cons." href="/en/reviews/2/" rating={4.7} price="Top Choice" />
-      <Card title="AMD Ryzen 9000 Tested" description="Everything you need to know before making a decision." href="/en/reviews/3/" rating={4.5} price="Updated" />
+  <!-- Editorial Asymmetrical Layout -->
+  <main class="max-w-[1400px] mx-auto px-6 py-12">
+    <div class="magazine-grid">
+      
+      <!-- Featured Story (Spans 8 cols) -->
+      <article class="col-span-12 md:col-span-8 group cursor-pointer">
+        {featuredReview ? (
+          <a href={`/en/reviews/${featuredReview.id.split('/').pop()}`} class="block">
+            <div class="relative overflow-hidden mb-6 aspect-[16/9] bg-[#0a0a0a] border border-white/10">
+              <div class="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent z-10"></div>
+              <div class="w-full h-full bg-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
+                <span class="font-sans text-zinc-400">Hero Graphic placeholder</span>
+              </div>
+              <div class="absolute top-4 left-4 z-20 bg-primary text-white font-bold uppercase text-xs px-3 py-1 shadow-[-4px_4px_0_0_#000]">
+                {featuredReview.data.category}
+              </div>
+            </div>
+            
+            <h2 class="text-4xl md:text-5xl mb-4 leading-tight group-hover:underline decoration-[4px] decoration-primary underline-offset-4">
+              {featuredReview.data.title}
+            </h2>
+            <p class="text-xl text-zinc-400 font-sans max-w-2xl leading-relaxed mb-6">
+              {featuredReview.data.description}
+            </p>
+            <div class="flex items-center gap-4 text-sm font-bold uppercase font-sans">
+              <span>By {featuredReview.data.author}</span>
+              <span class="text-primary">•</span>
+              <span class="text-accent text-lg">★ {featuredReview.data.score}</span>
+            </div>
+          </a>
+        ) : (
+          <div class="text-center py-20 text-zinc-400 border border-dashed border-white/10">Awaiting Editorial Sync...</div>
+        )}
+      </article>
+
+      <!-- Sidebar Stories (Spans 4 cols) -->
+      <aside class="col-span-12 md:col-span-4 flex flex-col gap-10 border-t md:border-t-0 md:border-l border-white/10 pt-10 md:pt-0 md:pl-10">
+        
+        <div>
+          <h3 class="font-bold text-xs uppercase tracking-widest text-zinc-400 border-b border-white/10 pb-2 mb-6">Trending Now</h3>
+          
+          {sidebarReviews.length > 0 ? sidebarReviews.map(review => (
+            <article class="mb-8 group cursor-pointer">
+              <a href={`/en/reviews/${review.id.split('/').pop()}`} class="block">
+                <h4 class="text-2xl mb-2 leading-snug group-hover:text-primary transition-colors">{review.data.title}</h4>
+                <div class="flex items-center gap-2 text-xs font-bold uppercase text-zinc-400 font-sans">
+                  <span class="text-accent text-lg">★ {review.data.score}</span>
+                  <span>{review.data.category}</span>
+                </div>
+              </a>
+            </article>
+          )) : (
+            <div class="text-sm text-zinc-400">No trending stories yet.</div>
+          )}
+        </div>
+        
+        <!-- Newsletter Box -->
+        <div class="bg-black text-white p-8 mt-auto shadow-[8px_8px_0_0_var(--color-primary)]">
+          <h4 class="text-3xl font-serif mb-4">Tech brutally reviewed. Every Friday.</h4>
+          <input type="email" placeholder="Your Email" class="w-full bg-transparent border-b-2 border-white/30 text-white py-2 mb-6 font-sans focus:outline-none focus:border-primary transition-colors" />
+          <button class="w-full bg-primary text-black font-bold uppercase tracking-widest py-3 hover:bg-[#0a0a0a] transition-colors">Subscribe</button>
+        </div>
+
+      </aside>
     </div>
-  </section>
+  </main>
 </BaseLayout>

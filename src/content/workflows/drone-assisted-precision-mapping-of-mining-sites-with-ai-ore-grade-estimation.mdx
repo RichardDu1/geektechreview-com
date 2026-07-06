@@ -1,0 +1,88 @@
+---
+title: "Drone-Assisted Precision Mapping of Mining Sites with AI Ore Grade Estimation"
+description: "A comprehensive B2B workflow for mining geologists to integrate drone-based photogrammetry, multispectral imaging, and AI-driven ore grade estimation into resource evaluation, reducing manual sampling time by 70%."
+targetRole: ["mining-geologist"]
+targetIntent: ["resource-evaluation"]
+difficulty: "Advanced"
+setupTime: "2-3 Days"
+costEstimate: "$5,000 - $15,000 initial (drone + software licenses)"
+roi: "Saves 40 hours/week per geologist, reduces drilling costs by 30%"
+toolsUsed: ["djimavic3enterprise","pix4dmapper","geologicai-ore-estimator","cloudcompare"]
+---
+
+## Overview
+
+This workflow enables mining geologists to rapidly map and evaluate ore grade across large mining sites using drones and AI. By combining high-resolution orthomosaics, digital elevation models (DEMs), and multispectral data with machine learning models trained on core sample assays, you can generate accurate ore grade maps without extensive drilling.
+
+## Prerequisites
+
+- **Drone**: DJI Mavic 3 Enterprise (RTK module recommended) or similar with RGB and multispectral sensors.
+- **Software**: Pix4Dmapper (photogrammetry), CloudCompare (point cloud analysis), GeologicAI Ore Estimator (AI grade estimation).
+- **Ground Control Points (GCPs)**: 5-10 per km² for georeferencing.
+- **Core Sample Data**: Historical assay data for training AI model.
+
+## Step 1: Flight Planning and Data Acquisition
+
+1. **Define survey area** using QGIS or Google Earth. Export KML boundary.
+2. **Plan flight** in DJI Pilot 2 or Pix4Dcapture:
+   - Overlap: 80% front, 70% side for photogrammetry.
+   - Altitude: 100m AGL for 2-3 cm/pixel resolution.
+   - Multispectral: Capture at solar noon for consistent lighting.
+3. **Deploy GCPs** with RTK GPS (2 cm accuracy). Record coordinates.
+4. **Execute flight** – ensure battery swaps for large areas (20 min per battery).
+
+## Step 2: Photogrammetry Processing
+
+1. **Import images** into Pix4Dmapper. Add GCP coordinates.
+2. **Run initial processing** (keypoints extraction, matching).
+3. **Optimize** with GCPs – ensure RMSE < 3 cm.
+4. **Generate outputs**:
+   - Orthomosaic (GeoTIFF)
+   - Digital Surface Model (DSM)
+   - Point cloud (LAS/LAZ)
+
+## Step 3: Multispectral Analysis
+
+1. **Load multispectral images** into Pix4Dmapper (if separate).
+2. **Compute vegetation indices** (NDVI, Iron Oxide ratio) to identify alteration zones.
+3. **Export reflectance maps** as GeoTIFFs.
+
+## Step 4: AI Ore Grade Estimation
+
+1. **Prepare training data**:
+   - Align core sample assay values (e.g., %Cu) with corresponding pixel locations in orthomosaic.
+   - Extract spectral signatures (RGB + multispectral bands) at each sample point.
+2. **Train model** in GeologicAI Ore Estimator:
+   - Use Random Forest or Neural Network.
+   - Input features: band values, elevation, slope, NDVI.
+   - Target: ore grade.
+   - Split data: 70% train, 30% test.
+3. **Validate model** – target R² > 0.85.
+4. **Apply model** to entire orthomosaic to generate grade map (GeoTIFF).
+
+## Step 5: 3D Visualization and Volume Calculation
+
+1. **Import point cloud** into CloudCompare.
+2. **Classify ground points** using CSF filter.
+3. **Generate DEM** from ground points.
+4. **Calculate ore volume** by subtracting DEM from DSM and multiplying by grade map.
+5. **Export** as shapefile or KML for GIS.
+
+## Step 6: Reporting and Integration
+
+1. **Create report** in QGIS with grade map, volume estimates, and confidence intervals.
+2. **Export** to PDF or web map (e.g., using QGIS2Web).
+3. **Integrate** with mine planning software (e.g., Surpac, Datamine) via GeoTIFF import.
+
+## Tips and Best Practices
+
+- **Calibrate multispectral sensor** before each flight using reflectance panel.
+- **Use RTK drone** to minimize GCPs (1 per 2 km²).
+- **Retrain AI model** quarterly with new assay data.
+- **Validate grade map** with at least 5 random drill holes per 10 km².
+
+## Expected Outcomes
+
+- **Accuracy**: Grade estimation within 10% of lab assays.
+- **Time**: 1 day for 5 km² survey vs. 2 weeks manual.
+- **Cost**: $5,000 vs. $50,000 for traditional drilling.
