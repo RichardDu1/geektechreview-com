@@ -1,5 +1,8 @@
-@import "tailwindcss/preflight" layer(base);
-@import "tailwindcss/utilities" layer(utilities);
+@import "tailwindcss";
+
+@source "../components";
+@source "../layouts";
+@source "../pages";
 
 /* =========================================================================
    GeekTechReview Design System
