@@ -8,14 +8,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://geektechreview.com',
   integrations: [
-    sitemap({ lastmod: new Date('2026-06-01') }),
+    sitemap({ lastmod: new Date('2026-07-29') }),
     mdx(),
   ],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-    routing: { prefixDefaultLocale: true },
-  },
   vite: {
     plugins: [tailwindcss()],
   },

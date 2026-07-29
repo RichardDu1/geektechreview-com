@@ -1,0 +1,37 @@
+---
+/**
+ * TrendingBar — horizontal scrolling bar of trending reviews.
+ */
+interface Props {
+  items: { title: string; href: string; rating?: number; category?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <section class="border-y border-[var(--color-border)] bg-[var(--color-surface)] py-3" aria-label="Trending reviews">
+    <div class="container-page flex items-center gap-4">
+      <span class="hidden shrink-0 text-xs font-bold uppercase tracking-widest text-[var(--color-accent)] sm:block">
+        ★ Trending
+      </span>
+      <div class="flex gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {items.map((item) => (
+          <a
+            href={item.href}
+            class="group flex shrink-0 items-center gap-2 whitespace-nowrap text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+          >
+            {item.rating !== undefined && (
+              <span class="rounded bg-[var(--color-surface-2)] px-1.5 py-0.5 text-xs font-bold tabular-nums text-[var(--color-text)]">
+                {item.rating.toFixed(1)}
+              </span>
+            )}
+            <span class="group-hover:underline">{item.title}</span>
+            {item.category && <span class="text-[var(--color-border)]">·</span>}
+            {item.category && <span class="text-xs">{item.category}</span>}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

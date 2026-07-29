@@ -1,0 +1,103 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import ReviewCard from "../components/ReviewCard.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { formatCategory, CATEGORY_SLUGS } from "../utils/format";
+
+/**
+ * ListLayout — grid of ReviewCards with category filter pills.
+ */
+interface ReviewItem {
+  title: string;
+  description: string;
+  category: string;
+  rating: number;
+  price?: number;
+  priceCurrency?: string;
+  pros?: string[];
+  cons?: string[];
+  href: string;
+  verdictLabel?: "buy" | "wait" | "skip";
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  items: ReviewItem[];
+  canonical: string;
+  schema?: object;
+  activeCategory?: string;
+  showFilters?: boolean;
+}
+
+const {
+  title,
+  description,
+  items,
+  canonical,
+  schema,
+  activeCategory,
+  showFilters = true,
+} = Astro.props;
+
+const crumbs = [
+  { name: "Home", href: "/" },
+  ...(activeCategory
+    ? [{ name: "Reviews", href: "/reviews/" }, { name: formatCategory(activeCategory), href: `/reviews/${activeCategory}/` }]
+    : [{ name: "Reviews", href: "/reviews/" }]),
+  { name: title, href: canonical },
+];
+---
+
+<BaseLayout title={title} description={description ?? ""} canonical={canonical} schema={schema}>
+  <div class="container-page py-6">
+    <Breadcrumb items={crumbs} />
+
+    <header class="mb-8">
+      <h1>{title}</h1>
+      {description && <p class="mt-2 max-w-2xl text-lg text-[var(--color-muted)]">{description}</p>}
+    </header>
+
+    {showFilters && (
+      <div class="mb-8 flex flex-wrap gap-2">
+        <a
+          href="/reviews/"
+          class={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${!activeCategory ? "bg-[var(--color-primary)] text-white" : "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-muted)] hover:text-[var(--color-text)]"}`}
+        >
+          All
+        </a>
+        {CATEGORY_SLUGS.map((slug) => (
+          <a
+            href={`/reviews/${slug}/`}
+            class={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeCategory === slug ? "bg-[var(--color-primary)] text-white" : "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-muted)] hover:text-[var(--color-text)]"}`}
+          >
+            {formatCategory(slug)}
+          </a>
+        ))}
+      </div>
+    )}
+
+    {items.length === 0 ? (
+      <div class="card-surface flex items-center justify-center py-20 text-[var(--color-muted)]">
+        No reviews yet. Check back soon.
+      </div>
+    ) : (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((item) => (
+          <ReviewCard
+            title={item.title}
+            description={item.description}
+            category={item.category}
+            rating={item.rating}
+            price={item.price}
+            priceCurrency={item.priceCurrency}
+            pros={item.pros}
+            cons={item.cons}
+            href={item.href}
+            verdictLabel={item.verdictLabel}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

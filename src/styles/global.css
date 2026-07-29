@@ -1,42 +1,239 @@
 @import "tailwindcss";
 
+/* =========================================================================
+   GeekTechReview Design System
+   Dark mode is DEFAULT. Light mode via `.light` class on <html>.
+   ========================================================================= */
+
 @theme {
-  --color-primary-500: #2563eb;
-  --color-primary-600: #1d4ed8;
-  --color-primary-dark: #1e40af;
-  --color-surface: #ffffff;
-  --color-neutral: #f8f9fa;
-  --color-card: #ffffff;
+  /* Brand fonts */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Dark-mode (default) color tokens — exposed as Tailwind utilities */
+  --color-bg: #0a0a0b;
+  --color-surface: #141416;
+  --color-surface-2: #1b1b1f;
+  --color-border: #232328;
+  --color-text: #e8e8ed;
+  --color-muted: #8b8b94;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #60a5fa;
+  --color-accent: #8b5cf6;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-fair: #f97316;
+
+  /* Score color scale (used by RatingBadge / bars) */
+  --color-score-9: #22c55e;
+  --color-score-8: #3b82f6;
+  --color-score-7: #f59e0b;
+  --color-score-6: #f97316;
+  --color-score-low: #ef4444;
+}
+
+/* -------------------------------------------------------------------------
+   Light mode overrides — activated by `<html class="light">`.
+   Dark is default (no class), so we only override when `.light` is present.
+   ------------------------------------------------------------------------- */
+html.light {
+  --color-bg: #ffffff;
+  --color-surface: #f8f9fa;
+  --color-surface-2: #f1f3f5;
   --color-border: #e5e7eb;
-  --color-muted: #6b7280;
   --color-text: #111827;
-  
-  --animate-blob: blob 10s infinite;
-  --animate-fade-in-up: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --color-muted: #6b7280;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #7c3aed;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --color-fair: #ea580c;
 
-  @keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
-    33% { transform: translate(40px, -60px) scale(1.1); opacity: 0.3; }
-    66% { transform: translate(-30px, 30px) scale(0.9); opacity: 0.1; }
-    100% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
-  }
-
-  @keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
+  --color-score-9: #16a34a;
+  --color-score-8: #2563eb;
+  --color-score-7: #d97706;
+  --color-score-6: #ea580c;
+  --color-score-low: #dc2626;
 }
 
-@utility animation-delay-2000 {
-  animation-delay: 2s;
+/* -------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
 }
 
-@utility animation-delay-4000 {
-  animation-delay: 4s;
+html.light {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background-color: var(--color-surface);
+  background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: "Inter", Georgia, -apple-system, sans-serif;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+/* -------------------------------------------------------------------------
+   Fluid typography
+   ------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+h1 { font-size: clamp(2rem, 5vw, 4rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+h3 { font-size: clamp(1.25rem, 2vw, 1.75rem); }
+h4 { font-size: clamp(1.125rem, 1.5vw, 1.375rem); }
+
+p { line-height: 1.7; }
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+a:hover { color: var(--color-primary-hover); }
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* -------------------------------------------------------------------------
+   Utility helpers (semantic, reusable across components)
+   ------------------------------------------------------------------------- */
+@utility container-page {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* Surface / card */
+@utility card-surface {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.875rem;
+}
+
+/* Focus ring for accessibility */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Scrollbar (dark-friendly) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+}
+
+/* -------------------------------------------------------------------------
+   Prose — article / reading mode (used by ReviewLayout content)
+   ------------------------------------------------------------------------- */
+.prose {
+  color: var(--color-text);
+  max-width: 72ch;
+}
+.prose > * + * { margin-top: 1.25rem; }
+
+.prose h2 {
+  margin-top: 2.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.prose h3 { margin-top: 2rem; }
+.prose h4 { margin-top: 1.5rem; }
+
+.prose p,
+.prose li { color: var(--color-text); line-height: 1.75; }
+
+.prose a { text-decoration: underline; text-underline-offset: 2px; }
+
+.prose strong { color: var(--color-text); font-weight: 700; }
+
+.prose ul,
+.prose ol { padding-left: 1.4rem; }
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+.prose li { margin-top: 0.4rem; }
+.prose li::marker { color: var(--color-muted); }
+
+.prose blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.prose code {
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.3rem;
+}
+.prose pre {
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.prose img {
+  border-radius: 0.6rem;
+  border: 1px solid var(--color-border);
+  width: 100%;
+  height: auto;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.prose th,
+.prose td {
+  border: 1px solid var(--color-border);
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+.prose th { background-color: var(--color-surface-2); font-weight: 700; }
+.prose tr:nth-child(even) td { background-color: var(--color-surface); }
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
 }

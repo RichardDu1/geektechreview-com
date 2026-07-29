@@ -1,0 +1,105 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import CompareTable from "../../components/CompareTable.astro";
+import ReviewCard from "../../components/ReviewCard.astro";
+import { getCollection } from "astro:content";
+import { formatCategory, formatPrice } from "../../utils/format";
+import { generateCompareSchema } from "../../utils/schema";
+
+const allReviews = await getCollection("reviews");
+const topReviews = [...allReviews]
+  .sort((a, b) => b.data.rating - a.data.rating)
+  .slice(0, 12);
+
+const featuredSample = topReviews.slice(0, 3).map((r) => ({
+  name: r.data.title,
+  brand: r.data.brand,
+  rating: r.data.rating,
+  price: formatPrice(r.data.price, r.data.priceCurrency),
+  href: `/reviews/${r.data.category}/${r.data.slug || r.id}/`,
+  specs: {
+    category: formatCategory(r.data.category),
+    model: r.data.model,
+    verdict: r.data.verdictLabel.toUpperCase(),
+    tested_by: r.data.testedBy || "Alex Chen",
+  },
+}));
+
+const canonical = "https://geektechreview.com/compare/";
+
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "Compare", href: canonical },
+];
+
+const schema = generateCompareSchema(topReviews.map((r) => ({
+  title: r.data.title,
+  description: r.data.description,
+  category: r.data.category,
+  brand: r.data.brand,
+  model: r.data.model,
+  price: r.data.price,
+  priceCurrency: r.data.priceCurrency,
+  rating: r.data.rating,
+  verdict: r.data.verdict,
+  verdictLabel: r.data.verdictLabel,
+  publishedAt: r.data.publishedAt,
+})));
+---
+
+<BaseLayout
+  title="Compare Tech Hardware — Head-to-Head Benchmarks & Specs"
+  description="Compare specs, benchmark scores, lab ratings, and prices side-by-side to make the right hardware buying decision."
+  canonical={canonical}
+  schema={schema}
+>
+  <div class="container-page py-6">
+    <Breadcrumb items={crumbs} />
+
+    <header class="mb-10 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-primary)]">
+        <span>Head-to-Head Tool</span>
+      </div>
+      <h1 class="mt-3 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+        Compare Products
+      </h1>
+      <p class="mt-2 max-w-2xl text-lg text-[var(--color-muted)]">
+        Side-by-side lab benchmark comparisons of top-rated hardware.
+      </p>
+    </header>
+
+    <!-- Sample Head-to-Head Comparison -->
+    <section class="mb-14">
+      <h2 class="mb-4 font-display text-2xl font-bold">Featured Head-to-Head Comparison</h2>
+      <CompareTable products={featuredSample} />
+    </section>
+
+    <!-- Available Products for Comparison Grid -->
+    <section>
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h2 class="font-display text-2xl font-bold">Products Ready for Comparison</h2>
+          <p class="text-sm text-[var(--color-muted)]">Select any product to view full lab specs and review breakdown</p>
+        </div>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {topReviews.map((r) => (
+          <ReviewCard
+            title={r.data.title}
+            description={r.data.description}
+            category={r.data.category}
+            rating={r.data.rating}
+            price={r.data.price}
+            priceCurrency={r.data.priceCurrency}
+            pros={r.data.pros}
+            cons={r.data.cons}
+            href={`/reviews/${r.data.category}/${r.data.slug || r.id}/`}
+            verdictLabel={r.data.verdictLabel}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

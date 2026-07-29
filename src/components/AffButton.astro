@@ -1,0 +1,41 @@
+---
+import { formatAmazonUrl } from "../utils/aff";
+
+/**
+ * AffButton — Amazon affiliate button.
+ * rel="sponsored nofollow" (Google compliant). Price + "View on Amazon".
+ * Tooltip: "We may earn a commission".
+ */
+interface Props {
+  href?: string;
+  price?: string;
+  label?: string;
+  asin?: string;
+}
+
+const { href, price, label = "View on Amazon", asin } = Astro.props;
+const url = href ?? formatAmazonUrl(asin);
+const disabled = !url;
+---
+
+{disabled ? (
+  <span class="inline-flex cursor-not-allowed items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] px-5 py-3 text-sm font-semibold text-[var(--color-muted)] opacity-60">
+    Unavailable
+  </span>
+) : (
+  <a
+    href={url}
+    target="_blank"
+    rel="sponsored nofollow noopener noreferrer"
+    title="We may earn a commission"
+    class="group inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5"
+    style="background:linear-gradient(135deg, var(--color-primary), var(--color-accent))"
+  >
+    {price && <span class="tabular-nums">{price}</span>}
+    <span>{label}</span>
+    <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+    <span class="sr-only">We may earn a commission</span>
+  </a>
+)}

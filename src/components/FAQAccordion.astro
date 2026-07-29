@@ -1,0 +1,45 @@
+---
+/**
+ * FAQAccordion — collapsible FAQ panels with FAQPage JSON-LD schema.
+ */
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: FAQ[];
+}
+
+const { items = [] } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: items.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
+---
+
+{items.length > 0 && (
+  <section class="space-y-3">
+    {items.map((item, i) => (
+      <details class="group card-surface overflow-hidden" name={`faq-${i}`}>
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-semibold text-[var(--color-text)] hover:bg-[var(--color-surface-2)]/40">
+          <span>{item.question}</span>
+          <svg class="h-5 w-5 shrink-0 text-[var(--color-muted)] transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </summary>
+        <div class="border-t border-[var(--color-border)] px-5 py-4 text-sm leading-relaxed text-[var(--color-muted)]">
+          {item.answer}
+        </div>
+      </details>
+    ))}
+  </section>
+)}
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -1,15 +1,30 @@
 ---
 title: "NuPhy Halo75 v2"
 description: "A beautiful, thocky mechanical keyboard that's almost perfect—if you can stomach the price and the battery life."
-category: "Keyboards"
+category: "pc-components"
 author: "Alex Chen"
-score: 8.5
-price: "$179.95"
-pros: ["Excellent build quality with aluminum frame","Outstanding PBT keycaps and pre-lubed switches","Smooth wireless performance and low latency","Hot-swappable switches and per-key RGB"]
-cons: ["Battery life is mediocre (around 40 hours with RGB off)","No USB-C passthrough or extra ports","Proprietary dongle storage is awkward","Software is basic and Windows-only"]
-bottomLine: "The NuPhy Halo75 v2 is a gorgeous, thocky mechanical keyboard that nails the typing experience and build quality, but its middling battery life and lack of USB-C extras keep it from being the undisputed king of 75% wireless boards. If you value feel and sound over battery longevity, it's a solid pick."
-verdict: "Solid Pick"
+brand: "NuPhy"
+model: "Halo75 v2"
+slug: "nuphy-halo75-v2"
+price: 179.95
+priceCurrency: "USD"
+rating: 8.5
+pros:
+  - "Excellent build quality with aluminum frame"
+  - "Outstanding PBT keycaps and pre-lubed switches"
+  - "Smooth wireless performance and low latency"
+  - "Hot-swappable switches and per-key RGB"
+cons:
+  - "Battery life is mediocre (around 40 hours with RGB off)"
+  - "No USB-C passthrough or extra ports"
+  - "Proprietary dongle storage is awkward"
+  - "Software is basic and Windows-only"
+verdict: "The NuPhy Halo75 v2 is a gorgeous, thocky mechanical keyboard that nails the typing experience and build quality, but its middling battery life and lack of USB-C extras keep it from being the undisputed king of 75% wireless boards. If you value feel and sound over battery longevity, it's a solid pick."
+verdictLabel: "buy"
 publishedAt: 2026-05-31
+testedBy: "Alex Chen"
+testMethodology: "v1.0"
+featured: false
 ---
 
 ## Design & Build

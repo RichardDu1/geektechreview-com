@@ -1,15 +1,30 @@
 ---
 title: "Keychron Q1 Pro"
 description: "A gasket-mounted aluminum QMK/VIA wireless mechanical keyboard that sounds great but makes you question why you'd pay this much for a plastic battery case."
-category: "Keyboards"
+category: "pc-components"
 author: "Alex Chen"
-score: 8.2
-price: "$199"
-pros: ["Excellent gasket mount and typing feel","Full aluminum case (mostly)","QMK/VIA support with wireless","Hot-swap switches and knob"]
-cons: ["Plastic bottom case feels cheap at this price","Battery life is mediocre (about 35 hours with RGB off)","Stock stabilizers need tuning","No 2.4GHz dongle, Bluetooth only"]
-bottomLine: "The Keychron Q1 Pro is a fantastic typing experience in a package that's 80% premium and 20% compromise. If you need wireless and can stomach the plastic bottom, it's a solid pick. But if you're fine with a cable, the original Q1 is cheaper and arguably better built."
-verdict: "Solid Pick"
+brand: "Keychron"
+model: "Q1 Pro"
+slug: "keychron-q1-pro"
+price: 199
+priceCurrency: "USD"
+rating: 8.2
+pros:
+  - "Excellent gasket mount and typing feel"
+  - "Full aluminum case (mostly)"
+  - "QMK/VIA support with wireless"
+  - "Hot-swap switches and knob"
+cons:
+  - "Plastic bottom case feels cheap at this price"
+  - "Battery life is mediocre (about 35 hours with RGB off)"
+  - "Stock stabilizers need tuning"
+  - "No 2.4GHz dongle, Bluetooth only"
+verdict: "The Keychron Q1 Pro is a fantastic typing experience in a package that's 80% premium and 20% compromise. If you need wireless and can stomach the plastic bottom, it's a solid pick. But if you're fine with a cable, the original Q1 is cheaper and arguably better built."
+verdictLabel: "wait"
 publishedAt: 2026-05-31
+testedBy: "Alex Chen"
+testMethodology: "v1.0"
+featured: false
 ---
 
 ## Design & Build

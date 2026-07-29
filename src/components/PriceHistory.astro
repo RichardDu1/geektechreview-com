@@ -1,0 +1,112 @@
+---
+/**
+ * PriceHistory — Canvas-based price history chart (placeholder/real).
+ * Renders a lightweight inline canvas line chart from a series of points.
+ * No external deps; degrades gracefully if JS is unavailable.
+ */
+interface Props {
+  data?: number[];
+  current?: number;
+  currency?: string;
+}
+
+const {
+  data = [],
+  current,
+  currency = "USD",
+} = Astro.props;
+
+// Build a static SVG fallback path so the chart shows even without JS.
+const max = data.length ? Math.max(...data) : 10;
+const min = data.length ? Math.min(...data) : 0;
+const range = max - min || 1;
+const w = 320;
+const h = 80;
+const points = data.map((v, i) => {
+  const x = data.length > 1 ? (i / (data.length - 1)) * w : w / 2;
+  const y = h - ((v - min) / range) * (h - 8) - 4;
+  return `${x.toFixed(1)},${y.toFixed(1)}`;
+});
+const polyPoints = points.join(" ");
+const hasData = data.length > 0;
+const symbol = currency === "USD" ? "$" : "";
+---
+
+<div class="card-surface p-5">
+  <div class="mb-3 flex items-center justify-between">
+    <h3 class="text-sm font-bold uppercase tracking-wide text-[var(--color-muted)]">Price history</h3>
+    {current !== undefined && (
+      <span class="text-lg font-bold tabular-nums">{symbol}{current.toLocaleString()}</span>
+    )}
+  </div>
+
+  {hasData ? (
+    <div class="relative">
+      <canvas
+        data-price-chart
+        data-values={JSON.stringify(data)}
+        data-currency={currency}
+        width={w}
+        height={h}
+        class="w-full"
+        style={`height:${h}px`}
+      />
+      <noscript>
+        <svg viewBox={`0 0 ${w} ${h}`} class="w-full" style={`height:${h}px`} aria-label="Price history line chart">
+          <polyline points={polyPoints} fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+        </svg>
+      </noscript>
+      <div class="mt-2 flex justify-between text-[11px] text-[var(--color-muted)]">
+        <span>Low: {symbol}{min.toLocaleString()}</span>
+        <span>High: {symbol}{max.toLocaleString()}</span>
+      </div>
+    </div>
+  ) : (
+    <p class="py-8 text-center text-sm text-[var(--color-muted)]">Price history unavailable.</p>
+  )}
+</div>
+
+<script>
+  function drawCharts() {
+    const canvases = document.querySelectorAll<HTMLCanvasElement>("canvas[data-price-chart]");
+    canvases.forEach((canvas) => {
+      const values: number[] = JSON.parse(canvas.dataset.values || "[]");
+      if (!values.length) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.width;
+      const h = canvas.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.scale(dpr, dpr);
+
+      const max = Math.max(...values);
+      const min = Math.min(...values);
+      const range = max - min || 1;
+      const pad = 4;
+      const color = getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim() || "#3b82f6";
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+      values.forEach((v, i) => {
+        const x = values.length > 1 ? (i / (values.length - 1)) * w : w / 2;
+        const y = h - ((v - min) / range) * (h - pad * 2) - pad;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Fill under line
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fillStyle = color + "22";
+      ctx.fill();
+    });
+  }
+  drawCharts();
+  document.addEventListener("astro:after-swap", drawCharts);
+</script>

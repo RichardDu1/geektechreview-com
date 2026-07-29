@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { Info, ShoppingBag, ShieldCheck } from "@lucide/astro";
+
+const canonical = "https://geektechreview.com/affiliate-disclosure/";
+
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "Affiliate Disclosure", href: canonical },
+];
+---
+
+<BaseLayout
+  title="Affiliate Disclosure & Commercial Transparency — GeekTechReview"
+  description="Official Amazon Associates affiliate disclosure, revenue model transparency, and editorial integrity statement."
+  canonical={canonical}
+>
+  <div class="container-page py-6">
+    <Breadcrumb items={crumbs} />
+
+    <header class="mb-12 max-w-3xl">
+      <div class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)]/10 px-3.5 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
+        <Info class="h-4 w-4" />
+        <span>Commercial Disclosure</span>
+      </div>
+      <h1 class="mt-4 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+        Affiliate Disclosure
+      </h1>
+      <p class="mt-4 text-xl text-[var(--color-muted)] leading-relaxed">
+        Transparency is essential to maintaining your trust. Here is how GeekTechReview earns revenue and maintains editorial objectivity.
+      </p>
+    </header>
+
+    <div class="max-w-3xl space-y-8">
+      <!-- Amazon Statement -->
+      <section class="card-surface border border-[var(--color-primary)]/30 p-6 sm:p-8">
+        <div class="flex items-center gap-3">
+          <ShoppingBag class="h-6 w-6 text-[var(--color-primary)]" />
+          <h2 class="font-display text-2xl font-bold">Amazon Associates Program Statement</h2>
+        </div>
+        <p class="mt-4 text-base font-semibold text-[var(--color-text)]">
+          GeekTechReview is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com.
+        </p>
+        <p class="mt-2 text-sm text-[var(--color-muted)] leading-relaxed">
+          As an Amazon Associate, GeekTechReview earns from qualifying purchases. When you click on an Amazon link on our site and make a purchase, we may receive a small referral commission at <strong class="text-[var(--color-text)]">no additional cost to you</strong>.
+        </p>
+      </section>
+
+      <!-- How We Make Money -->
+      <section class="card-surface p-6 sm:p-8">
+        <h2 class="font-display text-2xl font-bold">How We Fund Our Lab</h2>
+        <div class="mt-4 space-y-3 text-sm text-[var(--color-muted)] leading-relaxed">
+          <p>
+            Running a hardware lab equipped with calibrated colorimeters, acoustic measurement rigs, thermal cameras, and high-wattage power monitors requires funding. Affiliate referrals allow us to remain free for readers without relying on intrusive pop-up ads or paywalls.
+          </p>
+          <p>
+            We only place affiliate links on products that we have reviewed, analyzed, or categorized based on objective lab findings.
+          </p>
+        </div>
+      </section>
+
+      <!-- Independence Guarantee -->
+      <section class="card-surface p-6 sm:p-8">
+        <div class="flex items-center gap-3">
+          <ShieldCheck class="h-6 w-6 text-[var(--color-success)]" />
+          <h2 class="font-display text-2xl font-bold">Our Guarantee to Readers</h2>
+        </div>
+        <ul class="mt-4 space-y-3 text-sm text-[var(--color-muted)]">
+          <li class="flex items-start gap-2">
+            <span class="text-[var(--color-success)]">✓</span> <strong class="text-[var(--color-text)]">No Cost Increase:</strong> Clicking an affiliate link never increases the purchase price for you.
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-[var(--color-success)]">✓</span> <strong class="text-[var(--color-text)]">No Favored Scoring:</strong> High commission rates never influence a product's rating or verdict. A bad product gets a bad score, period.
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-[var(--color-success)]">✓</span> <strong class="text-[var(--color-text)]">Clear Marking:</strong> Outbound retail links feature <code class="text-xs bg-[var(--color-surface-2)] px-1 py-0.5 rounded">rel="sponsored nofollow"</code> attributes.
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

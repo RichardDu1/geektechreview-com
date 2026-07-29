@@ -1,0 +1,34 @@
+---
+import { getScoreColor, getScoreLabel } from "../utils/format";
+
+interface Props {
+  score: number;
+  size?: "sm" | "md" | "lg";
+  showLabel?: boolean;
+}
+
+const { score, size = "md", showLabel = true } = Astro.props;
+const color = getScoreColor(score);
+const label = getScoreLabel(score);
+
+const sizes = {
+  sm: { box: "h-12 w-12 text-lg", num: "text-base", label: "text-[10px]" },
+  md: { box: "h-20 w-20 text-2xl", num: "text-2xl", label: "text-xs" },
+  lg: { box: "h-28 w-28 text-3xl", num: "text-4xl", label: "text-sm" },
+};
+const s = sizes[size];
+---
+
+<div class="inline-flex flex-col items-center gap-2">
+  <div
+    class={`flex items-center justify-center rounded-xl font-bold ${s.box}`}
+    style={`background-color:${color}1a;border:1px solid ${color};color:${color}`}
+  >
+    <span class={s.num}>{score.toFixed(1)}</span>
+  </div>
+  {showLabel && (
+    <span class={`font-semibold uppercase tracking-wide ${s.label}`} style={`color:${color}`}>
+      {label}
+    </span>
+  )}
+</div>

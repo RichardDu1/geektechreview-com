@@ -1,0 +1,40 @@
+---
+import { formatDate } from "../utils/format";
+
+/**
+ * Changelog — review update log display.
+ */
+interface Entry {
+  date: Date | string;
+  version?: string;
+  summary: string;
+}
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries = [] } = Astro.props;
+---
+
+{entries.length > 0 && (
+  <div class="card-surface p-5">
+    <h3 class="mb-4 text-sm font-bold uppercase tracking-wide text-[var(--color-muted)]">Update log</h3>
+    <ol class="relative space-y-5 border-l border-[var(--color-border)] pl-5">
+      {entries.map((entry) => (
+        <li class="relative">
+          <span class="absolute -left-[26px] top-1 h-3 w-3 rounded-full border-2 border-[var(--color-bg)]" style="background-color:var(--color-primary)" />
+          <div class="flex flex-wrap items-center gap-2">
+            <time class="text-sm font-semibold text-[var(--color-text)]" datetime={new Date(entry.date).toISOString()}>
+              {formatDate(entry.date)}
+            </time>
+            {entry.version && (
+              <span class="rounded bg-[var(--color-surface-2)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--color-muted)]">{entry.version}</span>
+            )}
+          </div>
+          <p class="mt-1 text-sm text-[var(--color-muted)]">{entry.summary}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+)}

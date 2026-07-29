@@ -1,0 +1,40 @@
+---
+import ListLayout from "../../layouts/ListLayout.astro";
+import { getCollection } from "astro:content";
+import { generateListSchema } from "../../utils/schema";
+
+const allReviews = await getCollection("reviews");
+const sortedReviews = [...allReviews].sort(
+  (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+);
+
+const items = sortedReviews.map((r) => ({
+  title: r.data.title,
+  description: r.data.description,
+  category: r.data.category,
+  rating: r.data.rating,
+  price: r.data.price,
+  priceCurrency: r.data.priceCurrency,
+  pros: r.data.pros,
+  cons: r.data.cons,
+  href: `/reviews/${r.data.category}/${r.data.slug || r.id}/`,
+  verdictLabel: r.data.verdictLabel,
+}));
+
+const canonical = "https://geektechreview.com/reviews/";
+const schemaItems = items.map((i) => ({
+  name: i.title,
+  url: `https://geektechreview.com${i.href}`,
+  rating: i.rating,
+}));
+const schema = generateListSchema(schemaItems, "All Tech Reviews");
+---
+
+<ListLayout
+  title="All Reviews"
+  description="Explore our full archive of lab-tested tech hardware reviews, ratings, and verdicts."
+  items={items}
+  canonical={canonical}
+  schema={schema}
+  showFilters={true}
+/>

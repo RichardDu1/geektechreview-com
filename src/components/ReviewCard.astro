@@ -1,0 +1,102 @@
+---
+import RatingBadge from "./RatingBadge.astro";
+import RatingStars from "./RatingStars.astro";
+import { formatCategory, formatPrice, getScoreColor } from "../utils/format";
+
+/**
+ * ReviewCard — card for list pages.
+ */
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+  rating: number;
+  price?: number;
+  priceCurrency?: string;
+  pros?: string[];
+  cons?: string[];
+  href: string;
+  imageAlt?: string;
+  verdictLabel?: string;
+}
+
+const {
+  title,
+  description,
+  category,
+  rating,
+  price,
+  priceCurrency,
+  pros = [],
+  cons = [],
+  href,
+  imageAlt,
+  verdictLabel,
+} = Astro.props;
+
+const color = getScoreColor(rating);
+const priceStr = formatPrice(price, priceCurrency);
+const topPros = pros.slice(0, 2);
+const topCons = cons.slice(0, 1);
+---
+
+<article class="group flex flex-col overflow-hidden card-surface transition-shadow hover:shadow-lg hover:shadow-black/20">
+  <a href={href} class="block">
+    <div class="relative aspect-[16/10] overflow-hidden bg-[var(--color-surface-2)]">
+      <div class="flex h-full w-full items-center justify-center text-sm text-[var(--color-muted)]">
+        <svg class="h-10 w-10 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <path d="M21 15l-5-5L5 21" />
+        </svg>
+      </div>
+      <span
+        class="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide backdrop-blur"
+        style={`background-color:${color}26;color:${color};border:1px solid ${color}66`}
+      >
+        {rating.toFixed(1)}
+      </span>
+      <span class="absolute right-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
+        {formatCategory(category)}
+      </span>
+    </div>
+  </a>
+
+  <div class="flex flex-1 flex-col p-4">
+    <div class="mb-2 flex items-center gap-2">
+      <RatingStars score={rating} size={14} />
+      {verdictLabel && (
+        <span class="text-[11px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">{verdictLabel}</span>
+      )}
+    </div>
+
+    <h3 class="mb-1.5 text-lg font-bold leading-snug">
+      <a href={href} class="transition-colors hover:text-[var(--color-primary)]">{title}</a>
+    </h3>
+    <p class="mb-3 line-clamp-2 text-sm text-[var(--color-muted)]">{description}</p>
+
+    {(topPros.length > 0 || topCons.length > 0) && (
+      <ul class="mb-3 space-y-1 text-xs">
+        {topPros.map((p) => (
+          <li class="flex gap-1.5" style="color:var(--color-success)">
+            <span aria-hidden="true">+</span><span class="text-[var(--color-text)]">{p}</span>
+          </li>
+        ))}
+        {topCons.map((c) => (
+          <li class="flex gap-1.5" style="color:var(--color-danger)">
+            <span aria-hidden="true">−</span><span class="text-[var(--color-text)]">{c}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <div class="mt-auto flex items-center justify-between pt-2">
+      {priceStr ? (
+        <span class="text-base font-bold tabular-nums">{priceStr}</span>
+      ) : (
+        <span class="text-sm text-[var(--color-muted)]">Price N/A</span>
+      )}
+      <a href={href} class="text-xs font-semibold text-[var(--color-primary)] hover:underline">Read review →</a>
+    </div>
+  </div>
+</article>

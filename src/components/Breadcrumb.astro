@@ -1,36 +1,43 @@
 ---
-// Breadcrumb.astro — Auto-generate breadcrumbs from URL path
-const path = Astro.url.pathname;
-const segments = path
-  .split('/')
-  .filter(Boolean)
-  .filter((s) => s !== 'en'); // skip locale prefix
+/**
+ * Breadcrumb navigation with BreadcrumbList JSON-LD schema.
+ */
+interface Crumb {
+  name: string;
+  href: string;
+}
 
-const breadcrumbs = segments.map((seg, i) => {
-  const href = '/en/' + segments.slice(0, i + 1).join('/') + '/';
-  const name = seg
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-  return { name, href };
-});
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: item.name,
+    item: item.href,
+  })),
+};
 ---
 
-{breadcrumbs.length > 0 && (
-  <nav aria-label="Breadcrumb" class="container py-3">
-    <ol class="flex items-center gap-1.5 text-sm text-zinc-400">
-      <li>
-        <a href="/en/" class="hover:text-primary transition-colors">Home</a>
+<nav aria-label="Breadcrumb" class="mb-4">
+  <ol class="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-muted)]">
+    {items.map((item, i) => (
+      <li class="flex items-center gap-1.5">
+        {i > 0 && <span aria-hidden="true" class="text-[var(--color-border)]">/</span>}
+        {i < items.length - 1 ? (
+          <a href={item.href} class="hover:text-[var(--color-primary)] hover:underline">{item.name}</a>
+        ) : (
+          <span class="font-medium text-[var(--color-text)]" aria-current="page">{item.name}</span>
+        )}
       </li>
-      {breadcrumbs.map((crumb, i) => (
-        <li class="flex items-center gap-1.5">
-          <span>/</span>
-          {i === breadcrumbs.length - 1 ? (
-            <span class="text-white font-medium" aria-current="page">{crumb.name}</span>
-          ) : (
-            <a href={crumb.href} class="hover:text-primary transition-colors">{crumb.name}</a>
-          )}
-        </li>
-      ))}
-    </ol>
-  </nav>
-)}
+    ))}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -1,0 +1,104 @@
+---
+import RatingStars from "./RatingStars.astro";
+import { getScoreColor } from "../utils/format";
+
+/**
+ * CompareTable — comparison table with sticky first column,
+ * spec groups, and rating comparison.
+ */
+interface CompareProduct {
+  name: string;
+  brand: string;
+  rating: number;
+  price?: string;
+  href?: string;
+  specs: Record<string, string>;
+}
+
+interface Props {
+  products: CompareProduct[];
+  specGroups?: { group: string; specs: string[] }[];
+}
+
+const { products, specGroups = [] } = Astro.props;
+
+// Collect the ordered list of spec keys (union, preserve group order).
+const specKeys: string[] = [];
+const seen = new Set<string>();
+for (const g of specGroups) {
+  for (const k of g.specs) {
+    if (!seen.has(k)) {
+      seen.add(k);
+      specKeys.push(k);
+    }
+  }
+}
+// Fallback: union of all product spec keys if no groups provided.
+if (specKeys.length === 0) {
+  for (const p of products) {
+    for (const k of Object.keys(p.specs)) {
+      if (!seen.has(k)) {
+        seen.add(k);
+        specKeys.push(k);
+      }
+    }
+  }
+}
+---
+
+<div class="card-surface overflow-x-auto">
+  <table class="w-full border-collapse text-sm">
+    <thead>
+      <tr class="border-b border-[var(--color-border)]">
+        <th scope="col" class="sticky left-0 z-10 bg-[var(--color-surface)] px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-[var(--color-muted)]">
+          Spec
+        </th>
+        {products.map((p) => (
+          <th scope="col" class="min-w-[160px] px-4 py-3 text-left">
+            {p.href ? (
+              <a href={p.href} class="font-bold text-[var(--color-text)] hover:text-[var(--color-primary)] hover:underline">{p.name}</a>
+            ) : (
+              <span class="font-bold text-[var(--color-text)]">{p.name}</span>
+            )}
+            <div class="text-xs font-normal text-[var(--color-muted)]">{p.brand}</div>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {/* Rating row */}
+      <tr class="border-b border-[var(--color-border)] bg-[var(--color-surface-2)]/40">
+        <th scope="row" class="sticky left-0 z-10 bg-[var(--color-surface-2)]/80 px-4 py-3 text-left font-medium text-[var(--color-muted)]">Rating</th>
+        {products.map((p) => {
+          const color = getScoreColor(p.rating);
+          return (
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg font-bold tabular-nums" style={`color:${color}`}>{p.rating.toFixed(1)}</span>
+                <RatingStars score={p.rating} size={14} />
+              </div>
+            </td>
+          );
+        })}
+      </tr>
+      {/* Price row */}
+      {products.some((p) => p.price) && (
+        <tr class="border-b border-[var(--color-border)]">
+          <th scope="row" class="sticky left-0 z-10 bg-[var(--color-surface)] px-4 py-3 text-left font-medium text-[var(--color-muted)]">Price</th>
+          {products.map((p) => (
+            <td class="px-4 py-3 font-semibold tabular-nums">{p.price ?? "—"}</td>
+          ))}
+        </tr>
+      )}
+      {/* Spec rows */}
+      {specKeys.map((key, i) => (
+        <tr class={i % 2 === 0 ? "bg-[var(--color-surface-2)]/30" : ""}>
+          <th scope="row" class="sticky left-0 z-10 bg-inherit px-4 py-3 text-left font-medium text-[var(--color-muted)] capitalize">{key.replace(/_/g, " ")}</th>
+          {products.map((p) => (
+            <td class="px-4 py-3 font-mono text-[0.85rem] text-[var(--color-text)]">{p.specs[key] ?? "—"}</td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

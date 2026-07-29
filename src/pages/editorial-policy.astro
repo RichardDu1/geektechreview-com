@@ -1,0 +1,136 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { FileText, CheckCircle2, Shield, Scale, RefreshCw } from "@lucide/astro";
+
+const canonical = "https://geektechreview.com/editorial-policy/";
+
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "Editorial Policy", href: canonical },
+];
+---
+
+<BaseLayout
+  title="Editorial Policy & Testing Ethics — GeekTechReview"
+  description="Our guidelines on editorial independence, review scoring methodology, affiliate compensation transparency, and article updates."
+  canonical={canonical}
+>
+  <div class="container-page py-6">
+    <Breadcrumb items={crumbs} />
+
+    <header class="mb-12 max-w-3xl">
+      <div class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)]/10 px-3.5 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
+        <FileText class="h-4 w-4" />
+        <span>Editorial Standards</span>
+      </div>
+      <h1 class="mt-4 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+        Editorial Policy
+      </h1>
+      <p class="mt-4 text-xl text-[var(--color-muted)] leading-relaxed">
+        How we maintain complete editorial independence, conduct rigorous hardware evaluations, and transparently handle affiliate partnerships.
+      </p>
+    </header>
+
+    <div class="grid gap-12 lg:col-span-12 lg:grid-cols-12">
+      <div class="space-y-10 lg:col-span-8">
+        <!-- 1. Editorial Independence -->
+        <section class="card-surface p-6 sm:p-8">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+              <Shield class="h-5 w-5" />
+            </div>
+            <h2 class="font-display text-2xl font-bold">1. Editorial Independence</h2>
+          </div>
+          <div class="mt-4 space-y-3 text-sm text-[var(--color-muted)] leading-relaxed">
+            <p>
+              GeekTechReview operates with absolute editorial independence. Our reviews, ratings, and recommendations are driven solely by empirical test data and hands-on evaluations conducted by our editorial team.
+            </p>
+            <p>
+              We do not accept paid reviews, sponsored ratings, or manufacturer pre-approval of our content. Advertisers and affiliate partners have zero control or input over our test results, scores, or final verdicts.
+            </p>
+          </div>
+        </section>
+
+        <!-- 2. Scoring Methodology -->
+        <section class="card-surface p-6 sm:p-8">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+              <Scale class="h-5 w-5" />
+            </div>
+            <h2 class="font-display text-2xl font-bold">2. Scoring Methodology</h2>
+          </div>
+          <div class="mt-4 space-y-3 text-sm text-[var(--color-muted)] leading-relaxed">
+            <p>
+              Our product ratings are calculated on a standardized 0–10 scale based on weighted subscores across five key dimensions:
+            </p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong class="text-[var(--color-text)]">Performance & NPU (30%):</strong> Synthetic & real-world benchmarks, thermal headroom, NPU TOPS capabilities.</li>
+              <li><strong class="text-[var(--color-text)]">Value & Price (20%):</strong> Feature set relative to MSRP and competing options in the same price tier.</li>
+              <li><strong class="text-[var(--color-text)]">Design & Build Quality (20%):</strong> Ergonomics, materials, port selection, display quality, and durability.</li>
+              <li><strong class="text-[var(--color-text)]">Features & Ecosystem (15%):</strong> Software stability, connectivity standards (Wi-Fi 7, Thunderbolt 5), AI features.</li>
+              <li><strong class="text-[var(--color-text)]">Battery & Efficiency (15%):</strong> Real-world battery life under normalized brightness (200 nits) and power efficiency under load.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 3. Update & Re-testing Policy -->
+        <section class="card-surface p-6 sm:p-8">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+              <RefreshCw class="h-5 w-5" />
+            </div>
+            <h2 class="font-display text-2xl font-bold">3. Update & Re-testing Policy</h2>
+          </div>
+          <div class="mt-4 space-y-3 text-sm text-[var(--color-muted)] leading-relaxed">
+            <p>
+              Hardware doesn't stay static—firmware updates, driver optimizations, and OS patches can significantly alter performance. We continuously monitor software updates for high-impact hardware.
+            </p>
+            <p>
+              When a major software update alters performance or introduces new capabilities (such as OS-level AI features), we re-test the product and update the article date with a detailed <strong class="text-[var(--color-text)]">Changelog</strong>.
+            </p>
+          </div>
+        </section>
+
+        <!-- 4. Affiliate Transparency -->
+        <section class="card-surface p-6 sm:p-8">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+              <CheckCircle2 class="h-5 w-5" />
+            </div>
+            <h2 class="font-display text-2xl font-bold">4. Affiliate Transparency</h2>
+          </div>
+          <div class="mt-4 space-y-3 text-sm text-[var(--color-muted)] leading-relaxed">
+            <p>
+              GeekTechReview is funded in part by affiliate referral commissions. When readers click our outbound retail links (such as Amazon Associates) and make a purchase, we may earn a referral fee.
+            </p>
+            <p>
+              This fee comes at no additional cost to you. Links marked with affiliate buttons carry <code class="text-xs bg-[var(--color-surface-2)] px-1 py-0.5 rounded">rel="sponsored nofollow"</code> attributes in compliance with Search Engine guidelines and FTC regulations.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar summary -->
+      <aside class="space-y-6 lg:col-span-4">
+        <div class="card-surface p-6">
+          <h3 class="font-display text-lg font-bold">Quick Policy Summary</h3>
+          <ul class="mt-4 space-y-3 text-xs text-[var(--color-muted)]">
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-success)]">✓</span> No sponsored scores or review overrides.
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-success)]">✓</span> Products tested using standardized Methodology v1.0.
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-success)]">✓</span> Transparent update history with timestamped changelogs.
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[var(--color-success)]">✓</span> Amazon Associates disclosure on every page.
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,77 @@
+---
+import ReviewLayout from "../../../layouts/ReviewLayout.astro";
+import Changelog from "../../../components/Changelog.astro";
+import { getCollection, render } from "astro:content";
+import { generateReviewSchema } from "../../../utils/schema";
+
+export async function getStaticPaths() {
+  const reviews = await getCollection("reviews");
+  return reviews.map((entry) => {
+    const slug = entry.data.slug || entry.id;
+    return {
+      params: { category: entry.data.category, slug },
+      props: { entry },
+    };
+  });
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const slug = entry.data.slug || entry.id;
+const canonical = `https://geektechreview.com/reviews/${entry.data.category}/${slug}/`;
+
+const schema = generateReviewSchema({
+  title: entry.data.title,
+  description: entry.data.description,
+  category: entry.data.category,
+  brand: entry.data.brand,
+  model: entry.data.model,
+  price: entry.data.price,
+  priceCurrency: entry.data.priceCurrency,
+  rating: entry.data.rating,
+  verdict: entry.data.verdict,
+  verdictLabel: entry.data.verdictLabel,
+  publishedAt: entry.data.publishedAt,
+  updatedAt: entry.data.updatedAt,
+  testedBy: entry.data.testedBy,
+  slug,
+});
+
+const tocItems = (headings || [])
+  .filter((h) => h.depth <= 3)
+  .map((h) => ({ id: h.slug, text: h.text }));
+---
+
+<ReviewLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  category={entry.data.category}
+  brand={entry.data.brand}
+  model={entry.data.model}
+  rating={entry.data.rating}
+  pros={entry.data.pros}
+  cons={entry.data.cons}
+  verdict={entry.data.verdict}
+  verdictLabel={entry.data.verdictLabel}
+  price={entry.data.price}
+  priceCurrency={entry.data.priceCurrency}
+  amazonUrl={entry.data.amazonUrl}
+  amazonAsin={entry.data.amazonAsin}
+  subscores={entry.data.subscores}
+  publishedAt={entry.data.publishedAt}
+  updatedAt={entry.data.updatedAt}
+  testedBy={entry.data.testedBy}
+  testMethodology={entry.data.testMethodology}
+  canonical={canonical}
+  schema={schema}
+  tocItems={tocItems}
+>
+  <Content />
+
+  {entry.data.updatedAt && (
+    <div class="mt-8 border-t border-[var(--color-border)] pt-6">
+      <Changelog date={entry.data.updatedAt} />
+    </div>
+  )}
+</ReviewLayout>

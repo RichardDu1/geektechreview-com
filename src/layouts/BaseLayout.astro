@@ -1,79 +1,180 @@
-﻿---
-import CookieBanner from '../components/CookieBanner.astro';
-import '../styles/global.css';
-const { title, description, canonical, schema } = Astro.props;
 ---
+import "../styles/global.css";
+import ThemeToggle from "../components/ThemeToggle.astro";
+
+/**
+ * BaseLayout — dark mode by default.
+ * Removed: blob backgrounds, email capture popup, CookieBanner.
+ * Added: font preconnect/preload, theme toggle, proper header/footer.
+ */
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  schema?: object;
+}
+
+const { title, description, canonical, schema } = Astro.props;
+const year = new Date().getFullYear();
+
+const nav = [
+  { label: "Reviews", href: "/reviews/" },
+  { label: "Best Of", href: "/best/laptops/" },
+  { label: "Compare", href: "/compare/" },
+  { label: "Deals", href: "/deals/" },
+  { label: "Guides", href: "/guides/" },
+  { label: "About", href: "/about/" },
+];
+
+const footerCategories = [
+  { label: "Laptops", href: "/reviews/laptops/" },
+  { label: "Phones", href: "/reviews/phones/" },
+  { label: "Audio", href: "/reviews/audio/" },
+  { label: "Gaming", href: "/reviews/gaming/" },
+  { label: "PC Components", href: "/reviews/pc-components/" },
+  { label: "Smart Home", href: "/reviews/smart-home/" },
+  { label: "AI Devices", href: "/reviews/ai-devices/" },
+  { label: "Creator Gear", href: "/reviews/creator-gear/" },
+];
+---
+
 <!doctype html>
-<html lang="en" class="dark antialiased overflow-x-hidden selection:bg-primary-500/30">
+<html lang="en" class="dark antialiased selection:bg-[var(--color-primary)]/30">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Space Grotesk', sans-serif; }</style>
+    <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; }</style>
-    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
-    <title>{title}</title>
 
-    <!-- Open Graph / Facebook -->
+    {/* Fonts: preconnect + preload */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    {/* Open Graph */}
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonical} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
+    <meta property="og:site_name" content="GeekTechReview" />
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
 
+    {/* Theme init (runs before paint to avoid flash) */}
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light") document.documentElement.classList.add("light");
+          else document.documentElement.classList.remove("light");
+        } catch (e) {}
+      })();
+    </script>
+
+    {schema && (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )}
+
+    <title>{title}</title>
   </head>
-  <body class="relative min-h-screen bg-dark">
-    <!-- Ambient Background Blobs -->
-    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-      <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-500/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
-      <div class="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-purple-500/10 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
-      <div class="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-blue-500/10 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000"></div>
-    </div>
 
-    <header class="fixed top-0 w-full z-50 bg-dark/60 backdrop-blur-xl border-b border-white/5 supports-[backdrop-filter]:bg-dark/40">
-      <div class="container mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="/" class="text-xl font-extrabold tracking-tight flex items-center gap-2">
-          <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-primary-500 to-primary-600 shadow-lg shadow-primary-500/20"></div>
-          {title.split('—')[0].trim()}
+  <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+    <header class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-xl">
+      <div class="container-page flex h-16 items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 text-lg font-bold tracking-tight">
+          <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-tr from-[var(--color-primary)] to-[var(--color-accent)] text-xs font-black text-white shadow-lg shadow-[var(--color-primary)]/20">
+            G
+          </span>
+          <span>GeekTechReview</span>
         </a>
-        <nav class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
-          <a href="/en/categories/" class="hover:text-white transition-colors">Categories</a>
-          <a href="/en/latest/" class="hover:text-white transition-colors">Latest</a>
+
+        <nav class="hidden items-center gap-6 text-sm font-medium text-[var(--color-muted)] md:flex">
+          {nav.map((n) => (
+            <a href={n.href} class="transition-colors hover:text-[var(--color-text)]">{n.label}</a>
+          ))}
         </nav>
+
+        <div class="flex items-center gap-2">
+          <ThemeToggle />
+        </div>
       </div>
     </header>
-    
-    <main class="pt-24 pb-16">
+
+    <main>
       <slot />
     </main>
-    
-    <footer class="border-t border-white/5 py-12 text-center text-sm text-slate-600 bg-black/20">
-      <p>&copy; {new Date().getFullYear()} {title.split('—')[0].trim()}. All rights reserved.</p>
-    </footer>
-      <CookieBanner />
-  
-<!-- Email Capture -->
-<div id="email-capture" class="fixed bottom-0 left-0 w-full bg-primary-500 text-white p-4 z-[100] transform transition-transform translate-y-full flex justify-center items-center gap-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-white/20">
-  <div class="font-bold text-lg hidden md:block">Join 50,000+ tech leaders getting weekly deep-dives & lifetime deals.</div>
-  <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Subscribed to the newsletter!'); document.getElementById('email-capture').style.display='none';">
-    <input type="email" placeholder="Your best email address" class="px-5 py-2.5 rounded-lg text-black outline-none w-72 focus:ring-4 ring-black/20 font-medium" required>
-    <button type="submit" class="bg-[#000000] text-white font-bold px-8 py-2.5 rounded-lg hover:bg-[#222222] transition-colors shadow-lg">Subscribe</button>
-  </form>
-  <button type="button" onclick="document.getElementById('email-capture').style.display='none'" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/70 hover:text-white font-bold text-xl">✕</button>
-</div>
-<script>
-  setTimeout(() => {
-    document.getElementById('email-capture').classList.remove('translate-y-full');
-  }, 4000); // pop up after 4 seconds
-</script>
-\n  </body>
-</html>
 
+    <footer class="mt-16 border-t border-[var(--color-border)] bg-[var(--color-surface)]/40">
+      <div class="container-page py-12">
+        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Brand */}
+          <div class="sm:col-span-2 lg:col-span-1">
+            <a href="/" class="flex items-center gap-2.5 text-lg font-bold">
+              <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-tr from-[var(--color-primary)] to-[var(--color-accent)] text-xs font-black text-white">
+                G
+              </span>
+              <span>GeekTechReview</span>
+            </a>
+            <p class="mt-3 max-w-xs text-sm leading-relaxed text-[var(--color-muted)]">
+              In-depth, lab-tested reviews of AI-era hardware — laptops, phones, audio, gaming, and more. No fluff, just verdicts.
+            </p>
+          </div>
+
+          {/* Categories */}
+          <div>
+            <h2 class="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--color-muted)]">Categories</h2>
+            <ul class="space-y-2 text-sm">
+              {footerCategories.map((c) => (
+                <li><a href={c.href} class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">{c.label}</a></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h2 class="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--color-muted)]">Resources</h2>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/best/laptops/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">Best Of guides</a></li>
+              <li><a href="/compare/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">Product comparisons</a></li>
+              <li><a href="/deals/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">Today's deals</a></li>
+              <li><a href="/guides/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">Buying guides</a></li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h2 class="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--color-muted)]">Company</h2>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/about/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">About us</a></li>
+              <li><a href="/how-we-test/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">How we test</a></li>
+              <li><a href="/editorial-policy/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">Editorial policy</a></li>
+              <li><a href="/affiliate-disclosure/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">Affiliate disclosure</a></li>
+              <li><a href="/contact/" class="text-[var(--color-muted)] hover:text-[var(--color-primary)]">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-10 border-t border-[var(--color-border)] pt-6">
+          <p class="text-xs leading-relaxed text-[var(--color-muted)]">
+            <strong class="text-[var(--color-text)]">Affiliate disclosure:</strong> As an Amazon Associate, GeekTechReview earns from qualifying purchases. Links to Amazon are sponsored and may earn us a commission at no extra cost to you. Prices and availability are accurate as of the time shown and are subject to change. See our <a href="/affiliate-disclosure/" class="underline hover:text-[var(--color-primary)]">affiliate disclosure</a> for details.
+          </p>
+          <p class="mt-3 text-xs text-[var(--color-muted)]">
+            &copy; {year} GeekTechReview. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

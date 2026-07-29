@@ -1,0 +1,47 @@
+---
+/**
+ * ProsCons — two-column pros (green +) / cons (red -).
+ */
+interface Props {
+  pros: string[];
+  cons: string[];
+}
+
+const { pros, cons } = Astro.props;
+---
+
+<div class="grid gap-4 sm:grid-cols-2">
+  <div class="card-surface p-4">
+    <h3 class="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide" style="color:var(--color-success)">
+      <span class="inline-flex h-5 w-5 items-center justify-center rounded-full" style="background-color:var(--color-success)">+</span>
+      Pros
+    </h3>
+    <ul class="space-y-2">
+      {pros.length === 0 ? (
+        <li class="text-sm" style="color:var(--color-muted)">None noted.</li>
+      ) : pros.map((p) => (
+        <li class="flex gap-2 text-sm leading-relaxed">
+          <span aria-hidden="true" style="color:var(--color-success)">✓</span>
+          <span>{p}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="card-surface p-4">
+    <h3 class="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide" style="color:var(--color-danger)">
+      <span class="inline-flex h-5 w-5 items-center justify-center rounded-full" style="background-color:var(--color-danger)">−</span>
+      Cons
+    </h3>
+    <ul class="space-y-2">
+      {cons.length === 0 ? (
+        <li class="text-sm" style="color:var(--color-muted)">None noted.</li>
+      ) : cons.map((c) => (
+        <li class="flex gap-2 text-sm leading-relaxed">
+          <span aria-hidden="true" style="color:var(--color-danger)">✕</span>
+          <span>{c}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>

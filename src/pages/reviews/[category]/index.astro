@@ -1,0 +1,55 @@
+---
+import ListLayout from "../../../layouts/ListLayout.astro";
+import { getCollection } from "astro:content";
+import { formatCategory, CATEGORY_SLUGS } from "../../../utils/format";
+import { generateListSchema } from "../../../utils/schema";
+
+export async function getStaticPaths() {
+  const allReviews = await getCollection("reviews");
+
+  return CATEGORY_SLUGS.map((category) => {
+    const categoryReviews = allReviews
+      .filter((r) => r.data.category === category)
+      .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+
+    return {
+      params: { category },
+      props: { category, reviews: categoryReviews },
+    };
+  });
+}
+
+const { category, reviews } = Astro.props;
+const categoryLabel = formatCategory(category);
+
+const items = reviews.map((r) => ({
+  title: r.data.title,
+  description: r.data.description,
+  category: r.data.category,
+  rating: r.data.rating,
+  price: r.data.price,
+  priceCurrency: r.data.priceCurrency,
+  pros: r.data.pros,
+  cons: r.data.cons,
+  href: `/reviews/${r.data.category}/${r.data.slug || r.id}/`,
+  verdictLabel: r.data.verdictLabel,
+}));
+
+const canonical = `https://geektechreview.com/reviews/${category}/`;
+const schemaItems = items.map((i) => ({
+  name: i.title,
+  url: `https://geektechreview.com${i.href}`,
+  rating: i.rating,
+}));
+const schema = generateListSchema(schemaItems, `${categoryLabel} Reviews`);
+---
+
+<ListLayout
+  title={`${categoryLabel} Reviews`}
+  description={`Lab-tested reviews, benchmark scores, and buying advice for the latest ${categoryLabel.toLowerCase()}.`}
+  items={items}
+  canonical={canonical}
+  schema={schema}
+  activeCategory={category}
+  showFilters={true}
+/>

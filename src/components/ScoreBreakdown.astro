@@ -1,0 +1,54 @@
+---
+import { getScoreColor } from "../utils/format";
+
+/**
+ * ScoreBreakdown — multi-dimension score bars.
+ */
+interface Subscores {
+  performance: number;
+  value: number;
+  design: number;
+  features: number;
+  battery?: number;
+}
+
+interface Props {
+  subscores: Subscores;
+}
+
+const { subscores } = Astro.props;
+
+const dims: { key: keyof Subscores; label: string }[] = [
+  { key: "performance", label: "Performance" },
+  { key: "value", label: "Value" },
+  { key: "design", label: "Design" },
+  { key: "features", label: "Features" },
+  { key: "battery", label: "Battery" },
+];
+---
+
+<div class="card-surface p-5">
+  <h3 class="mb-4 text-sm font-bold uppercase tracking-wide text-[var(--color-muted)]">Score breakdown</h3>
+  <div class="space-y-3.5">
+    {dims.map(({ key, label }) => {
+      const val = subscores[key];
+      if (val === undefined) return null;
+      const pct = (val / 10) * 100;
+      const color = getScoreColor(val);
+      return (
+        <div>
+          <div class="mb-1 flex items-center justify-between text-sm">
+            <span class="font-medium text-[var(--color-text)]">{label}</span>
+            <span class="tabular-nums font-semibold" style={`color:${color}`}>{val.toFixed(1)}</span>
+          </div>
+          <div class="h-2 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
+            <div
+              class="h-full rounded-full transition-all duration-500"
+              style={`width:${pct}%;background-color:${color}`}
+            />
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>

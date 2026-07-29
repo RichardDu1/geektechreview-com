@@ -1,15 +1,28 @@
 ---
 title: "Sony WH-1000XM6"
 description: "Sony's latest noise-canceling kings are here, and they're... exactly what you expected. Incremental improvements, a heftier price tag, and the same old song and dance."
-category: "Audio"
+category: "audio"
 author: "Alex Chen"
-score: 8.5
-price: "$399"
-pros: ["Best-in-class active noise cancellation","Comfortable for all-day wear","Improved multipoint Bluetooth connectivity"]
-cons: ["No USB-C fast charging in the case","Design barely changed from XM5","Still no lossless audio support"]
-bottomLine: "The Sony WH-1000XM6 are the best noise-canceling headphones you can buy, but they're also the most boring upgrade in years. If you have the XM5, save your money. If you're new to the game, these are a solid pick—just don't expect any surprises."
-verdict: "Solid Pick"
+brand: "Sony"
+model: "WH-1000XM6"
+slug: "sony-wh-1000xm6"
+price: 399
+priceCurrency: "USD"
+rating: 8.5
+pros:
+  - "Best-in-class active noise cancellation"
+  - "Comfortable for all-day wear"
+  - "Improved multipoint Bluetooth connectivity"
+cons:
+  - "No USB-C fast charging in the case"
+  - "Design barely changed from XM5"
+  - "Still no lossless audio support"
+verdict: "The Sony WH-1000XM6 are the best noise-canceling headphones you can buy, but they're also the most boring upgrade in years. If you have the XM5, save your money. If you're new to the game, these are a solid pick—just don't expect any surprises."
+verdictLabel: "buy"
 publishedAt: 2026-05-31
+testedBy: "Alex Chen"
+testMethodology: "v1.0"
+featured: false
 ---
 
 ## Design & Build

@@ -1,104 +1,258 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TrendingBar from "../components/TrendingBar.astro";
+import ReviewCard from "../components/ReviewCard.astro";
+import RatingBadge from "../components/RatingBadge.astro";
+import { getCollection } from "astro:content";
+import { formatCategory, formatPrice, getScoreColor, CATEGORY_SLUGS } from "../utils/format";
+import { generateWebsiteSchema } from "../utils/schema";
+import {
+  Laptop,
+  Smartphone,
+  Headphones,
+  Gamepad2,
+  Cpu,
+  Home as HomeIcon,
+  Bot,
+  Camera,
+  Search,
+  ArrowRight,
+  Sparkles,
+} from "@lucide/astro";
 
-const allReviews = await getCollection('reviews');
-// Sort by date descending
-const sortedReviews = allReviews.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const allReviews = await getCollection("reviews");
+const sortedReviews = [...allReviews].sort(
+  (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+);
 
-const featuredReview = sortedReviews[0];
-const sidebarReviews = sortedReviews.slice(1, 4);
+const featuredReviews = sortedReviews.filter((r) => r.data.featured);
+const displayFeatured = featuredReviews.length > 0 ? featuredReviews : sortedReviews.slice(0, 2);
+const latestReviews = sortedReviews.slice(0, 8);
 
-const pageTitle = 'Deep Dive Tech Reviews | Geek Tech Review';
-const pageDescription = 'In-depth, brutally honest reviews of developer laptops, noise-canceling audio, and tech hardware.';
+const trendingItems = sortedReviews.slice(0, 6).map((r) => ({
+  title: r.data.title,
+  href: `/reviews/${r.data.category}/${r.data.slug || r.id}/`,
+  rating: r.data.rating,
+  category: formatCategory(r.data.category),
+}));
+
+const categoryConfig: Record<string, { icon: any; label: string; desc: string }> = {
+  laptops: { icon: Laptop, label: "Laptops", desc: "Copilot+ PCs, MacBooks & Workstations" },
+  phones: { icon: Smartphone, label: "Phones", desc: "On-device AI smartphones & Flagships" },
+  audio: { icon: Headphones, label: "Audio", desc: "ANC headphones, Spatial audio & Mics" },
+  gaming: { icon: Gamepad2, label: "Gaming", desc: "OLED displays, Handhelds & GPUs" },
+  "pc-components": { icon: Cpu, label: "PC Components", desc: "CPUs, GPUs, Motherboards & SSDs" },
+  "smart-home": { icon: HomeIcon, label: "Smart Home", desc: "Matter hubs, Security & Locks" },
+  "ai-devices": { icon: Bot, label: "AI Devices", desc: "Local inference hardware & Dev boards" },
+  "creator-gear": { icon: Camera, label: "Creator Gear", desc: "Capture cards, Cameras & Studio gear" },
+};
+
+const schema = generateWebsiteSchema();
 ---
 
 <BaseLayout
-  title={pageTitle}
-  description={pageDescription}
-  canonical="https://geektechreview.com/en/"
-  schema={{ type: 'WebSite', data: { description: pageDescription } }}
+  title="GeekTechReview — AI-Era Hardware Reviews & Lab-Tested Buying Guides"
+  description="Brutally honest, lab-tested reviews of AI-era hardware: laptops, phones, audio, gaming, and developer gear. No fluff, just verdicts."
+  canonical="https://geektechreview.com/"
+  schema={schema}
 >
-  <!-- Magazine Header -->
-  <header class="border-b-[4px] border-white/10 pb-8 pt-12 px-6 max-w-[1400px] mx-auto">
-    <div class="flex flex-col items-center">
-      <div class="font-bold tracking-widest uppercase text-xs text-zinc-400 mb-4 border-b border-white/10 pb-1">Issue #042 • Late 2026</div>
-      <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-center mb-6">
-        GEEK TECH.
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden border-b border-[var(--color-border)] bg-gradient-to-b from-[var(--color-surface)]/60 to-[var(--color-bg)] py-16 md:py-24">
+    <div class="container-page relative z-10 text-center">
+      <div class="mx-auto inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 px-3.5 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
+        <Sparkles class="h-3.5 w-3.5" />
+        <span>AI-Era Hardware Lab Reviews</span>
+      </div>
+
+      <h1 class="mx-auto mt-6 max-w-4xl font-display text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl">
+        GeekTechReview
       </h1>
-      <nav class="flex gap-8 font-sans font-bold uppercase text-sm border-y border-white/10 py-4 w-full justify-center">
-        <a href="/en/reviews/" class="hover:text-primary transition-colors">All Reviews</a>
-        <a href="/en/reviews/" class="hover:text-primary transition-colors">Laptops</a>
-        <a href="/en/reviews/" class="hover:text-primary transition-colors">Audio</a>
-        <a href="/en/reviews/" class="hover:text-primary transition-colors">Keyboards</a>
-      </nav>
+
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-[var(--color-muted)] sm:text-xl">
+        AI-era hardware, brutally honest reviews. Zero fluff, 100% lab-tested verdicts.
+      </p>
+
+      {/* Search Bar UI */}
+      <div class="mx-auto mt-8 max-w-xl">
+        <form action="/reviews/" method="GET" class="relative flex items-center">
+          <input
+            type="text"
+            name="q"
+            placeholder="Search laptops, GPUs, headphones, AI devices..."
+            class="w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4 pl-12 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)] shadow-xl transition focus:border-[var(--color-primary)] focus:outline-none"
+          />
+          <Search class="absolute left-4 h-5 w-5 text-[var(--color-muted)]" />
+          <button
+            type="submit"
+            class="absolute right-2 rounded-xl bg-[var(--color-primary)] px-4 py-2 text-xs font-semibold text-white transition hover:opacity-90"
+          >
+            Search
+          </button>
+        </form>
+      </div>
     </div>
-  </header>
+  </section>
 
-  <!-- Editorial Asymmetrical Layout -->
-  <main class="max-w-[1400px] mx-auto px-6 py-12">
-    <div class="magazine-grid">
-      
-      <!-- Featured Story (Spans 8 cols) -->
-      <article class="col-span-12 md:col-span-8 group cursor-pointer">
-        {featuredReview ? (
-          <a href={`/en/reviews/${featuredReview.id.split('/').pop()}`} class="block">
-            <div class="relative overflow-hidden mb-6 aspect-[16/9] bg-[#0a0a0a] border border-white/10">
-              <div class="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent z-10"></div>
-              <div class="w-full h-full bg-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
-                <span class="font-sans text-zinc-400">Hero Graphic placeholder</span>
-              </div>
-              <div class="absolute top-4 left-4 z-20 bg-primary text-white font-bold uppercase text-xs px-3 py-1 shadow-[-4px_4px_0_0_#000]">
-                {featuredReview.data.category}
-              </div>
-            </div>
-            
-            <h2 class="text-4xl md:text-5xl mb-4 leading-tight group-hover:underline decoration-[4px] decoration-primary underline-offset-4">
-              {featuredReview.data.title}
-            </h2>
-            <p class="text-xl text-zinc-400 font-sans max-w-2xl leading-relaxed mb-6">
-              {featuredReview.data.description}
-            </p>
-            <div class="flex items-center gap-4 text-sm font-bold uppercase font-sans">
-              <span>By {featuredReview.data.author}</span>
-              <span class="text-primary">•</span>
-              <span class="text-accent text-lg">★ {featuredReview.data.score}</span>
-            </div>
-          </a>
-        ) : (
-          <div class="text-center py-20 text-zinc-400 border border-dashed border-white/10">Awaiting Editorial Sync...</div>
-        )}
-      </article>
+  <!-- Trending Bar -->
+  <TrendingBar items={trendingItems} />
 
-      <!-- Sidebar Stories (Spans 4 cols) -->
-      <aside class="col-span-12 md:col-span-4 flex flex-col gap-10 border-t md:border-t-0 md:border-l border-white/10 pt-10 md:pt-0 md:pl-10">
-        
+  <!-- Featured Reviews Section -->
+  {displayFeatured.length > 0 && (
+    <section class="container-page py-12">
+      <div class="mb-8 flex items-center justify-between">
         <div>
-          <h3 class="font-bold text-xs uppercase tracking-widest text-zinc-400 border-b border-white/10 pb-2 mb-6">Trending Now</h3>
-          
-          {sidebarReviews.length > 0 ? sidebarReviews.map(review => (
-            <article class="mb-8 group cursor-pointer">
-              <a href={`/en/reviews/${review.id.split('/').pop()}`} class="block">
-                <h4 class="text-2xl mb-2 leading-snug group-hover:text-primary transition-colors">{review.data.title}</h4>
-                <div class="flex items-center gap-2 text-xs font-bold uppercase text-zinc-400 font-sans">
-                  <span class="text-accent text-lg">★ {review.data.score}</span>
-                  <span>{review.data.category}</span>
-                </div>
-              </a>
-            </article>
-          )) : (
-            <div class="text-sm text-zinc-400">No trending stories yet.</div>
-          )}
+          <h2 class="font-display text-2xl font-bold tracking-tight">Featured Reviews</h2>
+          <p class="text-sm text-[var(--color-muted)]">Hand-picked flagship hardware tested in our lab</p>
         </div>
-        
-        <!-- Newsletter Box -->
-        <div class="bg-black text-white p-8 mt-auto shadow-[8px_8px_0_0_var(--color-primary)]">
-          <h4 class="text-3xl font-serif mb-4">Tech brutally reviewed. Every Friday.</h4>
-          <input type="email" placeholder="Your Email" class="w-full bg-transparent border-b-2 border-white/30 text-white py-2 mb-6 font-sans focus:outline-none focus:border-primary transition-colors" />
-          <button class="w-full bg-primary text-black font-bold uppercase tracking-widest py-3 hover:bg-[#0a0a0a] transition-colors">Subscribe</button>
-        </div>
+      </div>
 
-      </aside>
+      <div class="grid gap-8 lg:grid-cols-2">
+        {displayFeatured.map((item) => {
+          const href = `/reviews/${item.data.category}/${item.data.slug || item.id}/`;
+          const priceStr = formatPrice(item.data.price, item.data.priceCurrency);
+          return (
+            <article class="group relative flex flex-col justify-between overflow-hidden card-surface border border-[var(--color-border)] p-6 transition hover:border-[var(--color-primary)]/50 sm:p-8">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="rounded-full bg-[var(--color-surface-2)] px-3 py-1 text-xs font-semibold text-[var(--color-muted)]">
+                    {formatCategory(item.data.category)}
+                  </span>
+                  <RatingBadge score={item.data.rating} size="sm" />
+                </div>
+
+                <h3 class="mt-4 font-display text-2xl font-bold leading-snug group-hover:text-[var(--color-primary)]">
+                  <a href={href}>{item.data.title}</a>
+                </h3>
+
+                <p class="mt-2 line-clamp-3 text-sm text-[var(--color-muted)]">
+                  {item.data.description}
+                </p>
+
+                {item.data.pros && item.data.pros.length > 0 && (
+                  <div class="mt-4 space-y-1 text-xs">
+                    {item.data.pros.slice(0, 2).map((p) => (
+                      <div class="flex items-center gap-2 text-[var(--color-success)]">
+                        <span>✓</span>
+                        <span class="text-[var(--color-text)]">{p}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div class="mt-6 flex items-center justify-between border-t border-[var(--color-border)] pt-4">
+                <div>
+                  <span class="text-xs text-[var(--color-muted)]">Tested by {item.data.testedBy || "Alex Chen"}</span>
+                  {priceStr && <div class="text-base font-bold tabular-nums">{priceStr}</div>}
+                </div>
+                <a href={href} class="inline-flex items-center gap-1.5 rounded-xl bg-[var(--color-surface-2)] px-4 py-2 text-xs font-bold text-[var(--color-text)] transition group-hover:bg-[var(--color-primary)] group-hover:text-white">
+                  Read Full Review
+                  <ArrowRight class="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- Latest Reviews Section -->
+  <section class="container-page py-12">
+    <div class="mb-8 flex items-center justify-between">
+      <div>
+        <h2 class="font-display text-2xl font-bold tracking-tight">Latest Hardware Reviews</h2>
+        <p class="text-sm text-[var(--color-muted)]">Our most recent lab test results and verdicts</p>
+      </div>
+      <a href="/reviews/" class="inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-primary)] hover:underline">
+        View All ({sortedReviews.length})
+        <ArrowRight class="h-4 w-4" />
+      </a>
     </div>
-  </main>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {latestReviews.map((r) => (
+        <ReviewCard
+          title={r.data.title}
+          description={r.data.description}
+          category={r.data.category}
+          rating={r.data.rating}
+          price={r.data.price}
+          priceCurrency={r.data.priceCurrency}
+          pros={r.data.pros}
+          cons={r.data.cons}
+          href={`/reviews/${r.data.category}/${r.data.slug || r.id}/`}
+          verdictLabel={r.data.verdictLabel}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Category Grid Section -->
+  <section class="border-t border-[var(--color-border)] bg-[var(--color-surface)]/40 py-16">
+    <div class="container-page">
+      <div class="mb-10 text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight">Browse by Category</h2>
+        <p class="mt-2 text-sm text-[var(--color-muted)]">Explore hardware across 8 dedicated categories</p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {CATEGORY_SLUGS.map((cat) => {
+          const cfg = categoryConfig[cat];
+          const IconComp = cfg?.icon ?? Laptop;
+          return (
+            <a
+              href={`/reviews/${cat}/`}
+              class="group flex items-start gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition hover:border-[var(--color-primary)] hover:shadow-lg hover:shadow-black/20"
+            >
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition group-hover:bg-[var(--color-primary)] group-hover:text-white">
+                <IconComp class="h-6 w-6" />
+              </div>
+              <div>
+                <h3 class="font-display text-lg font-bold group-hover:text-[var(--color-primary)]">
+                  {cfg?.label ?? cat}
+                </h3>
+                <p class="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">
+                  {cfg?.desc}
+                </p>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup Section -->
+  <section class="container-page py-16">
+    <div class="rounded-3xl border border-[var(--color-border)] bg-gradient-to-r from-[var(--color-surface)] via-[var(--color-surface-2)] to-[var(--color-surface)] p-8 text-center sm:p-12">
+      <div class="mx-auto max-w-xl">
+        <div class="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+          <Sparkles class="h-6 w-6" />
+        </div>
+        <h2 class="mt-4 font-display text-2xl font-bold sm:text-3xl">Stay Ahead in the AI Hardware Era</h2>
+        <p class="mt-2 text-sm text-[var(--color-muted)]">
+          Get weekly lab test summaries, score updates, and price drop alerts directly to your inbox. Zero spam.
+        </p>
+
+        <form class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input
+            type="email"
+            placeholder="Enter your email address"
+            required
+            class="w-full flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)] focus:border-[var(--color-primary)] focus:outline-none"
+          />
+          <button
+            type="submit"
+            class="whitespace-nowrap rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"
+          >
+            Subscribe
+          </button>
+        </form>
+        <p class="mt-3 text-xs text-[var(--color-muted)]">
+          By subscribing, you agree to our <a href="/editorial-policy/" class="underline hover:text-[var(--color-primary)]">editorial policy</a>. Unsubscribe anytime.
+        </p>
+      </div>
+    </div>
+  </section>
 </BaseLayout>

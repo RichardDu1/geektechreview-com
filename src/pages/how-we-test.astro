@@ -1,0 +1,100 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { Wrench, Cpu, Zap, Activity, Gauge } from "@lucide/astro";
+
+const canonical = "https://geektechreview.com/how-we-test/";
+
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "How We Test", href: canonical },
+];
+---
+
+<BaseLayout
+  title="How We Test Hardware (Methodology v1.0) — GeekTechReview"
+  description="Explore our standardized lab testing protocols, benchmark suites, equipment used, and 0-10 scoring framework."
+  canonical={canonical}
+>
+  <div class="container-page py-6">
+    <Breadcrumb items={crumbs} />
+
+    <header class="mb-12 max-w-3xl">
+      <div class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)]/10 px-3.5 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
+        <Wrench class="h-4 w-4" />
+        <span>Testing Methodology v1.0</span>
+      </div>
+      <h1 class="mt-4 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+        How We Test
+      </h1>
+      <p class="mt-4 text-xl text-[var(--color-muted)] leading-relaxed">
+        Our laboratory protocols combine industry-standard synthetic benchmarks with repeatable real-world stress tests.
+      </p>
+    </header>
+
+    <div class="space-y-12">
+      <!-- Overview & Version -->
+      <section class="card-surface p-6 sm:p-8">
+        <div class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+            <Gauge class="h-5 w-5" />
+          </div>
+          <h2 class="font-display text-2xl font-bold">Standardized Framework (v1.0)</h2>
+        </div>
+        <p class="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">
+          All hardware reviewed under Methodology v1.0 undergoes testing in a climate-controlled environment (21°C / 70°F) using calibrated measurement instruments. Tests are repeated three times to eliminate statistical outliers.
+        </p>
+      </section>
+
+      <!-- Testing Categories & Equipment -->
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="card-surface p-6">
+          <div class="flex items-center gap-3">
+            <Cpu class="h-6 w-6 text-[var(--color-primary)]" />
+            <h3 class="font-display text-xl font-bold">Laptops & AI PCs</h3>
+          </div>
+          <ul class="mt-4 space-y-2 text-xs text-[var(--color-muted)]">
+            <li><strong class="text-[var(--color-text)]">CPU/GPU Benchmarks:</strong> Cinebench 2024 (10-min loop), Geekbench 6, 3DMark Time Spy / Steel Nomad.</li>
+            <li><strong class="text-[var(--color-text)]">NPU & AI Inference:</strong> UL Procyon AI Computer Vision Benchmark, LM Studio (Llama-3-8B tokens/sec).</li>
+            <li><strong class="text-[var(--color-text)]">Display:</strong> X-Rite i1Display Pro colorimeter (sRGB, DCI-P3 gamut coverage, peak nits, delta-E).</li>
+            <li><strong class="text-[var(--color-text)]">Battery:</strong> Standardized web script execution at calibrated 200 nits display brightness.</li>
+          </ul>
+        </div>
+
+        <div class="card-surface p-6">
+          <div class="flex items-center gap-3">
+            <Zap class="h-6 w-6 text-[var(--color-accent)]" />
+            <h3 class="font-display text-xl font-bold">Audio & ANC Gear</h3>
+          </div>
+          <ul class="mt-4 space-y-2 text-xs text-[var(--color-muted)]">
+            <li><strong class="text-[var(--color-text)]">Acoustic Response:</strong> MiniDSP EARS measurement rig with REW (Room EQ Wizard) frequency curves.</li>
+            <li><strong class="text-[var(--color-text)]">ANC Attenuation:</strong> Calibrated pink noise playback at 80dB SPL to measure decibel attenuation.</li>
+            <li><strong class="text-[var(--color-text)]">Microphone:</strong> Anechoic voice recording comparison against Shure SM7B reference mic.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Equipment List -->
+      <section class="card-surface p-6 sm:p-8">
+        <div class="flex items-center gap-3">
+          <Activity class="h-6 w-6 text-[var(--color-success)]" />
+          <h2 class="font-display text-2xl font-bold">Lab Equipment Used</h2>
+        </div>
+        <div class="mt-6 grid gap-4 sm:grid-cols-3 text-xs">
+          <div class="rounded-xl border border-[var(--color-border)] p-4 bg-[var(--color-surface-2)]/30">
+            <div class="font-bold text-[var(--color-text)]">Fluke 62 MAX+ IR Thermometer</div>
+            <div class="mt-1 text-[var(--color-muted)]">Chassis thermal surface temperature mapping under peak load.</div>
+          </div>
+          <div class="rounded-xl border border-[var(--color-border)] p-4 bg-[var(--color-surface-2)]/30">
+            <div class="font-bold text-[var(--color-text)]">X-Rite i1Display Pro Plus</div>
+            <div class="mt-1 text-[var(--color-muted)]">Luminance, contrast ratio, and color accuracy calibration.</div>
+          </div>
+          <div class="rounded-xl border border-[var(--color-border)] p-4 bg-[var(--color-surface-2)]/30">
+            <div class="font-bold text-[var(--color-text)]">Keysight Smart Power Monitor</div>
+            <div class="mt-1 text-[var(--color-muted)]">Real-time wall draw and watt efficiency logging.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
