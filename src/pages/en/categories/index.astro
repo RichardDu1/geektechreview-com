@@ -1,24 +1,23 @@
 ---
-// Categories index
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import Card from '../../../components/Card.astro';
 
-const title = 'AI Tool Categories — Find the AI For That (2026)';
-const description = 'Browse AI tools by category: writing, image generation, coding, productivity, and more.';
+const title = 'Tech Review Categories — Geek Tech Review (2026)';
+const description = 'Browse in-depth reviews by category: laptops, phones, audio, gaming, and smart home devices.';
 ---
 
 <BaseLayout title={title} description={description}>
   <Breadcrumb />
   <section class="container py-16">
-    <h1 class="text-3xl font-bold mb-8 text-center">AI Tool Categories</h1>
+    <h1 class="text-3xl font-bold mb-8 text-center">Tech Review Categories</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-      <Card title="AI Writing" description="Content generation, copywriting, paraphrasing, and SEO writing tools" href="/en/categories/writing/" />
-      <Card title="AI Image" description="Text-to-image, photo editing, logo generation, and design tools" href="/en/categories/image/" />
-      <Card title="AI Coding" description="Code completion, refactoring, debugging, and documentation tools" href="/en/categories/coding/" />
-      <Card title="AI Productivity" description="Meeting summaries, task automation, note-taking, and workflow tools" href="/en/categories/productivity/" />
-      <Card title="AI Video" description="Video generation, editing, transcription, and avatar tools" href="/en/categories/video/" />
-      <Card title="AI Audio" description="Text-to-speech, music generation, podcast editing, and voice cloning" href="/en/categories/audio/" />
+      <Card title="Laptops" description="Ultrabooks, gaming laptops, workstations, and Chromebooks — tested and ranked" href="/en/categories/laptops/" />
+      <Card title="Phones" description="Flagship smartphones, budget picks, foldables, and accessories" href="/en/categories/phones/" />
+      <Card title="Audio" description="Headphones, earbuds, speakers, and soundbars — sound quality tested" href="/en/categories/audio/" />
+      <Card title="Gaming" description="Consoles, GPUs, monitors, keyboards, and gaming peripherals" href="/en/categories/gaming/" />
+      <Card title="Smart Home" description="Smart locks, lights, cameras, and hubs — tested for real homes" href="/en/categories/smart-home/" />
+      <Card title="DevTools" description="Mechanical keyboards, monitors, desks, and gear for developers" href="/en/categories/devtools/" />
     </div>
   </section>
 </BaseLayout>
