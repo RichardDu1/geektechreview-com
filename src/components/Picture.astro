@@ -38,7 +38,6 @@ const ext = src.split('.').pop() || 'jpg';
     src={`${base}-800w.${ext}`}
     alt={alt}
     loading={loading}
-    class={className}
-    style="max-width: 100%; height: auto;"
+    class={`max-w-full h-auto ${className}`.trim()}
   />
 </picture>

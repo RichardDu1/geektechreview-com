@@ -78,12 +78,12 @@ const topCons = cons.slice(0, 1);
     {(topPros.length > 0 || topCons.length > 0) && (
       <ul class="mb-3 space-y-1 text-xs">
         {topPros.map((p) => (
-          <li class="flex gap-1.5" style="color:var(--color-success)">
+          <li class="flex gap-1.5 text-[var(--color-success)]">
             <span aria-hidden="true">+</span><span class="text-[var(--color-text)]">{p}</span>
           </li>
         ))}
         {topCons.map((c) => (
-          <li class="flex gap-1.5" style="color:var(--color-danger)">
+          <li class="flex gap-1.5 text-[var(--color-danger)]">
             <span aria-hidden="true">−</span><span class="text-[var(--color-text)]">{c}</span>
           </li>
         ))}

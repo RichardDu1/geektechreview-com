@@ -2,6 +2,8 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../../components/Breadcrumb.astro";
 import { formatCategory, CATEGORY_SLUGS } from "../../../utils/format";
+import { generateListSchema } from "../../../utils/schema";
+import { getCollection } from "astro:content";
 import { Clock } from "@lucide/astro";
 
 export async function getStaticPaths() {
@@ -15,6 +17,30 @@ const { category } = Astro.props;
 const categoryLabel = formatCategory(category);
 const canonical = `https://geektechreview.com/best/${category}/`;
 
+const allReviews = await getCollection("reviews");
+const categoryReviews = allReviews
+  .filter((r) => r.data.category === category)
+  .sort((a, b) => b.data.rating - a.data.rating);
+
+const schemaItems = categoryReviews.map((r) => ({
+  name: r.data.title,
+  url: `https://geektechreview.com/reviews/${category}/${r.data.slug || r.id}/`,
+  rating: r.data.rating,
+}));
+
+const faqs = [
+  {
+    question: `What are the best ${categoryLabel.toLowerCase()} in 2026?`,
+    answer: `Our upcoming best ${categoryLabel.toLowerCase()} guide for 2026 ranks every model we've lab-tested by overall rating, value, and feature set. In the meantime, browse our individual ${categoryLabel.toLowerCase()} reviews for detailed benchmark scores and verdicts.`,
+  },
+  {
+    question: `How does GeekTechReview rank ${categoryLabel.toLowerCase()}?`,
+    answer: `Each product is scored on a standardized 0-10 scale across performance, value, design, features, and (where relevant) battery efficiency, using our published Methodology v1.0 testing protocols. Products are then ordered by total weighted score.`,
+  },
+];
+
+const schema = generateListSchema(schemaItems, `Best ${categoryLabel} of 2026`, faqs);
+
 const crumbs = [
   { name: "Home", href: "/" },
   { name: "Best Of", href: "/best/laptops/" },
@@ -26,6 +52,7 @@ const crumbs = [
   title={`Best ${categoryLabel} (2026) — Rankings & Buying Advice`}
   description={`Lab-backed roundup of the best ${categoryLabel.toLowerCase()} tested by GeekTechReview.`}
   canonical={canonical}
+  schema={schema}
 >
   <div class="container-page py-6">
     <Breadcrumb items={crumbs} />

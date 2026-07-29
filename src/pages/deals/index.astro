@@ -47,9 +47,9 @@ const crumbs = [
       <p class="mt-2 max-w-2xl text-lg text-[var(--color-muted)]">
         Curated discounts on top-rated hardware tested and verified by our editorial lab.
       </p>
-    </header>
-
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <section>
+      <h2 class="sr-only">Live Hardware Deals</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {dealReviews.map((r) => {
         const href = `/reviews/${r.data.category}/${r.data.slug || r.id}/`;
         const priceStr = formatPrice(r.data.price, r.data.priceCurrency);
@@ -98,5 +98,6 @@ const crumbs = [
         );
       })}
     </div>
+    </section>
   </div>
 </BaseLayout>

@@ -1,6 +1,7 @@
 ---
 import ReviewLayout from "../../../layouts/ReviewLayout.astro";
 import Changelog from "../../../components/Changelog.astro";
+import ReviewCard from "../../../components/ReviewCard.astro";
 import { getCollection, render } from "astro:content";
 import { generateReviewSchema } from "../../../utils/schema";
 
@@ -41,6 +42,13 @@ const schema = generateReviewSchema({
 const tocItems = (headings || [])
   .filter((h) => h.depth <= 3)
   .map((h) => ({ id: h.slug, text: h.text }));
+
+// Related reviews from same category
+const allReviews = await getCollection("reviews");
+const related = allReviews
+  .filter((r) => r.data.category === entry.data.category && r.id !== entry.id)
+  .sort((a, b) => b.data.rating - a.data.rating)
+  .slice(0, 3);
 ---
 
 <ReviewLayout
@@ -73,5 +81,27 @@ const tocItems = (headings || [])
     <div class="mt-8 border-t border-[var(--color-border)] pt-6">
       <Changelog date={entry.data.updatedAt} />
     </div>
+  )}
+
+  {related.length > 0 && (
+    <section class="mt-12 border-t border-[var(--color-border)] pt-8">
+      <h2 class="font-[var(--font-display)] text-2xl font-bold mb-6">Related Reviews</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {related.map((r) => (
+          <ReviewCard
+            title={r.data.title}
+            description={r.data.description}
+            category={r.data.category}
+            rating={r.data.rating}
+            verdictLabel={r.data.verdictLabel}
+            price={r.data.price}
+            priceCurrency={r.data.priceCurrency}
+            pros={r.data.pros}
+            cons={r.data.cons}
+            slug={r.data.slug || r.id}
+          />
+        ))}
+      </div>
+    </section>
   )}
 </ReviewLayout>

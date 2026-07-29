@@ -77,12 +77,14 @@ const crumbs = [
       </div>
     )}
 
-    {items.length === 0 ? (
-      <div class="card-surface flex items-center justify-center py-20 text-[var(--color-muted)]">
-        No reviews yet. Check back soon.
-      </div>
-    ) : (
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <section>
+      <h2 class="sr-only">Reviews List</h2>
+      {items.length === 0 ? (
+        <div class="card-surface flex items-center justify-center py-20 text-[var(--color-muted)]">
+          No reviews yet. Check back soon.
+        </div>
+      ) : (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
           <ReviewCard
             title={item.title}
@@ -97,7 +99,8 @@ const crumbs = [
             verdictLabel={item.verdictLabel}
           />
         ))}
-      </div>
-    )}
+        </div>
+      )}
+    </section>
   </div>
 </BaseLayout>

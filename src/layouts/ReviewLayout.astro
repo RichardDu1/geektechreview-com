@@ -8,6 +8,7 @@ import ProsCons from "../components/ProsCons.astro";
 import AffCard from "../components/AffCard.astro";
 import SpecTable from "../components/SpecTable.astro";
 import ScoreBreakdown from "../components/ScoreBreakdown.astro";
+import ReviewCard from "../components/ReviewCard.astro";
 import { formatCategory, formatPrice, formatDate, getScoreColor } from "../utils/format";
 
 /**
@@ -44,6 +45,18 @@ interface Props {
   schema?: object;
   tocItems?: { id: string; text: string }[];
   specs?: { label: string; value: string }[];
+  relatedReviews?: {
+    title: string;
+    description: string;
+    category: string;
+    rating: number;
+    price?: number;
+    priceCurrency?: string;
+    pros?: string[];
+    cons?: string[];
+    href: string;
+    verdictLabel?: "buy" | "wait" | "skip";
+  }[];
 }
 
 const {
@@ -70,6 +83,7 @@ const {
   schema,
   tocItems = [],
   specs = [],
+  relatedReviews = [],
 } = Astro.props;
 
 const canonicalUrl = canonical ?? `https://geektechreview.com/reviews/${category}/${model}/`;
