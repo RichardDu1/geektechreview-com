@@ -20,6 +20,9 @@ cons:
 verdict: "The Sony WH-1000XM6 are the best noise-canceling headphones you can buy, but they're also the most boring upgrade in years. If you have the XM5, save your money. If you're new to the game, these are a solid pick—just don't expect any surprises."
 verdictLabel: "buy"
 publishedAt: 2026-05-31
+images:
+  - src: "/images/reviews/sony-wh-1000xm6.jpg"
+    alt: "sony-wh-1000xm6"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"
 featured: false

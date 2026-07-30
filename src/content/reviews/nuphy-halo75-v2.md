@@ -22,6 +22,9 @@ cons:
 verdict: "The NuPhy Halo75 v2 is a gorgeous, thocky mechanical keyboard that nails the typing experience and build quality, but its middling battery life and lack of USB-C extras keep it from being the undisputed king of 75% wireless boards. If you value feel and sound over battery longevity, it's a solid pick."
 verdictLabel: "buy"
 publishedAt: 2026-05-31
+images:
+  - src: "/images/reviews/nuphy-halo75-v2.jpg"
+    alt: "nuphy-halo75-v2"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"
 featured: false

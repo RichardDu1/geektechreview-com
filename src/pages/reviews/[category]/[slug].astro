@@ -98,7 +98,9 @@ const related = allReviews
             priceCurrency={r.data.priceCurrency}
             pros={r.data.pros}
             cons={r.data.cons}
-            slug={r.data.slug || r.id}
+            href={`/reviews/${r.data.category}/${r.data.slug || r.id}/`}
+            imageSrc={r.data.images?.[0]?.src}
+            imageAlt={r.data.images?.[0]?.alt || r.data.title}
           />
         ))}
       </div>

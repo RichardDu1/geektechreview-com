@@ -97,6 +97,8 @@ const schema = generateCompareSchema(topReviews.map((r) => ({
             cons={r.data.cons}
             href={`/reviews/${r.data.category}/${r.data.slug || r.id}/`}
             verdictLabel={r.data.verdictLabel}
+            imageSrc={r.data.images?.[0]?.src}
+            imageAlt={r.data.images?.[0]?.alt || r.data.title}
           />
         ))}
       </div>

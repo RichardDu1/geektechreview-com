@@ -22,6 +22,9 @@ cons:
 verdict: "The Keychron Q1 Pro is a fantastic typing experience in a package that's 80% premium and 20% compromise. If you need wireless and can stomach the plastic bottom, it's a solid pick. But if you're fine with a cable, the original Q1 is cheaper and arguably better built."
 verdictLabel: "wait"
 publishedAt: 2026-05-31
+images:
+  - src: "/images/reviews/keychron-q1-pro.jpg"
+    alt: "keychron-q1-pro"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"
 featured: false

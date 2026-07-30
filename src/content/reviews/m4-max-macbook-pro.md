@@ -22,6 +22,9 @@ cons:
 verdict: "The M4 Max MacBook Pro is an absolute beast for creative pros who need raw power on the go. But if you're just browsing the web and checking email, you're throwing money into a fire pit. Buy it if you need it; otherwise, save your cash."
 verdictLabel: "buy"
 publishedAt: 2026-05-31
+images:
+  - src: "/images/reviews/m4-max-macbook-pro.jpg"
+    alt: "m4-max-macbook-pro"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"
 featured: false

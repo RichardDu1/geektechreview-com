@@ -20,6 +20,9 @@ cons:
 verdict: "The Alienware 34 QD-OLED delivers jaw-dropping visuals and buttery-smooth gaming, but its premium price and lack of USB-C make it a tough sell against the competition. If you want the best-looking ultrawide and have cash to burn, it's a no-brainer. Otherwise, wait for a sale."
 verdictLabel: "buy"
 publishedAt: 2026-05-31
+images:
+  - src: "/images/reviews/alienware-34-curved-qd-oled.jpg"
+    alt: "alienware-34-curved-qd-oled"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"
 featured: false
