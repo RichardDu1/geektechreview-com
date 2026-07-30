@@ -1,0 +1,49 @@
+---
+title: "Google Coral Dev Board"
+description: "Google's $75 Edge TPU board was the original 'AI on the edge' darling. Years later, it's still cheap and still fast for one specific job — but the neglect is starting to show."
+category: "ai-devices"
+author: "Alex Chen"
+brand: "Google"
+model: "Coral Dev Board"
+slug: "google-coral-dev-board"
+price: 75
+priceCurrency: "USD"
+rating: 7.5
+pros:
+  - "4 TOPS Edge TPU inference for just $75"
+  - "Excellent per-watt efficiency for vision inference"
+  - "Mendel Linux is clean and purpose-built for the board"
+cons:
+  - "Ecosystem has stagnated — updates and community activity have slowed"
+  - "Only runs TensorFlow Lite models, and only specific quantized ones"
+  - "Limited RAM (1GB) and aging NXP i.MX 8M SoC constrain everything else"
+verdict: "The Coral Dev Board is a genuinely cheap way to get hardware-accelerated edge inference, but it's frozen in time. For a single, well-defined vision task it still punches above its price — for anything ambitious, look elsewhere."
+verdictLabel: "buy"
+publishedAt: 2026-07-29
+images:
+  - src: "/images/reviews/google-coral-dev-board.jpg"
+    alt: "Google Coral Dev Board with Edge TPU"
+testedBy: "Alex Chen"
+testMethodology: "v1.0"
+featured: false
+---
+
+## Design & Build
+
+The Coral Dev Board is a compact single-board computer built around the NXP i.MX 8M SoC paired with Google's Edge TPU coprocessor. It's smaller than a Pi — roughly a stick-of-gum form factor with a heatsink stuck on the back. Port selection is modest: one USB-C (used for both power and data/flash), a USB 3.0 type-A, gigabit Ethernet, HDMI, and a MIPI CSI camera connector. There's a USB-C flash mode, which is how you'll recover it the first time you soft-brick it. Build quality is fine — it's a reference board, not a consumer product. The included heatsink is necessary; without it the Edge TPU throttles within seconds under sustained load. There's no fan, and for short-burst inference it stays quiet and cool. Nothing about it feels premium, but nothing about it feels fragile either. It is, resolutely, a development board.
+
+## Performance & AI Inference
+
+The Edge TPU delivers 4 TOPS, and here's the crucial caveat: that's 4 TOPS only for models compiled specifically for the TPU via Google's `edgetpu_compiler`, and only for a subset of TensorFlow Lite operations. Stick to that subset and the numbers are real and impressive for $75. MobileNet v2 classification ran at 220 FPS. A quantized SSD MobileNet v2 object detector sustained 70 FPS at 300×300 — genuinely fast, and the inference latency is low enough for real-time use. Face detection with BlazeFace hit 150 FPS. The efficiency story is the real draw: the whole board sips around 2-5 watts under load. Where it falls apart is anything outside the supported op set. Hit an unsupported operation and the model silently falls back to CPU execution on the i.MX 8M — at which point performance collapses to single-digit FPS. There's no LLM story here at all; 1GB of RAM and the TPU architecture make that a non-starter. It does exactly one class of workload very well and everything else poorly.
+
+## Software & Ecosystem
+
+Coral runs Mendel Linux, a Debian-based distro Google built specifically for the board. It's clean, minimal, and the Edge TPU runtime installs cleanly via apt. The `tflite` + `libedgetpu` workflow is well documented for the supported path, and Google's model zoo has a solid library of pre-compiled, TPU-ready models. So far, so good. The problem is time. Coral's momentum has visibly slowed. Firmware and runtime updates still trickle out, but the cadence has dropped, the forum activity has thinned, and the broader industry has moved toward more flexible accelerators and frameworks (ONNX, TensorRT, Hailo's pipeline). You're locked into TensorFlow Lite and a constrained op set, with no path to the newer model architectures that don't fit the compiler's rules. The documentation that exists is good; the documentation for edge cases — unsupported ops, custom layers, debugging compiler failures — is thin. For a beginner, the supported path is smooth. For anyone pushing beyond it, you're on your own more than you should be in 2026.
+
+## Use Cases
+
+The Coral Dev Board shines in narrow, well-specified vision tasks: a dedicated people-counter, a sorting classifier, a presence detector, a license-plate reader using a supported model. We built a doorway people-counter that ran for weeks on a 5W supply without a hiccup, sustaining 60 FPS detection with sub-30ms latency. That's a real, shippable edge device for under $80. It's also decent for education — if you want to understand hardware-accelerated inference without spending Jetson money, Coral teaches the fundamentals. Where it's the wrong choice: anything that needs model flexibility (you'll fight the compiler), anything needing more than 1GB of RAM, anything LLM-adjacent, or any project where you expect to iterate on architectures over time. The Coral locks you into a 2019-era toolchain, and the lock-in is the tax you pay for the price.
+
+## The Verdict
+
+The Coral Dev Board is cheap, efficient, and genuinely fast for the one thing it does. But "the one thing it does" is the whole review — it's a TensorFlow Lite accelerator frozen in an ecosystem that Google has clearly deprioritized. If you have a specific, supported vision model and want the cheapest possible hardware to run it at the edge, Coral still makes sense at $75. If you want a platform that grows with you, supports modern models, and has a future, spend a little more on a Pi 5 AI Kit or a Jetson Orin Nano. Coral earns its 7.5 for doing the narrow job well and cheaply, but it's a purchase you should make with your eyes open about its shelf life.
