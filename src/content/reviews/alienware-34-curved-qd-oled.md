@@ -21,7 +21,7 @@ verdict: "The Alienware 34 QD-OLED delivers jaw-dropping visuals and buttery-smo
 verdictLabel: "buy"
 publishedAt: 2026-05-31
 images:
-  - src: "/images/reviews/alienware-34-curved-qd-oled.jpg"
+  - src: "/images/reviews/alienware-34-curved-qd-oled.svg"
     alt: "alienware-34-curved-qd-oled"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"

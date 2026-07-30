@@ -23,7 +23,7 @@ verdict: "The NuPhy Halo75 v2 is a gorgeous, thocky mechanical keyboard that nai
 verdictLabel: "buy"
 publishedAt: 2026-05-31
 images:
-  - src: "/images/reviews/nuphy-halo75-v2.jpg"
+  - src: "/images/reviews/nuphy-halo75-v2.svg"
     alt: "nuphy-halo75-v2"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"

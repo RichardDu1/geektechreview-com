@@ -23,7 +23,7 @@ verdict: "The M4 Max MacBook Pro is an absolute beast for creative pros who need
 verdictLabel: "buy"
 publishedAt: 2026-05-31
 images:
-  - src: "/images/reviews/m4-max-macbook-pro.jpg"
+  - src: "/images/reviews/m4-max-macbook-pro.svg"
     alt: "m4-max-macbook-pro"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"

@@ -23,7 +23,7 @@ verdict: "The Keychron Q1 Pro is a fantastic typing experience in a package that
 verdictLabel: "wait"
 publishedAt: 2026-05-31
 images:
-  - src: "/images/reviews/keychron-q1-pro.jpg"
+  - src: "/images/reviews/keychron-q1-pro.svg"
     alt: "keychron-q1-pro"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"

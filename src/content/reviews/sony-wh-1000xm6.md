@@ -21,7 +21,7 @@ verdict: "The Sony WH-1000XM6 are the best noise-canceling headphones you can bu
 verdictLabel: "buy"
 publishedAt: 2026-05-31
 images:
-  - src: "/images/reviews/sony-wh-1000xm6.jpg"
+  - src: "/images/reviews/sony-wh-1000xm6.svg"
     alt: "sony-wh-1000xm6"
 testedBy: "Alex Chen"
 testMethodology: "v1.0"

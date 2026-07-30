@@ -108,6 +108,20 @@ const bestOfsCollection = defineCollection({
   }),
 });
 
+const comparisonsCollection = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/comparisons" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    productA: z.string(),
+    productB: z.string(),
+    publishedAt: z.date(),
+    updatedAt: z.date().optional(),
+    verdict: z.string(),
+    winner: z.enum(["a", "b", "tie"]),
+  }),
+});
+
 const guidesCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/guides" }),
   schema: z.object({
@@ -129,5 +143,6 @@ const guidesCollection = defineCollection({
 export const collections = {
   reviews: reviewsCollection,
   "best-ofs": bestOfsCollection,
+  comparisons: comparisonsCollection,
   guides: guidesCollection,
 };
