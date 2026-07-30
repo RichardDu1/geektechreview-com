@@ -1,0 +1,226 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import CompareTable from "../../components/CompareTable.astro";
+import RatingStars from "../../components/RatingStars.astro";
+import { getCollection, render } from "astro:content";
+import { formatCategory, formatPrice, getScoreColor } from "../../utils/format";
+import { generateCompareSchema } from "../../utils/schema";
+
+export async function getStaticPaths() {
+  const comparisons = await getCollection("comparisons");
+  return comparisons.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const data = entry.data;
+const slug = entry.id;
+const canonical = `https://geektechreview.com/compare/${slug}/`;
+
+// Resolve both products from the reviews collection by slug.
+const allReviews = await getCollection("reviews");
+const findBySlug = (s: string) =>
+  allReviews.find((r) => (r.data.slug || r.id) === s);
+
+const reviewA = findBySlug(data.productA);
+const reviewB = findBySlug(data.productB);
+
+// Build a "product view" for each side. Falls back to label-only if a review
+// isn't found (e.g. a market pick referenced by slug that has no review yet).
+const buildSide = (review: ReturnType<typeof findBySlug>, fallbackSlug: string) => {
+  if (!review) {
+    return {
+      name: fallbackSlug,
+      brand: "",
+      rating: 0,
+      ratingKnown: false,
+      price: undefined,
+      reviewHref: undefined,
+      category: "",
+    };
+  }
+  const r = review.data;
+  const rSlug = r.slug || review.id;
+  return {
+    name: r.title,
+    brand: r.brand,
+    rating: r.rating,
+    ratingKnown: true,
+    price: formatPrice(r.price, r.priceCurrency),
+    reviewHref: `/reviews/${r.category}/${rSlug}/`,
+    category: r.category,
+  };
+};
+
+const sideA = buildSide(reviewA, data.productA);
+const sideB = buildSide(reviewB, data.productB);
+
+// CompareTable expects products with specs. We surface review-derived specs.
+const compareProducts = [reviewA, reviewB].map((review, i) => {
+  const side = i === 0 ? sideA : sideB;
+  const r = review?.data;
+  return {
+    name: side.name,
+    brand: side.brand,
+    rating: side.rating,
+    price: side.price,
+    href: side.reviewHref,
+    specs: {
+      category: r ? formatCategory(r.category) : "—",
+      brand: r ? r.brand : "—",
+      model: r ? r.model : "—",
+      price: side.price ?? "—",
+      verdict: r ? r.verdictLabel.toUpperCase() : "—",
+      tested_by: r ? r.testedBy || "Alex Chen" : "—",
+    },
+  };
+});
+
+const specGroups = [
+  { group: "Overview", specs: ["category", "brand", "model"] },
+  { group: "Pricing & Verdict", specs: ["price", "verdict", "tested_by"] },
+];
+
+const winnerLabel =
+  data.winner === "a"
+    ? sideA.name
+    : data.winner === "b"
+      ? sideB.name
+      : "It's a tie";
+
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "Compare", href: "/compare/" },
+  { name: data.productA, href: canonical },
+];
+
+// Schema: only include products we actually have review data for.
+const schemaProducts = [reviewA, reviewB]
+  .filter((r): r is NonNullable<typeof r> => Boolean(r))
+  .map((r) => ({
+    title: r.data.title,
+    description: r.data.description,
+    category: r.data.category,
+    brand: r.data.brand,
+    model: r.data.model,
+    price: r.data.price,
+    priceCurrency: r.data.priceCurrency,
+    rating: r.data.rating,
+    verdict: r.data.verdict,
+    verdictLabel: r.data.verdictLabel,
+    publishedAt: r.data.publishedAt,
+    testedBy: r.data.testedBy,
+    slug: r.data.slug || r.id,
+  }));
+
+const schema = generateCompareSchema(schemaProducts);
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  canonical={canonical}
+  schema={schema}
+>
+  <div class="container-page py-6">
+    <Breadcrumb items={crumbs} />
+
+    <header class="mb-8 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-primary)]">
+        <span>Head-to-Head Comparison</span>
+      </div>
+      <h1 class="mt-3 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+        {data.title}
+      </h1>
+      <p class="mt-3 max-w-3xl text-lg text-[var(--color-muted)]">
+        {data.description}
+      </p>
+    </header>
+
+    <!-- Two-product scorecard -->
+    <section class="mb-10 grid gap-4 sm:grid-cols-2">
+      {[sideA, sideB].map((side, i) => {
+        const isA = i === 0;
+        const isWinner =
+          (data.winner === "a" && isA) || (data.winner === "b" && !isA);
+        const color = getScoreColor(side.rating);
+        return (
+          <div
+            class:list={[
+              "card-surface relative flex flex-col p-6",
+              isWinner && "ring-2 ring-[var(--color-primary)]",
+            ]}
+          >
+            {isWinner && (
+              <span class="absolute right-4 top-4 rounded-full bg-[var(--color-primary)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                Winner
+              </span>
+            )}
+            <div class="text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+              {isA ? "Product A" : "Product B"}
+            </div>
+            <h2 class="mt-1 font-display text-xl font-bold">{side.name}</h2>
+            {side.brand && (
+              <div class="text-sm text-[var(--color-muted)]">{side.brand}</div>
+            )}
+            {side.ratingKnown && (
+              <div class="mt-3 flex items-center gap-2">
+                <span class="text-2xl font-bold tabular-nums" style={`color:${color}`}>
+                  {side.rating.toFixed(1)}
+                </span>
+                <RatingStars score={side.rating} size={16} />
+              </div>
+            )}
+            {side.price && (
+              <div class="mt-2 text-lg font-bold tabular-nums">{side.price}</div>
+            )}
+            {side.reviewHref && (
+              <a
+                href={side.reviewHref}
+                class="mt-auto pt-4 text-sm font-semibold text-[var(--color-primary)] hover:underline"
+              >
+                Read full review →
+              </a>
+            )}
+          </div>
+        );
+      })}
+    </section>
+
+    <!-- Winner banner -->
+    <section class="mb-10">
+      <div class="card-surface flex flex-col items-center gap-2 p-6 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+            Our Verdict
+          </div>
+          <div class="mt-1 font-display text-lg font-bold">
+            Winner: {winnerLabel}
+          </div>
+        </div>
+        <a
+          href="/compare/"
+          class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] px-5 py-2.5 text-sm font-bold text-[var(--color-text)] transition hover:border-[var(--color-muted)]"
+        >
+          More comparisons
+        </a>
+      </div>
+    </section>
+
+    <!-- Spec comparison table -->
+    <section class="mb-10">
+      <h2 class="mb-4 font-display text-2xl font-bold">Spec Comparison</h2>
+      <CompareTable products={compareProducts} specGroups={specGroups} />
+    </section>
+
+    <!-- Comparison body (MDX content) -->
+    <section class="prose max-w-none">
+      <Content />
+    </section>
+  </div>
+</BaseLayout>

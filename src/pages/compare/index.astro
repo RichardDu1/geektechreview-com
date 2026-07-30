@@ -1,30 +1,42 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
-import CompareTable from "../../components/CompareTable.astro";
-import ReviewCard from "../../components/ReviewCard.astro";
 import { getCollection } from "astro:content";
-import { formatCategory, formatPrice } from "../../utils/format";
+import { formatCategory } from "../../utils/format";
 import { generateCompareSchema } from "../../utils/schema";
 
 const allReviews = await getCollection("reviews");
-const topReviews = [...allReviews]
-  .sort((a, b) => b.data.rating - a.data.rating)
-  .slice(0, 12);
+const findBySlug = (s: string) =>
+  allReviews.find((r) => (r.data.slug || r.id) === s);
 
-const featuredSample = topReviews.slice(0, 3).map((r) => ({
-  name: r.data.title,
-  brand: r.data.brand,
-  rating: r.data.rating,
-  price: formatPrice(r.data.price, r.data.priceCurrency),
-  href: `/reviews/${r.data.category}/${r.data.slug || r.id}/`,
-  specs: {
-    category: formatCategory(r.data.category),
-    model: r.data.model,
-    verdict: r.data.verdictLabel.toUpperCase(),
-    tested_by: r.data.testedBy || "Alex Chen",
-  },
-}));
+// Load all comparisons and resolve both products for preview cards.
+const comparisons = (await getCollection("comparisons")).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+
+const comparisonsWithProducts = comparisons.map((c) => {
+  const a = findBySlug(c.data.productA);
+  const b = findBySlug(c.data.productB);
+  const avgRating =
+    a && b ? (a.data.rating + b.data.rating) / 2 : a?.data.rating ?? b?.data.rating;
+  return {
+    entry: c,
+    slug: c.id,
+    title: c.data.title,
+    description: c.data.description,
+    winner: c.data.winner,
+    productAName: a?.data.title ?? c.data.productA,
+    productBName: b?.data.title ?? c.data.productB,
+    productABrand: a?.data.brand,
+    productBBrand: b?.data.brand,
+    category: a?.data.category ?? b?.data.category ?? "",
+    avgRating,
+    href: `/compare/${c.id}/`,
+  };
+});
+
+const winnerBadge = (w: string) =>
+  w === "a" ? "A wins" : w === "b" ? "B wins" : "Tie";
 
 const canonical = "https://geektechreview.com/compare/";
 
@@ -33,24 +45,29 @@ const crumbs = [
   { name: "Compare", href: canonical },
 ];
 
-const schema = generateCompareSchema(topReviews.map((r) => ({
-  title: r.data.title,
-  description: r.data.description,
-  category: r.data.category,
-  brand: r.data.brand,
-  model: r.data.model,
-  price: r.data.price,
-  priceCurrency: r.data.priceCurrency,
-  rating: r.data.rating,
-  verdict: r.data.verdict,
-  verdictLabel: r.data.verdictLabel,
-  publishedAt: r.data.publishedAt,
-})));
+const schema = generateCompareSchema(
+  allReviews
+    .sort((a, b) => b.data.rating - a.data.rating)
+    .slice(0, 8)
+    .map((r) => ({
+      title: r.data.title,
+      description: r.data.description,
+      category: r.data.category,
+      brand: r.data.brand,
+      model: r.data.model,
+      price: r.data.price,
+      priceCurrency: r.data.priceCurrency,
+      rating: r.data.rating,
+      verdict: r.data.verdict,
+      verdictLabel: r.data.verdictLabel,
+      publishedAt: r.data.publishedAt,
+    })),
+);
 ---
 
 <BaseLayout
   title="Compare Tech Hardware — Head-to-Head Benchmarks & Specs"
-  description="Compare specs, benchmark scores, lab ratings, and prices side-by-side to make the right hardware buying decision."
+  description="Side-by-side comparisons of the tech hardware we've lab-tested. See specs, ratings, and verdicts to decide which product wins for you."
   canonical={canonical}
   schema={schema}
 >
@@ -65,41 +82,57 @@ const schema = generateCompareSchema(topReviews.map((r) => ({
         Compare Products
       </h1>
       <p class="mt-2 max-w-2xl text-lg text-[var(--color-muted)]">
-        Side-by-side lab benchmark comparisons of top-rated hardware.
+        Side-by-side lab comparisons of the hardware we've tested — specs, ratings, and a clear verdict on which wins and why.
       </p>
     </header>
 
-    <!-- Sample Head-to-Head Comparison -->
-    <section class="mb-14">
-      <h2 class="mb-4 font-display text-2xl font-bold">Featured Head-to-Head Comparison</h2>
-      <CompareTable products={featuredSample} />
-    </section>
-
-    <!-- Available Products for Comparison Grid -->
     <section>
       <div class="mb-6 flex items-center justify-between">
         <div>
-          <h2 class="font-display text-2xl font-bold">Products Ready for Comparison</h2>
-          <p class="text-sm text-[var(--color-muted)]">Select any product to view full lab specs and review breakdown</p>
+          <h2 class="font-display text-2xl font-bold">All Comparisons</h2>
+          <p class="text-sm text-[var(--color-muted)]">
+            {comparisonsWithProducts.length} head-to-head comparisons
+          </p>
         </div>
       </div>
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {topReviews.map((r) => (
-          <ReviewCard
-            title={r.data.title}
-            description={r.data.description}
-            category={r.data.category}
-            rating={r.data.rating}
-            price={r.data.price}
-            priceCurrency={r.data.priceCurrency}
-            pros={r.data.pros}
-            cons={r.data.cons}
-            href={`/reviews/${r.data.category}/${r.data.slug || r.id}/`}
-            verdictLabel={r.data.verdictLabel}
-            imageSrc={r.data.images?.[0]?.src}
-            imageAlt={r.data.images?.[0]?.alt || r.data.title}
-          />
+        {comparisonsWithProducts.map((c) => (
+          <a
+            href={c.href}
+            class="group flex flex-col card-surface p-5 transition-shadow hover:shadow-lg hover:shadow-black/20"
+          >
+            <div class="mb-3 flex items-center justify-between">
+              {c.category ? (
+                <span class="rounded-full bg-[var(--color-surface-2)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                  {formatCategory(c.category)}
+                </span>
+              ) : (
+                <span />
+              )}
+              <span class="rounded-full bg-[var(--color-primary)]/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-[var(--color-primary)]">
+                {winnerBadge(c.winner)}
+              </span>
+            </div>
+
+            <h3 class="mb-2 font-display text-lg font-bold leading-snug transition-colors group-hover:text-[var(--color-primary)]">
+              {c.productAName} vs {c.productBName}
+            </h3>
+            <p class="mb-4 line-clamp-2 text-sm text-[var(--color-muted)]">
+              {c.description}
+            </p>
+
+            <div class="mt-auto flex items-center justify-between border-t border-[var(--color-border)] pt-3">
+              <div class="flex items-center gap-2 text-xs text-[var(--color-muted)]">
+                {c.productABrand && <span>{c.productABrand}</span>}
+                {c.productABrand && c.productBBrand && <span aria-hidden="true">·</span>}
+                {c.productBBrand && <span>{c.productBBrand}</span>}
+              </div>
+              <span class="text-xs font-semibold text-[var(--color-primary)] group-hover:underline">
+                Read comparison →
+              </span>
+            </div>
+          </a>
         ))}
       </div>
     </section>

@@ -1,79 +1,48 @@
-# GeekTechReview.com — Project Instructions
+# GeekTechReview.com — Agent Instructions
 
-## Project Overview
-GeekTechReview is a tech hardware review site focused on AI-era hardware, monetized via Amazon Associates affiliate links. Built with Astro 6 + Tailwind CSS v4 + MDX + Cloudflare Pages.
+## Project
+GeekTechReview: AI-era hardware review site with Amazon Associates monetization.
+Tech: Astro 6 + Tailwind CSS v4 + MDX + Cloudflare Pages.
 
-## CRITICAL: New URL Structure (NO /en/ prefix)
-The old site used `/en/` prefix for all URLs. The REBUILD removes this. New structure:
+## Auto-Pilot Rules
+
+### Decision Authority
+- **L1 (自主决定)**: 配色、CSS 值、组件结构、文件命名、文案措辞、图片选择、内链结构
+- **L2 (做完通知)**: 新增依赖、新增页面路由、修改 URL 结构、修改 Content Schema
+- **L3 (需确认)**: 放弃某个功能、改变项目方向、涉及付费服务、删除已有内容
+
+### Verification Protocol
+After completing each Phase, run:
+```bash
+bash scripts/verify.sh [phase-number]
 ```
-/                          # Homepage
-/reviews/                  # All reviews
-/reviews/{category}/       # Category listing
-/reviews/{category}/{slug}/  # Individual review
-/best/{category}/          # Best-of lists
-/compare/{slug}/           # Comparison pages
-/deals/                    # Deals
-/guides/                   # Buying guides
-/about/                    # About
-/editorial-policy/         # Editorial policy
-/how-we-test/              # Testing methodology
-/affiliate-disclosure/     # Affiliate disclosure
-/contact/                  # Contact
-```
+- All checks pass → proceed to next Phase automatically
+- Any check fails → fix the issue, re-run verify
+- 3 consecutive failures → block task, send Telegram notification
 
-## CRITICAL: Remove i18n Config
-The astro.config.mjs currently has `i18n: { defaultLocale: 'en', locales: ['en'], routing: { prefixDefaultLocale: true } }`. This MUST be removed. No i18n prefix.
+### Build Rules
+- `npm run build` must exit 0 before any commit
+- No `console.log` in production code
+- All images must have alt text
+- All Amazon links must have `rel="sponsored nofollow"`
+- All pages must have JSON-LD schema markup
+- Lighthouse mobile performance target: 90+, desktop: 95+
 
-## Category System (8 categories)
-Old categories → New categories mapping:
-- Laptops, Monitors, Keyboards → laptops (or pc-components for keyboards)
-- Audio → audio
-- Gaming, VR → gaming
-- Phones, Smartwatches → phones
-- Smart Home → smart-home
-- Cameras, Drones → creator-gear
-- AI tools/hardware → ai-devices
-- PC Components → pc-components
+### Content Rules
+- Reviews must include: title, description, category, rating (0-10), pros, cons, verdict
+- Best-of pages must include: ranked list, FAQ section, "how we tested" section
+- Amazon ASIN must be included in frontmatter when available
+- Images should use Astro `<Picture>` component for optimization
 
-New category slugs: `laptops`, `phones`, `audio`, `gaming`, `pc-components`, `smart-home`, `ai-devices`, `creator-gear`
+### Git Rules
+- Commit after each completed task
+- Format: `feat/fix/docs/refactor: description`
+- Never commit broken builds
 
-## Design System
-- **Dark mode is DEFAULT** (not light)
-- Remove ALL blob animations from BaseLayout
-- Remove email capture popup
-- Remove CookieBanner (unnecessary for affiliate site)
-- Colors: See REBUILD_PLAN.md section 5.1
-- Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (code/specs)
-- Score colors: 9.0+ green, 8.0-8.9 blue, 7.0-7.9 yellow, 6.0-6.9 orange, <6.0 red
-
-## Content Schema
-See `src/content.config.ts` for the NEW schema. Key changes from old:
-- `category` is now an enum (not free string)
-- `score` renamed to `rating` (0-10 scale)
-- Added: `brand`, `model`, `amazonAsin`, `amazonUrl`, `subscores`, `verdictLabel`, `updatedAt`, `testedBy`, `testMethodology`, `images`
-- `verdict` is now an enum: `buy`, `wait`, `skip`
-- `price` is now a number (not string), with `priceCurrency` field
-
-## Existing Content
-- 36 reviews in `src/content/reviews/` (mix of .md and .mdx)
-- 171 tools in `src/content/tools/` (will be removed/migrated later)
-- 60 workflows in `src/content/workflows/` (will be removed/migrated later)
-- Some reviews have duplicates (both .md and .mdx versions) — deduplicate during migration
-
-## Build Commands
-- `npm run dev` — dev server
-- `npm run build` — production build
-- `npm run preview` — preview build
-
-## Performance Targets
-- Lighthouse mobile: 90+ performance, 95+ accessibility, 95+ best practices, 100 SEO
-- Lighthouse desktop: 95+ performance
-- Zero JS by default (Astro Islands only)
-- <20KB CSS
-- No heavy animations
-
-## Amazon Affiliate
-- All Amazon links use `rel="sponsored nofollow"`
-- Use AffButton component for all Amazon links
-- 1-3 Amazon links per review, 1 per item in best-of lists
-- Affiliate disclosure in footer on every page
+### File Structure
+See REBUILD_PLAN.md for the complete architecture.
+Key paths:
+- Reviews: `src/content/reviews/`
+- Components: `src/components/`
+- Layouts: `src/layouts/`
+- Styles: `src/styles/global.css`

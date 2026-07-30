@@ -1,10 +1,10 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../../components/Breadcrumb.astro";
-import { formatCategory, CATEGORY_SLUGS } from "../../../utils/format";
+import FAQAccordion from "../../../components/FAQAccordion.astro";
+import { formatCategory, CATEGORY_SLUGS, getScoreColor } from "../../../utils/format";
 import { generateListSchema } from "../../../utils/schema";
 import { getCollection } from "astro:content";
-import { Clock } from "@lucide/astro";
 
 export async function getStaticPaths() {
   return CATEGORY_SLUGS.map((category) => ({
@@ -17,29 +17,62 @@ const { category } = Astro.props;
 const categoryLabel = formatCategory(category);
 const canonical = `https://geektechreview.com/best/${category}/`;
 
-const allReviews = await getCollection("reviews");
-const categoryReviews = allReviews
-  .filter((r) => r.data.category === category)
-  .sort((a, b) => b.data.rating - a.data.rating);
+// Find the best-of entry for this category (one per category).
+const bestOfs = await getCollection("best-ofs");
+const bestOf = bestOfs.find((b) => b.data.category === category);
 
-const schemaItems = categoryReviews.map((r) => ({
-  name: r.data.title,
-  url: `https://geektechreview.com/reviews/${category}/${r.data.slug || r.id}/`,
-  rating: r.data.rating,
-}));
+const allReviews = await getCollection("reviews");
+const reviewBySlug = new Map(
+  allReviews.map((r) => [r.data.slug || r.id, r]),
+);
+
+// Enrich each ranked item with its review (if one exists) for ratings/links.
+const items = (bestOf?.data.items ?? []).map((item) => {
+  const review = item.reviewSlug ? reviewBySlug.get(item.reviewSlug) : undefined;
+  return {
+    rank: item.rank,
+    name: item.name,
+    blurb: item.blurb,
+    reviewSlug: item.reviewSlug ?? "",
+    rating: review?.data.rating,
+    reviewHref: review
+      ? `/reviews/${review.data.category}/${review.data.slug || review.id}/`
+      : undefined,
+  };
+});
 
 const faqs = [
   {
     question: `What are the best ${categoryLabel.toLowerCase()} in 2026?`,
-    answer: `Our upcoming best ${categoryLabel.toLowerCase()} guide for 2026 ranks every model we've lab-tested by overall rating, value, and feature set. In the meantime, browse our individual ${categoryLabel.toLowerCase()} reviews for detailed benchmark scores and verdicts.`,
+    answer: `Our best ${categoryLabel.toLowerCase()} guide for 2026 ranks every model we've lab-tested by overall rating, value, and feature set, plus market picks we're actively evaluating. Each product is scored on our standardized 0–10 scale using Methodology v1.0.`,
   },
   {
     question: `How does GeekTechReview rank ${categoryLabel.toLowerCase()}?`,
-    answer: `Each product is scored on a standardized 0-10 scale across performance, value, design, features, and (where relevant) battery efficiency, using our published Methodology v1.0 testing protocols. Products are then ordered by total weighted score.`,
+    answer: `Each product is scored on a standardized 0-10 scale across performance, value, design, features, and (where relevant) battery efficiency, using our published Methodology v1.0 testing protocols. Products are then ordered by total weighted score and category fit.`,
+  },
+  {
+    question: `Are these picks influenced by sponsors or affiliates?`,
+    answer: `No. Rankings are based solely on our lab testing and editorial judgment. We do earn affiliate commissions from some retailer links (see our affiliate disclosure), but that never affects a product's score or its position in these rankings.`,
+  },
+  {
+    question: `How often is this list updated?`,
+    answer: `We update these rankings as we test new products and as the market shifts — typically whenever a major new release lands or our re-testing changes a score. Check the published date on each linked review for the latest evaluation.`,
   },
 ];
 
-const schema = generateListSchema(schemaItems, `Best ${categoryLabel} of 2026`, faqs);
+const schemaItems = items.map((i) => ({
+  name: i.name,
+  url: i.reviewHref
+    ? `https://geektechreview.com${i.reviewHref}`
+    : canonical,
+  rating: i.rating,
+}));
+
+const schema = generateListSchema(
+  schemaItems,
+  bestOf?.data.title ?? `Best ${categoryLabel} of 2026`,
+  faqs,
+);
 
 const crumbs = [
   { name: "Home", href: "/" },
@@ -49,8 +82,8 @@ const crumbs = [
 ---
 
 <BaseLayout
-  title={`Best ${categoryLabel} (2026) — Rankings & Buying Advice`}
-  description={`Lab-backed roundup of the best ${categoryLabel.toLowerCase()} tested by GeekTechReview.`}
+  title={bestOf?.data.title ?? `Best ${categoryLabel} (2026) — Rankings & Buying Advice`}
+  description={bestOf?.data.description ?? `Lab-backed roundup of the best ${categoryLabel.toLowerCase()} tested by GeekTechReview.`}
   canonical={canonical}
   schema={schema}
 >
@@ -64,34 +97,92 @@ const crumbs = [
       <h1 class="mt-3 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
         Best {categoryLabel} of 2026
       </h1>
-      <p class="mt-2 max-w-2xl text-lg text-[var(--color-muted)]">
-        Our upcoming definitive guide to the top-performing {categoryLabel.toLowerCase()} across all price points.
+      <p class="mt-3 max-w-2xl text-lg text-[var(--color-muted)]">
+        {bestOf?.data.description ?? `Our lab-tested ranking of the best ${categoryLabel.toLowerCase()} for 2026.`}
       </p>
     </header>
 
-    <div class="card-surface flex flex-col items-center justify-center p-12 text-center">
-      <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-surface-2)] text-[var(--color-muted)]">
-        <Clock class="h-8 w-8" />
-      </div>
-      <h2 class="mt-6 font-display text-2xl font-bold">Best {categoryLabel} Guide Coming Soon</h2>
-      <p class="mt-2 max-w-md text-sm text-[var(--color-muted)]">
-        We are currently expanding our test dataset and benchmark results for {categoryLabel.toLowerCase()}. Check out our latest individual reviews in the meantime!
-      </p>
+    {items.length > 0 ? (
+      <section class="mb-12 space-y-4">
+        {items.map((item) => {
+          const color = item.rating !== undefined ? getScoreColor(item.rating) : null;
+          return (
+            <article class="card-surface flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:gap-6">
+              {/* Rank badge */}
+              <div class="flex shrink-0 items-center justify-center">
+                <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)]/10 font-display text-xl font-extrabold text-[var(--color-primary)]">
+                  {item.rank}
+                </span>
+              </div>
 
-      <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <a
-          href={`/reviews/${category}/`}
-          class="rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"
-        >
-          View All {categoryLabel} Reviews
-        </a>
-        <a
-          href="/reviews/"
-          class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] px-6 py-3 text-sm font-bold text-[var(--color-text)] transition hover:border-[var(--color-muted)]"
-        >
-          Browse All Categories
-        </a>
+              {/* Body */}
+              <div class="flex-1">
+                <div class="mb-1 flex flex-wrap items-center gap-2">
+                  <h2 class="font-display text-xl font-bold leading-snug">
+                    {item.reviewHref ? (
+                      <a href={item.reviewHref} class="transition-colors hover:text-[var(--color-primary)]">
+                        {item.name}
+                      </a>
+                    ) : (
+                      item.name
+                    )}
+                  </h2>
+                  {item.rating !== undefined && (
+                    <span
+                      class="rounded-full px-2.5 py-1 text-xs font-bold tabular-nums"
+                      style={`background-color:${color}26;color:${color};border:1px solid ${color}66`}
+                    >
+                      {item.rating.toFixed(1)}
+                    </span>
+                  )}
+                  {!item.reviewHref && (
+                    <span class="rounded-full bg-[var(--color-surface-2)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                      Market pick
+                    </span>
+                  )}
+                </div>
+                <p class="text-sm leading-relaxed text-[var(--color-muted)]">{item.blurb}</p>
+                {item.reviewHref && (
+                  <a
+                    href={item.reviewHref}
+                    class="mt-3 inline-block text-sm font-semibold text-[var(--color-primary)] hover:underline"
+                  >
+                    Read the full review →
+                  </a>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    ) : (
+      <div class="card-surface mb-12 p-12 text-center">
+        <h2 class="font-display text-2xl font-bold">Best {categoryLabel} Guide Coming Soon</h2>
+        <p class="mt-2 text-sm text-[var(--color-muted)]">
+          We're still assembling this ranking. Browse our individual {categoryLabel.toLowerCase()} reviews in the meantime.
+        </p>
       </div>
+    )}
+
+    {/* FAQ */}
+    <section class="mb-8">
+      <h2 class="mb-4 font-display text-2xl font-bold">{categoryLabel} Buying FAQ</h2>
+      <FAQAccordion items={faqs} />
+    </section>
+
+    <div class="flex flex-wrap justify-center gap-4">
+      <a
+        href={`/reviews/${category}/`}
+        class="rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"
+      >
+        View All {categoryLabel} Reviews
+      </a>
+      <a
+        href="/reviews/"
+        class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] px-6 py-3 text-sm font-bold text-[var(--color-text)] transition hover:border-[var(--color-muted)]"
+      >
+        Browse All Categories
+      </a>
     </div>
   </div>
 </BaseLayout>

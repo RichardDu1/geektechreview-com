@@ -1,0 +1,47 @@
+---
+title: "Raspberry Pi 5 AI Kit vs NVIDIA Jetson Orin Nano: Best Edge AI Board?"
+description: "Raspberry Pi 5 AI Kit vs NVIDIA Jetson Orin Nano — budget Hailo NPU vs CUDA edge board. We compare TOPS, software, value, and use cases for edge AI."
+productA: "raspberry-pi-5-ai-kit"
+productB: "nvidia-jetson-orin-nano"
+publishedAt: 2026-07-29
+verdict: "The Raspberry Pi 5 AI Kit wins on price and accessibility for hobbyist edge vision; the Jetson Orin Nano wins for CUDA-native robotics and ML development. Pick the Pi for budget projects, Jetson for CUDA."
+winner: "tie"
+---
+
+## The Big Question
+
+If you're building an edge-AI project — a vision pipeline, a smart sensor, a robotics prototype — two boards dominate the conversation: the **Raspberry Pi 5 AI Kit** (a Pi 5 plus a Hailo-8L NPU) and the **NVIDIA Jetson Orin Nano**. Both deliver on-device inference without a desktop GPU, but they come from opposite ends of the spectrum: the Pi kit is cheap and accessible; the Jetson brings real NVIDIA CUDA to the edge. Here's how to choose.
+
+## Spec Comparison
+
+| Spec | Raspberry Pi 5 AI Kit | NVIDIA Jetson Orin Nano |
+|---|---|---|
+| NPU/GPU | Hailo-8L NPU | NVIDIA GPU (Ampere) |
+| Inference TOPS | 13 TOPS | 20–40 TOPS (config) |
+| Base CPU | Raspberry Pi 5 (ARM) | ARM + NVIDIA GPU |
+| AI Software | Hailo runtime, Pi ecosystem | CUDA, cuDNN, JetPack, TensorRT |
+| CUDA support | No | Yes (full CUDA stack) |
+| Community | Massive (Pi) | Smaller, pro-focused |
+| Price | $120 (kit) | $199+ |
+| GeekTechReview Rating | 8.8 | 8.5 |
+
+## Performance Comparison
+
+On raw **TOPS**, the Jetson Orin Nano edges ahead — and more importantly, those TOPS come with the full NVIDIA CUDA stack: cuDNN, TensorRT, JetPack. If your model was trained on CUDA and you want to deploy it on the edge with minimal porting, the Jetson is the path of least resistance. It's the board for serious robotics and computer-vision work.
+
+The **Pi 5 AI Kit** delivers 13 TOPS via the Hailo-8L NPU — enough for real-time object detection and common vision models, and remarkably capable for the price. It won't match the Jetson on the heaviest models or CUDA-specific pipelines, but for many edge-vision projects it's more than enough, and the Hailo runtime is straightforward.
+
+## Software & Ecosystem
+
+The Pi wins on community: the Raspberry Pi ecosystem is enormous, with endless tutorials, libraries, and accessories. The Jetson's ecosystem is smaller and more pro-focused, but what it lacks in breadth it makes up in depth — NVIDIA's documentation and ML tooling are best-in-class if you're already in the CUDA world.
+
+## Value Comparison
+
+The Pi 5 AI Kit is the clear value leader at $120 — it's the cheapest credible way to do edge AI. The Jetson Orin Nano at $199+ is pricier, but you're paying for CUDA and a more capable GPU. If your project genuinely needs CUDA, the Jetson's premium is justified; if it doesn't, the Pi kit is the smarter spend.
+
+## The Verdict
+
+**Tie — it depends on your stack.** Choose the **Raspberry Pi 5 AI Kit** for budget builds, hobbyist edge vision, and any project that doesn't strictly need CUDA — it's the most accessible edge-AI platform available. Choose the **NVIDIA Jetson Orin Nano** for robotics, CUDA-native ML development, and projects where the NVIDIA software stack is a requirement. We scored the Pi kit 8.8 and the Jetson 8.5 — the Pi's value and accessibility give it a slight overall edge, but the right pick is dictated by whether you need CUDA.
+
+- [Read our Raspberry Pi 5 AI Kit review →](/reviews/ai-devices/raspberry-pi-5-ai-kit/)
+- [Read our NVIDIA Jetson Orin Nano review →](/reviews/ai-devices/nvidia-jetson-orin-nano/)
